@@ -1,5 +1,5 @@
 // api/create-payment.js
-import YooKassa from 'yookassa';
+import { YooKassa } from 'yookassa';
 
 const shopId = process.env.SHOP_ID;
 const secretKey = process.env.SECRET_KEY;
