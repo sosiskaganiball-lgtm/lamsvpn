@@ -515,17 +515,27 @@
                 const data = await res.json();
                 if (!data.confirmation_token) throw new Error('Нет токена');
                 payBtn.style.display = 'none';
-                const checkout = new YooMoney.CheckoutWidget({
-                    confirmation_token: data.confirmation_token,
-                    customization: { colors: { primary: '#c8ff00', background: '#111' } },
-                    error_callback: err => {
-                        console.error(err);
-                        showToast('Ошибка платежа');
-                        payBtn.style.display = 'block';
-                        payBtn.disabled = false;
-                        payBtn.textContent = 'Оплатить';
-                    }
-                });
+              const checkout = new YooMoneyCheckoutWidget({
+    confirmation_token: data.confirmation_token,
+    customization: { colors: { primary: '#c8ff00', background: '#111' } },
+    error_callback: err => {
+        console.error(err);
+        showToast('Ошибка платежа');
+        payBtn.style.display = 'block';
+        payBtn.disabled = false;
+        payBtn.textContent = 'Оплатить';
+    },
+    success_callback: async () => {
+        document.getElementById('yookassa-widget-container').innerHTML = '';
+        document.getElementById('paymentStatus').style.display = 'block';
+        document.getElementById('paymentStatus').innerHTML = '<span style="color:#c8ff00;">Оплата прошла!</span>';
+        const newExpiry = extendSubscription(pendingPurchase.days);
+        closePaymentModal();
+        updateProfileUI();
+        showToast(`Подписка продлена до ${new Date(newExpiry).toLocaleDateString()}`);
+    }
+});
+checkout.render('yookassa-widget-container');
                 checkout.render('yookassa-widget-container');
                 checkout.on('success', async () => {
                     document.getElementById('yookassa-widget-container').innerHTML = '';
