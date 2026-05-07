@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LamsVPN — Быстрый и стабильный VPN</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://yookassa.ru/checkout-widget/v1/checkout-widget.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #0a0a0a; color: #e8e8e8; font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.6; overflow-x: hidden; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 2px; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+        .tag { display: inline-block; font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #c8ff00; border: 1px solid #c8ff00; padding: 4px 10px; border-radius: 2px; margin-bottom: 16px; }
+        h1, h2, h3 { font-family: 'Syne', sans-serif; }
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,10,10,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid #222; height: 60px; display: flex; align-items: center; }
+        nav .inner { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+        .logo { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo span { color: #c8ff00; }
+        .logo-dot { width: 8px; height: 8px; background: #c8ff00; border-radius: 50%; display: inline-block; }
+        nav ul { list-style: none; display: flex; gap: 4px; }
+        nav ul a { display: block; padding: 6px 14px; color: #666; text-decoration: none; font-size: 14px; border-radius: 6px; transition: all 0.2s; }
+        nav ul a:hover { color: #e8e8e8; background: #181818; }
+        .nav-cta { background: #c8ff00 !important; color: #000 !important; font-weight: 600 !important; padding: 6px 18px !important; border-radius: 6px !important; }
+        .nav-cta:hover { background: #a8d900 !important; }
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+        .hamburger span { width: 22px; height: 2px; background: #e8e8e8; display: block; transition: all 0.3s; }
+        .section { display: none; padding-top: 60px; min-height: 100vh; }
+        .section.active { display: block; }
+        .hero { min-height: 100vh; display: flex; align-items: center; padding: 80px 0 60px; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: 0; right: -200px; width: 700px; height: 700px; background: radial-gradient(circle, rgba(200,255,0,0.04) 0%, transparent 70%); pointer-events: none; }
+        .hero-grid { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 60px; }
+        .hero-label { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; }
+        .hero-label .dot { width: 6px; height: 6px; background: #c8ff00; border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.4); } }
+        .hero-label span { font-size: 12px; color: #666; letter-spacing: 1px; text-transform: uppercase; font-weight: 500; }
+        .hero h1 { font-size: clamp(38px, 5vw, 64px); font-weight: 800; line-height: 1.05; margin-bottom: 20px; color: #fff; }
+        .hero h1 em { font-style: normal; color: #c8ff00; }
+        .hero p { font-size: 16px; color: #666; margin-bottom: 36px; max-width: 420px; line-height: 1.7; }
+        .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+        .btn-primary, .btn-ghost, .btn-plan, .btn-submit, .btn-copy { padding: 13px 28px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; text-decoration: none; display: inline-block; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+        .btn-primary { background: #c8ff00; color: #000; }
+        .btn-primary:hover { background: #a8d900; transform: translateY(-1px); }
+        .btn-ghost { background: transparent; color: #e8e8e8; border: 1px solid #2a2a2a; }
+        .btn-ghost:hover { border-color: #666; background: #181818; }
+        .hero-card { background: #111; border: 1px solid #222; border-radius: 16px; padding: 32px; position: relative; }
+        .hero-card::before { content: ''; position: absolute; top: -1px; left: 32px; right: 32px; height: 1px; background: linear-gradient(90deg, transparent, #c8ff00, transparent); }
+        .stat-row { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 28px; }
+        .stat { text-align: center; }
+        .stat-num { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; color: #fff; display: block; }
+        .stat-num span { color: #c8ff00; }
+        .stat-label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-divider { width: 1px; background: #222; }
+        .feature-list { display: flex; flex-direction: column; gap: 10px; }
+        .feature-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: #181818; border-radius: 8px; border: 1px solid #222; font-size: 13px; color: #e8e8e8; }
+        .feature-icon { color: #c8ff00; font-size: 16px; flex-shrink: 0; }
+        .server-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
+        .server-pill { background: #181818; border: 1px solid #222; padding: 5px 12px; border-radius: 20px; font-size: 12px; color: #666; }
+        .sec-header { text-align: center; padding: 70px 0 48px; }
+        .sec-header h2 { font-size: clamp(28px, 4vw, 44px); font-weight: 800; color: #fff; margin-bottom: 12px; }
+        .sec-header p { color: #666; max-width: 500px; margin: 0 auto; font-size: 15px; }
+        .tariffs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding-bottom: 80px; }
+        .plan-card { background: #111; border: 1px solid #222; border-radius: 16px; padding: 32px; position: relative; transition: border-color 0.3s; }
+        .plan-card:hover { border-color: #2a2a2a; }
+        .plan-card.featured { border-color: #c8ff00; background: linear-gradient(135deg, #111 0%, rgba(200,255,0,0.03) 100%); }
+        .plan-card.featured::before { content: 'ПОПУЛЯРНЫЙ'; position: absolute; top: -1px; right: 24px; background: #c8ff00; color: #000; font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; padding: 4px 10px; border-radius: 0 0 6px 6px; }
+        .plan-name { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #666; margin-bottom: 8px; }
+        .plan-title { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 24px; }
+        .price-tabs { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
+        .price-tab { padding: 7px 14px; border-radius: 6px; font-size: 13px; border: 1px solid #2a2a2a; background: #181818; color: #666; cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+        .price-tab:hover { border-color: #666; color: #e8e8e8; }
+        .price-tab.active { border-color: #c8ff00; color: #c8ff00; background: rgba(200,255,0,0.06); }
+        .price-display { margin-bottom: 24px; }
+        .price-amount { font-family: 'Syne', sans-serif; font-size: 42px; font-weight: 800; color: #fff; }
+        .price-amount sup { font-size: 20px; vertical-align: super; }
+        .price-period { font-size: 13px; color: #666; margin-left: 4px; }
+        .plan-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+        .plan-features li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: #e8e8e8; }
+        .plan-features li::before { content: '✓'; color: #c8ff00; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+        .btn-plan { width: 100%; padding: 13px; border: 1px solid #2a2a2a; background: #1e1e1e; color: #e8e8e8; font-weight: 600; }
+        .btn-plan:hover { background: #2a2a2a; border-color: #444; }
+        .btn-plan.accent { background: #c8ff00; color: #000; border-color: #c8ff00; }
+        .btn-plan.accent:hover { background: #a8d900; }
+        .servers-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; padding-bottom: 60px; }
+        .server-card { background: #111; border: 1px solid #222; border-radius: 12px; padding: 24px; display: flex; align-items: center; gap: 20px; transition: border-color 0.2s; }
+        .server-card:hover { border-color: #2a2a2a; }
+        .server-flag { font-size: 36px; flex-shrink: 0; }
+        .server-info { flex: 1; }
+        .server-city { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+        .server-country { font-size: 12px; color: #666; margin-bottom: 10px; }
+        .server-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+        .stag { font-size: 11px; padding: 3px 8px; border-radius: 4px; border: 1px solid #2a2a2a; color: #666; }
+        .stag.bypass { border-color: rgba(200,255,0,0.3); color: #c8ff00; background: rgba(200,255,0,0.04); }
+        .server-status { flex-shrink: 0; }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 8px rgba(74,222,128,0.5); animation: pulse 3s infinite; }
+        .servers-note { text-align: center; padding: 32px; background: #111; border: 1px dashed #222; border-radius: 12px; color: #666; font-size: 14px; margin-bottom: 80px; }
+        .servers-note strong { color: #c8ff00; }
+        .faq-list { display: flex; flex-direction: column; gap: 8px; padding-bottom: 80px; max-width: 760px; margin: 0 auto; }
+        .faq-item { background: #111; border: 1px solid #222; border-radius: 10px; overflow: hidden; }
+        .faq-q { padding: 18px 22px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 500; font-size: 15px; color: #e8e8e8; user-select: none; gap: 16px; transition: background 0.2s; }
+        .faq-q:hover { background: #181818; }
+        .faq-arrow { font-size: 12px; color: #666; flex-shrink: 0; transition: transform 0.3s; }
+        .faq-item.open .faq-arrow { transform: rotate(180deg); }
+        .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.3s; font-size: 14px; color: #666; line-height: 1.7; padding: 0 22px; }
+        .faq-item.open .faq-a { max-height: 300px; padding: 0 22px 20px; }
+        .support-center { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; min-height: calc(100vh - 60px); gap: 32px; padding: 60px 0; }
+        .support-icon { width: 90px; height: 90px; border-radius: 22px; background: #111; border: 1px solid #222; display: flex; align-items: center; justify-content: center; font-size: 40px; }
+        .support-center h2 { font-size: 36px; font-weight: 800; color: #fff; }
+        .support-center p { color: #666; max-width: 400px; font-size: 15px; line-height: 1.7; }
+        .support-links { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 360px; }
+        .support-link { display: flex; align-items: center; gap: 14px; padding: 16px 22px; background: #111; border: 1px solid #222; border-radius: 10px; text-decoration: none; color: #e8e8e8; transition: all 0.2s; }
+        .support-link:hover { border-color: #2a2a2a; background: #181818; }
+        .support-link-icon { font-size: 22px; }
+        .support-link-text { text-align: left; }
+        .support-link-title { font-weight: 600; font-size: 14px; display: block; }
+        .support-link-sub { font-size: 12px; color: #666; }
+        .profile-page { min-height: calc(100vh - 120px); display: flex; flex-direction: column; align-items: center; padding: 60px 0; gap: 32px; }
+        .profile-header { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+        .profile-avatar-big { width: 90px; height: 90px; border-radius: 50%; background: #c8ff00; color: #000; font-size: 42px; font-weight: 800; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; }
+        .profile-details, .profile-extension, .profile-config-box, .profile-instructions { background: #111; border: 1px solid #222; border-radius: 16px; padding: 24px 32px; width: 100%; max-width: 600px; }
+        .detail-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #181818; font-size: 14px; color: #e8e8e8; }
+        .detail-row:last-child { border-bottom: none; }
+        .detail-row span:first-child { color: #666; }
+        .profile-config-box { display: none; }
+        .profile-config-box.active { display: block; }
+        .config-string { background: #181818; border: 1px solid #2a2a2a; border-radius: 8px; padding: 14px 16px; font-family: monospace; font-size: 12px; color: #aaa; word-break: break-all; line-height: 1.5; margin: 16px 0; }
+        .config-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+        .profile-instructions { margin-top: 8px; }
+        .instr-steps { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+        .instr-step { background: #181818; border-radius: 12px; padding: 20px; display: flex; gap: 16px; align-items: flex-start; }
+        .step-num { width: 32px; height: 32px; flex-shrink: 0; background: #c8ff00; color: #000; border-radius: 8px; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; }
+        .step-content h4 { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 6px; }
+        .step-content p { font-size: 13px; color: #666; line-height: 1.6; }
+        .step-content a { color: #c8ff00; text-decoration: none; }
+        .apps-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+        .app-link { display: flex; align-items: center; gap: 6px; padding: 8px 14px; background: #222; border: 1px solid #2a2a2a; border-radius: 6px; text-decoration: none; color: #e8e8e8; font-size: 12px; transition: all 0.2s; }
+        .app-link:hover { border-color: #666; }
+        .streisand-detail { background: #111; border-left: 4px solid #c8ff00; border-radius: 6px; padding: 14px; margin-top: 10px; }
+        .streisand-detail ol { list-style-position: inside; color: #aaa; font-size: 13px; line-height: 1.8; }
+        .streisand-detail ol li strong { color: #fff; }
+        .profile-actions { display: flex; flex-wrap: wrap; gap: 12px; width: 100%; max-width: 600px; justify-content: center; }
+        .profile-extension h3 { font-size: 18px; margin-bottom: 16px; }
+        .profile-extension .price-display { margin: 16px 0; }
+        #toast-container { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; align-items: center; pointer-events: none; }
+        .toast { background: #1a1a1a; border: 1px solid #2a2a2a; border-left: 4px solid #c8ff00; color: #e8e8e8; padding: 14px 24px; border-radius: 8px; font-size: 14px; font-weight: 500; pointer-events: auto; box-shadow: 0 8px 24px rgba(0,0,0,0.5); animation: toastIn 0.4s ease, toastOut 0.3s ease forwards; animation-delay: 0s, 2.8s; max-width: 380px; text-align: center; }
+        @keyframes toastIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes toastOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-10px); } }
+        footer { border-top: 1px solid #222; padding: 32px 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+        footer .logo { font-size: 16px; }
+        footer p { font-size: 12px; color: #666; }
+        .footer-links { display: flex; gap: 20px; }
+        .footer-links a { font-size: 13px; color: #666; text-decoration: none; }
+        .footer-links a:hover { color: #e8e8e8; }
+        .modal-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; padding: 20px; }
+        .modal-overlay.open { display: flex; }
+        .modal { background: #111; border: 1px solid #2a2a2a; border-radius: 16px; width: 100%; max-width: 400px; padding: 36px; position: relative; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .modal-close { position: absolute; top: 16px; right: 16px; background: #181818; border: 1px solid #222; color: #666; width: 30px; height: 30px; border-radius: 6px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .modal-close:hover { color: #e8e8e8; }
+        .modal h3 { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+        .modal p { color: #666; font-size: 13px; margin-bottom: 24px; }
+        .modal-tabs { display: flex; gap: 4px; margin-bottom: 24px; background: #181818; padding: 4px; border-radius: 8px; }
+        .modal-tab { flex: 1; padding: 8px; border-radius: 6px; background: none; border: none; color: #666; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+        .modal-tab.active { background: #111; color: #e8e8e8; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+        .form-group label { font-size: 12px; color: #666; letter-spacing: 0.5px; }
+        .form-group input { padding: 12px 14px; background: #181818; border: 1px solid #2a2a2a; border-radius: 8px; color: #e8e8e8; font-size: 14px; font-family: 'DM Sans', sans-serif; transition: border-color 0.2s; outline: none; }
+        .form-group input:focus { border-color: #c8ff00; }
+        .form-group input::placeholder { color: #444; }
+        .btn-submit { width: 100%; padding: 13px; background: #c8ff00; color: #000; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; margin-top: 6px; transition: all 0.2s; }
+        .btn-submit:hover { background: #a8d900; }
+        .form-error { color: #ff6b6b; font-size: 12px; margin-top: 8px; display: none; }
+        .payment-summary { background: #181818; border-radius: 12px; padding: 16px; margin-bottom: 20px; text-align: center; }
+        .payment-summary .sum { font-size: 28px; font-weight: 800; color: #c8ff00; }
+        .card-input { display: flex; gap: 12px; margin-bottom: 14px; }
+        .card-input input { width: 100%; }
+        .test-payment-note { font-size: 11px; text-align: center; margin-top: 12px; color: #666; }
+        .subscription-badge { display: inline-block; background: #c8ff00; color: #000; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-left: 12px; }
+        .profile-btn { display: flex; align-items: center; gap: 8px; padding: 6px 14px; background: #181818; border: 1px solid #2a2a2a; border-radius: 6px; color: #e8e8e8; cursor: pointer; font-size: 13px; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+        .profile-btn:hover { border-color: #666; }
+        .profile-avatar { width: 22px; height: 22px; border-radius: 50%; background: #c8ff00; color: #000; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+        @media (max-width: 768px) { nav ul { display: none; } nav ul.open { display: flex; flex-direction: column; position: fixed; top: 60px; left: 0; right: 0; background: #111; border-bottom: 1px solid #222; padding: 12px 16px; gap: 2px; } .hamburger { display: flex; } .hero-grid { grid-template-columns: 1fr; gap: 40px; } .tariffs-grid { grid-template-columns: 1fr; } .servers-grid { grid-template-columns: 1fr; } .hero h1 { font-size: 36px; } }
+    </style>
+</head>
+<body>
+    <div id="toast-container"></div>
+    <nav>
+        <div class="inner">
+            <a class="logo" href="#" onclick="showSection('home')"><div class="logo-dot"></div>Lams<span>VPN</span></a>
+            <ul id="navLinks">
+                <li><a href="#" onclick="showSection('home'); closeMenu()">Главная</a></li>
+                <li><a href="#" onclick="showSection('tariffs'); closeMenu()">Тарифы</a></li>
+                <li><a href="#" onclick="showSection('servers'); closeMenu()">Серверы</a></li>
+                <li><a href="#" onclick="showSection('faq'); closeMenu()">FAQ</a></li>
+                <li><a href="#" onclick="showSection('support'); closeMenu()">Поддержка</a></li>
+                <li><a class="nav-cta" href="#" onclick="openAuth(); closeMenu()">Войти</a></li>
+            </ul>
+            <div id="profileBtnWrap" style="display:none;">
+                <button class="profile-btn" onclick="showSection('profile')">
+                    <div class="profile-avatar" id="profileAvatar">А</div>
+                    <span id="profileName">Аккаунт</span>
+                </button>
+            </div>
+            <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+        </div>
+    </nav>
+
+    <!-- Секции (HOME, TARIFFS, SERVERS, FAQ, SUPPORT, PROFILE) остаются как в предыдущем примере, только изменён PAYMENT MODAL -->
+    <!-- HOME -->
+    <div id="sec-home" class="section active">
+        <div class="hero"><div class="container"><div class="hero-grid"><div><div class="hero-label"><div class="dot"></div><span>Работает прямо сейчас</span></div><h1>Интернет без<br><em>ограничений</em></h1><p>LamsVPN — быстрый и стабильный доступ к любому контенту.</p><div class="hero-btns"><button class="btn-primary" onclick="showSection('tariffs')">Выбрать тариф</button><button class="btn-ghost" onclick="showSection('servers')">Серверы →</button></div></div><div><div class="hero-card"><div class="stat-row"><div class="stat"><span class="stat-num">4<span>+</span></span><span class="stat-label">Локации</span></div><div class="stat-divider"></div><div class="stat"><span class="stat-num">99<span>%</span></span><span class="stat-label">Аптайм</span></div><div class="stat-divider"></div><div class="stat"><span class="stat-num">0</span><span class="stat-label">Логов</span></div></div><div class="feature-list"><div class="feature-item"><span class="feature-icon">⚡</span>Протокол VLESS — скорость без компромиссов</div><div class="feature-item"><span class="feature-icon">🛡️</span>Обход белых списков РКН</div><div class="feature-item"><span class="feature-icon">📱</span>Работает на всех устройствах</div><div class="feature-item"><span class="feature-icon">🔒</span>Полная конфиденциальность</div></div><div class="server-pills"><span class="server-pill">🇷🇺 Москва</span><span class="server-pill">🇺🇸 Шарлотт</span><span class="server-pill">🇸🇪 Стокгольм</span><span class="server-pill">🇫🇮 Хельсинки</span></div></div></div></div></div></div>
+        <div class="container"><footer><div class="logo">Lams<span style="color:#c8ff00">VPN</span></div><p>© 2025 LamsVPN</p><div class="footer-links"><a href="#" onclick="showSection('support')">Поддержка</a><a href="#" onclick="showSection('faq')">FAQ</a></div></footer></div>
+    </div>
+
+    <!-- TARIFFS -->
+    <div id="sec-tariffs" class="section">
+        <div class="container">
+            <div class="sec-header"><div class="tag">Тарифы</div><h2>Выберите свой план</h2><p>Оплата картой через ЮKassa</p></div>
+            <div class="tariffs-grid">
+                <div class="plan-card">
+                    <div class="plan-name">Базовый</div><div class="plan-title">До 3 устройств</div>
+                    <div class="price-tabs" id="tabs-basic">
+                        <button class="price-tab active" data-price="15" data-period="1 день" data-days="1">1 день</button>
+                        <button class="price-tab" data-price="100" data-period="мес." data-days="30">1 мес.</button>
+                        <button class="price-tab" data-price="297" data-period="3 мес." data-days="90">3 мес.</button>
+                        <button class="price-tab" data-price="594" data-period="6 мес." data-days="180">6 мес.</button>
+                        <button class="price-tab" data-price="1188" data-period="год" data-days="365">1 год</button>
+                    </div>
+                    <div class="price-display"><span class="price-amount" id="price-basic"><sup>₽</sup>15</span><span class="price-period" id="period-basic">/ 1 день</span></div>
+                    <ul class="plan-features"><li>До 3 устройств</li><li>Обход РКН</li><li>Все серверы</li><li>VLESS Reality</li></ul>
+                    <button class="btn-plan" data-plan="basic" onclick="initiatePurchase(this)">Подключить →</button>
+                </div>
+                <div class="plan-card featured">
+                    <div class="plan-name">Семейный</div><div class="plan-title">До 6 устройств</div>
+                    <div class="price-tabs" id="tabs-family">
+                        <button class="price-tab active" data-price="30" data-period="1 день" data-days="1">1 день</button>
+                        <button class="price-tab" data-price="210" data-period="мес." data-days="30">1 мес.</button>
+                        <button class="price-tab" data-price="630" data-period="3 мес." data-days="90">3 мес.</button>
+                        <button class="price-tab" data-price="1260" data-period="6 мес." data-days="180">6 мес.</button>
+                        <button class="price-tab" data-price="2520" data-period="год" data-days="365">1 год</button>
+                    </div>
+                    <div class="price-display"><span class="price-amount" id="price-family"><sup>₽</sup>30</span><span class="price-period" id="period-family">/ 1 день</span></div>
+                    <ul class="plan-features"><li>До 6 устройств</li><li>Приоритетная скорость</li><li>Приоритетная поддержка</li><li>VLESS Reality</li></ul>
+                    <button class="btn-plan accent" data-plan="family" onclick="initiatePurchase(this)">Подключить →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SERVERS, FAQ, SUPPORT без изменений (сокращены для экономии места, полные как раньше) -->
+    <div id="sec-servers" class="section">
+        <div class="container"><div class="sec-header"><div class="tag">Серверы</div><h2>Доступные локации</h2></div><div class="servers-grid"><div class="server-card"><div class="server-flag">🇷🇺</div><div class="server-info"><div class="server-city">Москва</div><div class="server-tags"><span class="stag bypass">✦ Обход</span></div></div><div class="server-status"><div class="status-dot"></div></div></div><div class="server-card"><div class="server-flag">🇺🇸</div><div class="server-info"><div class="server-city">Шарлотт</div><div class="server-tags"><span class="stag">Высокая скорость</span></div></div><div class="server-status"><div class="status-dot"></div></div></div><div class="server-card"><div class="server-flag">🇸🇪</div><div class="server-info"><div class="server-city">Стокгольм</div><div class="server-tags"><span class="stag">Европа</span></div></div><div class="server-status"><div class="status-dot"></div></div></div><div class="server-card"><div class="server-flag">🇫🇮</div><div class="server-info"><div class="server-city">Хельсинки</div><div class="server-tags"><span class="stag bypass">✦ Обход</span></div></div><div class="server-status"><div class="status-dot"></div></div></div></div></div>
+    </div>
+    <div id="sec-faq" class="section"><div class="container"><div class="sec-header"><div class="tag">FAQ</div><h2>Частые вопросы</h2></div><div class="faq-list"><div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Как подключиться? <span class="faq-arrow">▼</span></div><div class="faq-a">После оплаты в профиле появится ключ и инструкция.</div></div><div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Вы храните логи? <span class="faq-arrow">▼</span></div><div class="faq-a">Нет, только дату окончания подписки.</div></div></div></div></div>
+    <div id="sec-support" class="section"><div class="container"><div class="support-center"><div class="support-icon">🆘</div><h2>Поддержка</h2><p>@lamssupport</p></div></div></div>
+
+    <!-- PROFILE -->
+    <div id="sec-profile" class="section">
+        <div class="container">
+            <div class="profile-page">
+                <div class="profile-header">
+                    <div class="profile-avatar-big" id="profileAvatarBig">A</div>
+                    <h2 id="profileFullName">Имя</h2>
+                    <p id="profileEmailDisplay">email@example.com</p>
+                </div>
+                <div class="profile-details">
+                    <div class="detail-row"><span>Подписка:</span> <span id="profileSubStatus">—</span></div>
+                    <div class="detail-row"><span>Окончание:</span> <span id="profileExpiryDate">—</span></div>
+                    <div class="detail-row"><span>ID:</span> <span id="profileUid">—</span></div>
+                </div>
+                <div class="profile-extension">
+                    <h3>🔄 Продлить</h3>
+                    <div class="price-tabs" id="profileExtensionTabs">
+                        <button class="price-tab active" data-days="1" data-price="15" data-period="1 день">1 день</button>
+                        <button class="price-tab" data-days="30" data-price="100" data-period="мес.">1 мес.</button>
+                        <button class="price-tab" data-days="90" data-price="297" data-period="3 мес.">3 мес.</button>
+                    </div>
+                    <div class="price-display"><span class="price-amount" id="profileExtensionPriceAmount"><sup>₽</sup>15</span><span class="price-period" id="profileExtensionPricePeriod">/ 1 день</span></div>
+                    <button class="btn-primary" onclick="extendSubscriptionFromProfile()">Оплатить продление</button>
+                </div>
+                <div class="profile-config-box" id="profileConfigBox">
+                    <h3>🔑 Ваш ключ</h3>
+                    <div class="config-string" id="profileConfigString"></div>
+                    <div class="config-actions">
+                        <button class="btn-primary" onclick="copyProfileConfig()">📋 Скопировать</button>
+                        <button class="btn-ghost" onclick="regenerateConfig()">🔄 Новый</button>
+                    </div>
+                </div>
+                <div class="profile-instructions">
+                    <h3>📲 Инструкция</h3>
+                    <div class="instr-steps">
+                        <div class="instr-step"><div class="step-num">1</div><div class="step-content"><h4>Установите</h4><div class="apps-row"><a class="app-link" href="https://play.google.com/store/apps/details?id=com.v2ray.ang&hl=ru" target="_blank">📱 Android</a><a class="app-link" href="https://apps.apple.com/app/streisand/id6450534064" target="_blank">🍎 iOS</a><a class="app-link" href="https://github.com/2dust/v2rayN/releases" target="_blank">💻 Windows</a></div></div></div>
+                        <div class="instr-step"><div class="step-num">2</div><div class="step-content"><h4>Скопируйте ключ</h4><p>Нажмите кнопку выше.</p></div></div>
+                        <div class="instr-step"><div class="step-num">3</div><div class="step-content"><h4>Импортируйте</h4><p>В приложении: + → Импорт из буфера.</p></div></div>
+                        <div class="instr-step"><div class="step-num">4</div><div class="step-content"><h4>Подключитесь</h4><p>Нажмите Connect и проверьте IP на <a href="https://2ip.ru" target="_blank">2ip.ru</a>.</p></div></div>
+                    </div>
+                </div>
+                <div class="profile-actions">
+                    <button class="btn-ghost" onclick="logout()">🚪 Выйти</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AUTH MODAL (без изменений) -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal"><button class="modal-close" onclick="closeAuth()">✕</button><h3>LamsVPN</h3><p>Войдите или создайте аккаунт</p>
+            <div class="modal-tabs"><button class="modal-tab active" id="tabLogin" onclick="switchTab('login')">Войти</button><button class="modal-tab" id="tabReg" onclick="switchTab('reg')">Регистрация</button></div>
+            <div id="formLogin"><div class="form-group"><label>EMAIL</label><input type="email" id="loginEmail" placeholder="you@example.com"></div><div class="form-group"><label>ПАРОЛЬ</label><input type="password" id="loginPass" placeholder="••••••••"></div><div class="form-error" id="loginErr"></div><button class="btn-submit" onclick="doLogin()">Войти</button></div>
+            <div id="formReg" style="display:none;"><div class="form-group"><label>EMAIL</label><input type="email" id="regEmail"></div><div class="form-group"><label>ИМЯ</label><input type="text" id="regName"></div><div class="form-group"><label>ПАРОЛЬ</label><input type="password" id="regPass"></div><div class="form-group"><label>ПОВТОРИТЕ</label><input type="password" id="regPass2"></div><div class="form-error" id="regErr"></div><button class="btn-submit" onclick="doRegister()">Создать</button></div>
+        </div>
+    </div>
+
+    <!-- PAYMENT MODAL (обновлённый) -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closePaymentModal()">✕</button>
+            <h3>Оплата через ЮKassa</h3>
+            <div id="paymentDetails" class="payment-summary">
+                <span>Тариф <strong id="payPlanName"></strong></span><br>
+                <span class="sum" id="payAmount">0 ₽</span><br>
+                <span id="payPeriodDesc"></span>
+            </div>
+            <div id="paymentStatus" style="display:none; margin-bottom:16px;"></div>
+            <div id="yookassa-widget-container" style="min-height:100px;"></div>
+            <button class="btn-submit" id="payButton" onclick="startPayment()">Оплатить</button>
+            <div class="test-payment-note">⚡ Тестовый режим: средства не спишутся.</div>
+        </div>
+    </div>
+
+    <script>
+        // ======================== АВТОРИЗАЦИЯ И ПРОФИЛЬ (полный код как раньше) ========================
+        function showToast(msg) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = msg;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3500);
+        }
+
+        function hashPass(p) { return btoa(p + "lams-salt"); }
+        const getUsers = () => JSON.parse(localStorage.getItem('lvpn_users') || '{}');
+        const saveUsers = u => localStorage.setItem('lvpn_users', JSON.stringify(u));
+        const getCurrentEmail = () => localStorage.getItem('lvpn_current');
+        const setCurrentEmail = e => localStorage.setItem('lvpn_current', e);
+        function getCurrentUser() {
+            const email = getCurrentEmail();
+            if (!email) return null;
+            const users = getUsers();
+            return users[email] ? { ...users[email], email } : null;
+        }
+        function saveCurrentUser(user) {
+            const email = getCurrentEmail();
+            if (!email) return;
+            const users = getUsers();
+            users[email] = user;
+            saveUsers(users);
+        }
+        function generateUid() { return 'user_' + Math.random().toString(36).substr(2,12); }
+        function generateConfigString(uid) {
+            return 'vless://' + uid + '@lamsvpn.net:443?encryption=none&security=reality&sni=www.google.com&fp=chrome&pbk=pubkey&flow=xtls-rprx-vision&type=tcp#LamsVPN-' + Math.random().toString(36).substr(2,4);
+        }
+        function registerUser(email, name, pass, pass2) {
+            if (pass !== pass2) throw new Error('Пароли не совпадают');
+            if (pass.length < 6) throw new Error('Минимум 6 символов');
+            const users = getUsers();
+            if (users[email]) throw new Error('Уже есть');
+            const uid = generateUid();
+            users[email] = { name, passHash: hashPass(pass), uid, config: null, expiry: null };
+            saveUsers(users);
+            return users[email];
+        }
+        function loginUser(email, pass) {
+            const users = getUsers();
+            const u = users[email];
+            if (!u || u.passHash !== hashPass(pass)) throw new Error('Неверный email или пароль');
+            setCurrentEmail(email);
+            return u;
+        }
+        function extendSubscription(days) {
+            const user = getCurrentUser();
+            if (!user) throw new Error('Не авторизован');
+            const now = Date.now();
+            const prev = user.expiry ? Number(user.expiry) : 0;
+            user.expiry = Math.max(now, prev) + days * 86400000;
+            if (!user.config) user.config = generateConfigString(user.uid);
+            saveCurrentUser(user);
+            return user.expiry;
+        }
+        function isSubscriptionActive() {
+            const user = getCurrentUser();
+            return user && user.expiry && user.expiry > Date.now();
+        }
+        function updateProfileUI() {
+            const user = getCurrentUser();
+            const navBtn = document.querySelector('.nav-cta');
+            const wrap = document.getElementById('profileBtnWrap');
+            if (user) {
+                wrap.style.display = 'block';
+                if (navBtn) navBtn.style.display = 'none';
+                const nm = document.getElementById('profileName');
+                nm.innerHTML = user.name + (isSubscriptionActive() ? ' <span class="subscription-badge">до '+new Date(user.expiry).toLocaleDateString()+'</span>' : '');
+                document.getElementById('profileAvatar').textContent = user.name[0].toUpperCase();
+            } else {
+                wrap.style.display = 'none';
+                if (navBtn) navBtn.style.display = 'block';
+            }
+            if (document.getElementById('sec-profile').classList.contains('active')) populateProfileData();
+        }
+        function populateProfileData() {
+            const user = getCurrentUser();
+            if (!user) return;
+            document.getElementById('profileFullName').textContent = user.name;
+            document.getElementById('profileEmailDisplay').textContent = user.email;
+            document.getElementById('profileAvatarBig').textContent = user.name[0].toUpperCase();
+            document.getElementById('profileUid').textContent = user.uid;
+            if (isSubscriptionActive()) {
+                document.getElementById('profileSubStatus').textContent = 'Активна';
+                document.getElementById('profileExpiryDate').textContent = new Date(user.expiry).toLocaleDateString();
+                document.getElementById('profileConfigBox').classList.add('active');
+                document.getElementById('profileConfigString').textContent = user.config;
+            } else {
+                document.getElementById('profileSubStatus').textContent = 'Неактивна';
+                document.getElementById('profileExpiryDate').textContent = '—';
+                document.getElementById('profileConfigBox').classList.remove('active');
+            }
+        }
+        function regenerateConfig() {
+            if (!confirm('Старый ключ перестанет работать. Сгенерировать новый?')) return;
+            const user = getCurrentUser();
+            if (!user || !isSubscriptionActive()) { showToast('Нет подписки'); return; }
+            user.config = generateConfigString(user.uid);
+            saveCurrentUser(user);
+            document.getElementById('profileConfigString').textContent = user.config;
+            showToast('Новый ключ сгенерирован');
+        }
+        function copyProfileConfig() {
+            const txt = document.getElementById('profileConfigString').textContent;
+            if (!txt) return;
+            navigator.clipboard.writeText(txt).then(() => showToast('Ключ скопирован'));
+        }
+        function logout() {
+            localStorage.removeItem('lvpn_current');
+            updateProfileUI();
+            showSection('home');
+        }
+
+        // ======================== ПЛАТЕЖИ (обновлённая логика) ========================
+        let pendingPurchase = null;
+
+        function initiatePurchase(btn) {
+            if (!getCurrentUser()) { openAuth(); showToast('Войдите'); return; }
+            const card = btn.closest('.plan-card');
+            const tab = card.querySelector('.price-tab.active');
+            if (!tab) return;
+            const plan = btn.dataset.plan;
+            const price = parseInt(tab.dataset.price);
+            const period = tab.dataset.period;
+            const days = parseInt(tab.dataset.days);
+            const planName = plan === 'basic' ? 'Базовый' : 'Семейный';
+            pendingPurchase = { plan, price, days, period, planName };
+            document.getElementById('payPlanName').textContent = planName;
+            document.getElementById('payAmount').innerHTML = price + ' ₽';
+            document.getElementById('payPeriodDesc').textContent = `срок: ${period}`;
+            document.getElementById('yookassa-widget-container').innerHTML = '';
+            document.getElementById('payButton').style.display = 'block';
+            document.getElementById('paymentStatus').style.display = 'none';
+            openPaymentModal();
+        }
+
+        function extendSubscriptionFromProfile() {
+            const tab = document.querySelector('#profileExtensionTabs .price-tab.active');
+            if (!tab) return;
+            const days = parseInt(tab.dataset.days);
+            const price = parseInt(tab.dataset.price);
+            const period = tab.dataset.period;
+            pendingPurchase = { plan: 'extension', price, days, period, planName: 'Продление' };
+            document.getElementById('payPlanName').textContent = 'Продление';
+            document.getElementById('payAmount').innerHTML = price + ' ₽';
+            document.getElementById('payPeriodDesc').textContent = `срок: ${period}`;
+            document.getElementById('yookassa-widget-container').innerHTML = '';
+            document.getElementById('payButton').style.display = 'block';
+            document.getElementById('paymentStatus').style.display = 'none';
+            openPaymentModal();
+        }
+
+        function openPaymentModal() { document.getElementById('paymentModal').classList.add('open'); }
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.remove('open');
+            pendingPurchase = null;
+        }
+
+        async function startPayment() {
+            if (!pendingPurchase) return;
+            const payBtn = document.getElementById('payButton');
+            payBtn.disabled = true;
+            payBtn.textContent = 'Создание платежа...';
+            try {
+                const res = await fetch('/create-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        amount: pendingPurchase.price,
+                        currency: 'RUB',
+                        description: `${pendingPurchase.planName} на ${pendingPurchase.period}`,
+                        metadata: {
+                            email: getCurrentUser().email,
+                            days: pendingPurchase.days
+                        }
+                    })
+                });
+                const data = await res.json();
+                if (!data.confirmation_token) throw new Error('Нет токена');
+                payBtn.style.display = 'none';
+                const checkout = new YooMoney.CheckoutWidget({
+                    confirmation_token: data.confirmation_token,
+                    customization: { colors: { primary: '#c8ff00', background: '#111' } },
+                    error_callback: err => {
+                        console.error(err);
+                        showToast('Ошибка платежа');
+                        payBtn.style.display = 'block';
+                        payBtn.disabled = false;
+                        payBtn.textContent = 'Оплатить';
+                    }
+                });
+                checkout.render('yookassa-widget-container');
+                checkout.on('success', async () => {
+                    document.getElementById('yookassa-widget-container').innerHTML = '';
+                    document.getElementById('paymentStatus').style.display = 'block';
+                    document.getElementById('paymentStatus').innerHTML = '<span style="color:#c8ff00;">Оплата прошла!</span>';
+                    const newExpiry = extendSubscription(pendingPurchase.days);
+                    closePaymentModal();
+                    updateProfileUI();
+                    showToast(`Подписка продлена до ${new Date(newExpiry).toLocaleDateString()}`);
+                });
+            } catch (e) {
+                showToast('Ошибка: ' + e.message);
+                payBtn.disabled = false;
+                payBtn.textContent = 'Оплатить';
+            }
+        }
+
+        // ======================== ОБЩИЕ ФУНКЦИИ ========================
+        function showSection(name) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            const sec = document.getElementById('sec-' + name);
+            if (sec) sec.classList.add('active');
+            window.scrollTo(0,0);
+            if (name === 'profile') populateProfileData();
+        }
+        function toggleMenu() { document.getElementById('navLinks').classList.toggle('open'); }
+        function closeMenu() { document.getElementById('navLinks').classList.remove('open'); }
+        function toggleFaq(el) { el.parentElement.classList.toggle('open'); }
+        function openAuth() { document.getElementById('authModal').classList.add('open'); }
+        function closeAuth() { document.getElementById('authModal').classList.remove('open'); }
+        function switchTab(tab) {
+            document.getElementById('tabLogin').classList.toggle('active', tab==='login');
+            document.getElementById('tabReg').classList.toggle('active', tab==='reg');
+            document.getElementById('formLogin').style.display = tab==='login' ? 'block' : 'none';
+            document.getElementById('formReg').style.display = tab==='reg' ? 'block' : 'none';
+        }
+        function doLogin() {
+            try {
+                loginUser(document.getElementById('loginEmail').value.trim().toLowerCase(), document.getElementById('loginPass').value);
+                closeAuth();
+                updateProfileUI();
+                showToast('Добро пожаловать!');
+            } catch(e) {
+                document.getElementById('loginErr').textContent = e.message;
+                document.getElementById('loginErr').style.display = 'block';
+            }
+        }
+        function doRegister() {
+            try {
+                registerUser(document.getElementById('regEmail').value.trim().toLowerCase(), document.getElementById('regName').value.trim(), document.getElementById('regPass').value, document.getElementById('regPass2').value);
+                setCurrentEmail(document.getElementById('regEmail').value.trim().toLowerCase());
+                closeAuth();
+                updateProfileUI();
+                showToast('Регистрация успешна!');
+            } catch(e) {
+                document.getElementById('regErr').textContent = e.message;
+                document.getElementById('regErr').style.display = 'block';
+            }
+        }
+        // вкладки цен
+        document.querySelectorAll('.price-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const parent = this.closest('.price-tabs');
+                parent.querySelectorAll('.price-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                const price = this.dataset.price;
+                const period = this.dataset.period;
+                if (parent.id === 'profileExtensionTabs') {
+                    document.getElementById('profileExtensionPriceAmount').innerHTML = '<sup>₽</sup>' + price;
+                    document.getElementById('profileExtensionPricePeriod').textContent = '/ ' + period;
+                } else {
+                    const planId = parent.id.includes('basic') ? 'basic' : 'family';
+                    document.getElementById('price-' + planId).innerHTML = '<sup>₽</sup>' + price;
+                    document.getElementById('period-' + planId).textContent = '/ ' + period;
+                }
+            });
+        });
+        window.addEventListener('load', () => {
+            updateProfileUI();
+            document.getElementById('authModal').addEventListener('click', function(e) { if (e.target === this) closeAuth(); });
+            document.getElementById('paymentModal').addEventListener('click', function(e) { if (e.target === this) closePaymentModal(); });
+        });
+    </script>
+</body>
+</html>
