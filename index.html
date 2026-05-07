@@ -499,7 +499,7 @@
             payBtn.disabled = true;
             payBtn.textContent = 'Создание платежа...';
             try {
-                const res = await fetch('/create-payment', {
+                const res = await fetch('https://lamsvpn.vercel.app/create-payment', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
