@@ -7,7 +7,6 @@ const secretKey = process.env.SECRET_KEY;
 const yooKassa = new YooKassa({ shopId, secretKey });
 
 export default async function handler(req, res) {
-  // Разрешаем только POST-запросы
   if (req.method === 'POST') {
     try {
       const { amount, currency, description, metadata } = req.body;
@@ -23,14 +22,12 @@ export default async function handler(req, res) {
         description: description,
         metadata: metadata,
       });
-      // Возвращаем confirmation_token
       res.status(200).json({ confirmation_token: payment.confirmation.confirmation_token });
     } catch (error) {
       console.error('Ошибка создания платежа:', error);
       res.status(500).json({ error: 'Не удалось создать платёж' });
     }
   } else {
-    // Все остальные методы запрещены
     res.status(405).json({ error: 'Метод не поддерживается' });
   }
 }
