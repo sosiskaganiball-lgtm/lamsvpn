@@ -12,21 +12,20 @@
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: #0a0a0a; }
         ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 2px; }
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
         .tag { display: inline-block; font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #c8ff00; border: 1px solid #c8ff00; padding: 4px 10px; border-radius: 2px; margin-bottom: 16px; }
         h1, h2, h3 { font-family: 'Syne', sans-serif; }
         nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,10,10,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid #222; height: 60px; display: flex; align-items: center; }
-        nav .inner { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+        nav .inner { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 16px; }
         .logo { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 8px; cursor: pointer; }
         .logo span { color: #c8ff00; }
         .logo-dot { width: 8px; height: 8px; background: #c8ff00; border-radius: 50%; display: inline-block; }
         nav ul { list-style: none; display: flex; gap: 4px; }
-        nav ul a { display: block; padding: 6px 14px; color: #666; text-decoration: none; font-size: 14px; border-radius: 6px; transition: all 0.2s; }
+        nav ul a { display: block; padding: 6px 10px; color: #666; text-decoration: none; font-size: 13px; border-radius: 6px; transition: 0.2s; }
         nav ul a:hover { color: #e8e8e8; background: #181818; }
-        .nav-cta { background: #c8ff00 !important; color: #000 !important; font-weight: 600 !important; padding: 6px 18px !important; border-radius: 6px !important; }
-        .nav-cta:hover { background: #a8d900 !important; }
+        .nav-cta { background: #c8ff00 !important; color: #000 !important; font-weight: 600 !important; padding: 6px 14px !important; }
         .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
-        .hamburger span { width: 22px; height: 2px; background: #e8e8e8; display: block; transition: all 0.3s; }
+        .hamburger span { width: 22px; height: 2px; background: #e8e8e8; display: block; transition: 0.3s; }
         .section { display: none; padding-top: 60px; min-height: 100vh; }
         .section.active { display: block; }
         .hero { min-height: 100vh; display: flex; align-items: center; padding: 80px 0 60px; position: relative; overflow: hidden; }
@@ -40,7 +39,7 @@
         .hero h1 em { font-style: normal; color: #c8ff00; }
         .hero p { font-size: 16px; color: #666; margin-bottom: 36px; max-width: 420px; line-height: 1.7; }
         .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
-        .btn-primary, .btn-ghost, .btn-plan, .btn-submit, .btn-copy { padding: 13px 28px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; text-decoration: none; display: inline-block; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+        .btn-primary, .btn-ghost, .btn-plan, .btn-submit, .btn-copy { padding: 12px 24px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; text-decoration: none; display: inline-block; transition: 0.2s; font-family: 'DM Sans', sans-serif; }
         .btn-primary { background: #c8ff00; color: #000; }
         .btn-primary:hover { background: #a8d900; transform: translateY(-1px); }
         .btn-ghost { background: transparent; color: #e8e8e8; border: 1px solid #2a2a2a; }
@@ -69,7 +68,7 @@
         .plan-name { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #666; margin-bottom: 8px; }
         .plan-title { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 24px; }
         .price-tabs { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
-        .price-tab { padding: 7px 14px; border-radius: 6px; font-size: 13px; border: 1px solid #2a2a2a; background: #181818; color: #666; cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+        .price-tab { padding: 7px 14px; border-radius: 6px; font-size: 13px; border: 1px solid #2a2a2a; background: #181818; color: #666; cursor: pointer; transition: 0.2s; font-family: 'DM Sans', sans-serif; }
         .price-tab:hover { border-color: #666; color: #e8e8e8; }
         .price-tab.active { border-color: #c8ff00; color: #c8ff00; background: rgba(200,255,0,0.06); }
         .price-display { margin-bottom: 24px; }
@@ -110,7 +109,7 @@
         .support-center h2 { font-size: 36px; font-weight: 800; color: #fff; }
         .support-center p { color: #666; max-width: 400px; font-size: 15px; line-height: 1.7; }
         .support-links { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 360px; }
-        .support-link { display: flex; align-items: center; gap: 14px; padding: 16px 22px; background: #111; border: 1px solid #222; border-radius: 10px; text-decoration: none; color: #e8e8e8; transition: all 0.2s; }
+        .support-link { display: flex; align-items: center; gap: 14px; padding: 16px 22px; background: #111; border: 1px solid #222; border-radius: 10px; text-decoration: none; color: #e8e8e8; transition: 0.2s; }
         .support-link:hover { border-color: #2a2a2a; background: #181818; }
         .support-link-icon { font-size: 22px; }
         .support-link-text { text-align: left; }
@@ -135,7 +134,7 @@
         .step-content p { font-size: 13px; color: #666; line-height: 1.6; }
         .step-content a { color: #c8ff00; text-decoration: none; }
         .apps-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
-        .app-link { display: flex; align-items: center; gap: 6px; padding: 8px 14px; background: #222; border: 1px solid #2a2a2a; border-radius: 6px; text-decoration: none; color: #e8e8e8; font-size: 12px; transition: all 0.2s; }
+        .app-link { display: flex; align-items: center; gap: 6px; padding: 8px 14px; background: #222; border: 1px solid #2a2a2a; border-radius: 6px; text-decoration: none; color: #e8e8e8; font-size: 12px; transition: 0.2s; }
         .app-link:hover { border-color: #666; }
         .streisand-detail { background: #111; border-left: 4px solid #c8ff00; border-radius: 6px; padding: 14px; margin-top: 10px; }
         .streisand-detail ol { list-style-position: inside; color: #aaa; font-size: 13px; line-height: 1.8; }
@@ -154,33 +153,32 @@
         .footer-links { display: flex; gap: 20px; }
         .footer-links a { font-size: 13px; color: #666; text-decoration: none; }
         .footer-links a:hover { color: #e8e8e8; }
-        .modal-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; padding: 20px; }
+        .modal-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; padding: 16px; }
         .modal-overlay.open { display: flex; }
-        .modal { background: #111; border: 1px solid #2a2a2a; border-radius: 16px; width: 100%; max-width: 400px; padding: 36px; position: relative; animation: slideUp 0.3s ease; }
+        .modal { background: #111; border: 1px solid #2a2a2a; border-radius: 16px; width: 100%; max-width: 420px; padding: 28px 24px; position: relative; animation: slideUp 0.3s ease; max-height: 90vh; overflow-y: auto; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .modal-close { position: absolute; top: 16px; right: 16px; background: #181818; border: 1px solid #222; color: #666; width: 30px; height: 30px; border-radius: 6px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .modal-close { position: absolute; top: 12px; right: 12px; background: #181818; border: 1px solid #222; color: #666; width: 30px; height: 30px; border-radius: 6px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
         .modal-close:hover { color: #e8e8e8; }
-        .modal h3 { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 6px; }
-        .modal p { color: #666; font-size: 13px; margin-bottom: 24px; }
+        .modal h3 { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+        .modal p { color: #666; font-size: 13px; margin-bottom: 20px; }
         .modal-tabs { display: flex; gap: 4px; margin-bottom: 24px; background: #181818; padding: 4px; border-radius: 8px; }
-        .modal-tab { flex: 1; padding: 8px; border-radius: 6px; background: none; border: none; color: #666; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+        .modal-tab { flex: 1; padding: 8px; border-radius: 6px; background: none; border: none; color: #666; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.2s; font-family: 'DM Sans', sans-serif; }
         .modal-tab.active { background: #111; color: #e8e8e8; }
         .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
         .form-group label { font-size: 12px; color: #666; letter-spacing: 0.5px; }
         .form-group input { padding: 12px 14px; background: #181818; border: 1px solid #2a2a2a; border-radius: 8px; color: #e8e8e8; font-size: 14px; font-family: 'DM Sans', sans-serif; transition: border-color 0.2s; outline: none; }
         .form-group input:focus { border-color: #c8ff00; }
         .form-group input::placeholder { color: #444; }
-        .btn-submit { width: 100%; padding: 13px; background: #c8ff00; color: #000; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; margin-top: 6px; transition: all 0.2s; }
+        .btn-submit { width: 100%; padding: 13px; background: #c8ff00; color: #000; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; margin-top: 6px; transition: 0.2s; }
         .btn-submit:hover { background: #a8d900; }
         .form-error { color: #ff6b6b; font-size: 12px; margin-top: 8px; display: none; }
         .payment-summary { background: #181818; border-radius: 12px; padding: 16px; margin-bottom: 20px; text-align: center; }
         .payment-summary .sum { font-size: 28px; font-weight: 800; color: #c8ff00; }
         .test-payment-note { font-size: 11px; text-align: center; margin-top: 12px; color: #666; }
         .subscription-badge { display: inline-block; background: #c8ff00; color: #000; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-left: 12px; }
-        .profile-btn { display: flex; align-items: center; gap: 8px; padding: 6px 14px; background: #181818; border: 1px solid #2a2a2a; border-radius: 6px; color: #e8e8e8; cursor: pointer; font-size: 13px; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+        .profile-btn { display: flex; align-items: center; gap: 8px; padding: 6px 14px; background: #181818; border: 1px solid #2a2a2a; border-radius: 6px; color: #e8e8e8; cursor: pointer; font-size: 13px; font-family: 'DM Sans', sans-serif; transition: 0.2s; }
         .profile-btn:hover { border-color: #666; }
-        .profile-avatar { width: 22px; height: 22px; border-radius: 50%; background: #c8ff00; color: #000; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
-        #closeAfterSuccess { display: none; margin: 0 auto; background: #1a1a1a; color: #fff; border: 1px solid #444; padding: 12px 40px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        #closeAfterSuccess { display: none; margin: 0 auto; background: #1a1a1a; color: #fff; border: 1px solid #444; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s; }
         #closeAfterSuccess:hover { background: #333; border-color: #666; }
         #paymentStatus .success-icon { font-size: 48px; color: #4ade80; display: block; margin-bottom: 12px; animation: scaleIn 0.4s ease; }
         @keyframes scaleIn { 0% { transform: scale(0); opacity: 0; } 80% { transform: scale(1.2); } 100% { transform: scale(1); opacity: 1; } }
@@ -188,22 +186,42 @@
         #paymentStatus .success-sub { font-size: 14px; color: #aaa; max-width: 280px; margin: 0 auto; line-height: 1.4; }
 
         /* Админ-панель */
-        .admin-modal { max-width: 600px; max-height: 80vh; overflow-y: auto; }
-        .admin-user-row { background: #181818; border: 1px solid #2a2a2a; border-radius: 10px; padding: 16px; margin-bottom: 10px; font-size: 13px; }
+        .admin-modal { max-width: 640px; }
+        .admin-user-row { background: #181818; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px; margin-bottom: 8px; font-size: 13px; }
         .admin-user-row strong { color: #c8ff00; }
-        .admin-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+        .admin-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
         .admin-actions input { padding: 6px 10px; background: #111; border: 1px solid #333; color: #e8e8e8; border-radius: 6px; font-size: 12px; width: 100px; }
-        .admin-actions button { padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid #444; background: #1e1e1e; color: #e8e8e8; transition: all 0.2s; }
+        .admin-actions button { padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid #444; background: #1e1e1e; color: #e8e8e8; transition: 0.2s; }
         .admin-actions button:hover { background: #2a2a2a; }
         .admin-actions button.danger { border-color: #ff4444; color: #ff4444; }
         .admin-actions button.danger:hover { background: #331111; }
+
+        @media (max-width: 768px) {
+            nav ul { display: none; }
+            nav ul.open { display: flex; flex-direction: column; position: fixed; top: 60px; left: 0; right: 0; background: #111; border-bottom: 1px solid #222; padding: 12px 16px; gap: 2px; }
+            .hamburger { display: flex; }
+            .hero-grid { grid-template-columns: 1fr; gap: 32px; }
+            .tariffs-grid, .servers-grid { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 32px; }
+            .profile-page { padding: 40px 16px; }
+            .profile-details, .profile-extension, .profile-config-box, .profile-instructions { padding: 20px 16px; }
+            .instr-step { padding: 16px; }
+            .modal { max-width: 95%; padding: 20px; }
+            .admin-modal { max-width: 100%; }
+            .admin-actions { flex-direction: column; }
+            .admin-actions input { width: 100%; }
+            .price-tab { font-size: 12px; padding: 6px 10px; }
+            .price-amount { font-size: 32px; }
+            .btn-primary, .btn-ghost, .btn-plan { padding: 12px 16px; font-size: 13px; }
+            .logo { font-size: 18px; }
+        }
     </style>
 </head>
 <body>
     <div id="toast-container"></div>
     <nav>
         <div class="inner">
-            <a class="logo" id="adminTrigger" title="Тройной клик — админ-панель"><div class="logo-dot"></div>Lams<span>VPN</span></a>
+            <a class="logo" id="adminTrigger"><div class="logo-dot"></div>Lams<span>VPN</span></a>
             <ul id="navLinks">
                 <li><a href="#" onclick="showSection('home'); closeMenu()">Главная</a></li>
                 <li><a href="#" onclick="showSection('tariffs'); closeMenu()">Тарифы</a></li>
@@ -214,7 +232,7 @@
             </ul>
             <div id="profileBtnWrap" style="display:none;">
                 <button class="profile-btn" onclick="showSection('profile')">
-                    <div class="profile-avatar" id="profileAvatar">А</div>
+                    <div class="profile-avatar" id="profileAvatar">A</div>
                     <span id="profileName">Аккаунт</span>
                 </button>
             </div>
@@ -224,12 +242,35 @@
 
     <!-- HOME -->
     <div id="sec-home" class="section active">
-        <div class="hero"><div class="container"><div class="hero-grid"><div><div class="hero-label"><div class="dot"></div><span>Работает прямо сейчас</span></div><h1>Интернет без<br><em>ограничений</em></h1><p>LamsVPN — быстрый и стабильный доступ к любому контенту. Обход блокировок, защита данных, никаких логов.</p><div class="hero-btns"><button class="btn-primary" onclick="showSection('tariffs')">Выбрать тариф</button><button class="btn-ghost" onclick="showSection('servers')">Серверы →</button></div></div><div><div class="hero-card"><div class="stat-row"><div class="stat"><span class="stat-num">4<span>+</span></span><span class="stat-label">Локации</span></div><div class="stat-divider"></div><div class="stat"><span class="stat-num">99<span>%</span></span><span class="stat-label">Аптайм</span></div><div class="stat-divider"></div><div class="stat"><span class="stat-num">0</span><span class="stat-label">Логов</span></div></div><div class="feature-list"><div class="feature-item"><span class="feature-icon">⚡</span>Протокол VLESS — скорость без компромиссов</div><div class="feature-item"><span class="feature-icon">🛡️</span>Обход белых списков РКН</div><div class="feature-item"><span class="feature-icon">📱</span>Работает на всех устройствах</div><div class="feature-item"><span class="feature-icon">🔒</span>Полная конфиденциальность</div></div><div class="server-pills">
+        <div class="hero"><div class="container"><div class="hero-grid"><div>
+            <div class="hero-label"><div class="dot"></div><span>Работает прямо сейчас</span></div>
+            <h1>Интернет без<br><em>ограничений</em></h1>
+            <p>LamsVPN — быстрый и стабильный доступ к любому контенту. Обход блокировок, защита данных, никаких логов.</p>
+            <div class="hero-btns">
+                <button class="btn-primary" onclick="showSection('tariffs')">Выбрать тариф</button>
+                <button class="btn-ghost" onclick="showSection('servers')">Серверы →</button>
+            </div>
+        </div><div><div class="hero-card">
+            <div class="stat-row">
+                <div class="stat"><span class="stat-num">4<span>+</span></span><span class="stat-label">Локации</span></div>
+                <div class="stat-divider"></div>
+                <div class="stat"><span class="stat-num">99<span>%</span></span><span class="stat-label">Аптайм</span></div>
+                <div class="stat-divider"></div>
+                <div class="stat"><span class="stat-num">0</span><span class="stat-label">Логов</span></div>
+            </div>
+            <div class="feature-list">
+                <div class="feature-item"><span class="feature-icon">⚡</span>Протокол VLESS — скорость без компромиссов</div>
+                <div class="feature-item"><span class="feature-icon">🛡️</span>Обход белых списков РКН</div>
+                <div class="feature-item"><span class="feature-icon">📱</span>Работает на всех устройствах</div>
+                <div class="feature-item"><span class="feature-icon">🔒</span>Полная конфиденциальность</div>
+            </div>
+            <div class="server-pills">
                 <span class="server-pill">🇫🇷 Франция</span>
                 <span class="server-pill">🇺🇸 Шарлотт</span>
                 <span class="server-pill">🇸🇪 Стокгольм</span>
                 <span class="server-pill">🇳🇱 Нидерланды</span>
-            </div></div></div></div></div></div>
+            </div>
+        </div></div></div></div></div>
     </div>
 
     <!-- TARIFFS -->
@@ -396,204 +437,223 @@
     </div>
 
     <!-- АДМИН-ПАНЕЛЬ -->
+    <div class="modal-overlay" id="adminPasswordModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeAdminPassword()">✕</button>
+            <h3>🔐 Вход в админ-панель</h3>
+            <div class="form-group"><label>Пароль</label><input type="password" id="adminPasswordInput" placeholder="Введите пароль"></div>
+            <div class="form-error" id="adminPasswordError">Неверный пароль</div>
+            <button class="btn-submit" onclick="checkAdminPassword()">Войти</button>
+        </div>
+    </div>
     <div class="modal-overlay" id="adminModal">
         <div class="modal admin-modal">
             <button class="modal-close" onclick="closeAdmin()">✕</button>
             <h3>🛡️ Админ-панель</h3>
             <div class="form-group" style="margin-bottom:16px;">
-                <label>ПОИСК ПО ID</label>
-                <input type="text" id="adminSearchInput" placeholder="Введите ID пользователя" oninput="searchUser()">
+                <label>ПОИСК ПО ID / EMAIL</label>
+                <input type="text" id="adminSearchInput" placeholder="Введите ID или email" oninput="searchUser()">
             </div>
             <div id="adminUserList" style="max-height: 50vh; overflow-y: auto;"></div>
-            <button class="btn-ghost" onclick="showAllUsers()" style="margin-top:12px;">Показать всех пользователей</button>
-        </div>
-    </div>
-
-    <!-- Модалка ввода пароля -->
-    <div class="modal-overlay" id="adminPasswordModal">
-        <div class="modal">
-            <button class="modal-close" onclick="closeAdminPassword()">✕</button>
-            <h3>🔐 Вход в админ-панель</h3>
-            <div class="form-group">
-                <label>Пароль</label>
-                <input type="password" id="adminPasswordInput" placeholder="Введите пароль">
-            </div>
-            <div class="form-error" id="adminPasswordError">Неверный пароль</div>
-            <button class="btn-submit" onclick="checkAdminPassword()">Войти</button>
+            <button class="btn-ghost" onclick="loadAdminUsers()" style="margin-top:12px;">Показать всех пользователей</button>
         </div>
     </div>
 
     <script>
-        // ======================== TOAST SYSTEM ========================
-        function showToast(message) {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.textContent = message;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3500);
-        }
+        // ====================== API HELPER ======================
+        const toast = (msg) => {
+            const c = document.getElementById('toast-container');
+            const t = document.createElement('div');
+            t.className = 'toast';
+            t.textContent = msg;
+            c.appendChild(t);
+            setTimeout(() => t.remove(), 3500);
+        };
 
-        // ======================== AUTH & STORAGE ========================
-        function hashPass(pass) { return btoa(pass + "lams-salt"); }
-        function getUsers() { return JSON.parse(localStorage.getItem('lvpn_users') || '{}'); }
-        function saveUsers(users) { localStorage.setItem('lvpn_users', JSON.stringify(users)); }
-        function getCurrentEmail() { return localStorage.getItem('lvpn_current'); }
-        function setCurrentEmail(email) { localStorage.setItem('lvpn_current', email); }
+        const api = async (url, method = 'GET', body = null) => {
+            const opts = { method, headers: { 'Content-Type': 'application/json' } };
+            if (body) opts.body = JSON.stringify(body);
+            const res = await fetch(url, opts);
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Ошибка сервера');
+            return data;
+        };
 
-        function getCurrentUser() {
-            const email = getCurrentEmail();
+        // ====================== AUTH & USER ======================
+        let currentUser = null;
+        const getEmail = () => localStorage.getItem('lvpn_email');
+        const setEmail = (e) => localStorage.setItem('lvpn_email', e);
+
+        async function fetchUser() {
+            const email = getEmail();
             if (!email) return null;
-            const users = getUsers();
-            return users[email] ? { ...users[email], email } : null;
+            try { return await api(`/api/user?email=${encodeURIComponent(email)}`); }
+            catch { return null; }
         }
 
-        function saveCurrentUser(userData) {
-            const email = getCurrentEmail();
-            if (!email) return;
-            const users = getUsers();
-            users[email] = userData;
-            saveUsers(users);
+        async function register(email, name, pass) {
+            await api('/api/register', 'POST', { email, name, password: pass });
         }
 
-        function generateUid() {
-            return 'user_' + Math.random().toString(36).substr(2, 12);
+        async function login(email, pass) {
+            await api('/api/login', 'POST', { email, password: pass });
         }
 
-        function generateConfigString(uid) {
-            const serverPart = Math.random().toString(36).substr(2, 4);
-            return `vless://${uid}@lamsvpn.net:443?encryption=none&security=reality&sni=www.google.com&fp=chrome&pbk=LamsVPN-PublicKey-Replace-Me&flow=xtls-rprx-vision&type=tcp#LamsVPN-Moscow-${serverPart}`;
+        async function extendSubscription(days) {
+            const email = getEmail();
+            if (!email) throw new Error('Не авторизован');
+            return await api('/api/user', 'PUT', { email, action: 'extend', days });
         }
 
-        function registerUser(email, name, pass, pass2) {
-            if (pass !== pass2) throw new Error('Пароли не совпадают');
-            if (pass.length < 6) throw new Error('Пароль должен быть минимум 6 символов');
-            const users = getUsers();
-            if (users[email]) throw new Error('Пользователь с таким email уже существует');
-            const uid = generateUid();
-            users[email] = { name, passHash: hashPass(pass), uid, config: null, expiry: null };
-            saveUsers(users);
-            return users[email];
-        }
-
-        function loginUser(email, pass) {
-            const users = getUsers();
-            const user = users[email];
-            if (!user || user.passHash !== hashPass(pass)) throw new Error('Неверный email или пароль');
-            setCurrentEmail(email);
-            return user;
-        }
-
-        function extendSubscription(days) {
-            const user = getCurrentUser();
-            if (!user) throw new Error('Не авторизован');
-            const now = Date.now();
-            let currentExpiry = user.expiry ? Number(user.expiry) : 0;
-            let newExpiry = Math.max(now, currentExpiry) + days * 86400000;
-            user.expiry = newExpiry;
-            if (!user.config) {
-                user.config = generateConfigString(user.uid);
-            }
-            saveCurrentUser(user);
-            return newExpiry;
+        async function getMarzbanConfig() {
+            const email = getEmail();
+            const res = await api('/api/marzban', 'POST', { email, action: 'create' });
+            return res.config;
         }
 
         function isSubscriptionActive() {
-            const user = getCurrentUser();
-            return user && user.expiry && user.expiry > Date.now();
+            return currentUser && currentUser.expiry && currentUser.expiry > Date.now();
         }
 
         function updateProfileUI() {
-            const user = getCurrentUser();
-            const navLoginBtn = document.querySelector('.nav-cta');
-            const profileWrap = document.getElementById('profileBtnWrap');
-            if (user) {
-                profileWrap.style.display = 'block';
-                if (navLoginBtn) navLoginBtn.style.display = 'none';
-                const nameElem = document.getElementById('profileName');
-                if (isSubscriptionActive()) {
-                    const expiryDate = new Date(user.expiry).toLocaleDateString();
-                    nameElem.innerHTML = user.name + ` <span class="subscription-badge"> до ${expiryDate}</span>`;
-                } else {
-                    nameElem.innerHTML = user.name;
+            if (!currentUser) {
+                document.getElementById('profileBtnWrap').style.display = 'none';
+                document.querySelector('.nav-cta').style.display = 'block';
+                if (document.getElementById('sec-profile').classList.contains('active')) {
+                    populateProfileData();
                 }
-                document.getElementById('profileAvatar').textContent = user.name[0].toUpperCase();
-            } else {
-                profileWrap.style.display = 'none';
-                if (navLoginBtn) navLoginBtn.style.display = 'block';
+                return;
             }
+            document.getElementById('profileBtnWrap').style.display = 'block';
+            document.querySelector('.nav-cta').style.display = 'none';
+            const nameElem = document.getElementById('profileName');
+            if (isSubscriptionActive()) {
+                nameElem.innerHTML = currentUser.name + ` <span class="subscription-badge"> до ${new Date(currentUser.expiry).toLocaleDateString()}</span>`;
+            } else {
+                nameElem.innerHTML = currentUser.name;
+            }
+            document.getElementById('profileAvatar').textContent = currentUser.name[0].toUpperCase();
             if (document.getElementById('sec-profile').classList.contains('active')) {
                 populateProfileData();
             }
         }
 
         function populateProfileData() {
-            const user = getCurrentUser();
-            if (!user) return;
-            document.getElementById('profileFullName').textContent = user.name;
-            document.getElementById('profileEmailDisplay').textContent = user.email;
-            document.getElementById('profileAvatarBig').textContent = user.name[0].toUpperCase();
-            document.getElementById('profileUid').textContent = user.uid;
-            
-            const extensionBlock = document.getElementById('profileExtensionBlock');
+            if (!currentUser) return;
+            document.getElementById('profileFullName').textContent = currentUser.name;
+            document.getElementById('profileEmailDisplay').textContent = getEmail();
+            document.getElementById('profileAvatarBig').textContent = currentUser.name[0].toUpperCase();
+            document.getElementById('profileUid').textContent = currentUser.uid;
+            const box = document.getElementById('profileConfigBox');
+            const extBlock = document.getElementById('profileExtensionBlock');
             if (isSubscriptionActive()) {
                 document.getElementById('profileSubStatus').textContent = 'Активна';
-                document.getElementById('profileExpiryDate').textContent = new Date(user.expiry).toLocaleDateString();
-                document.getElementById('profileConfigBox').classList.add('active');
-                document.getElementById('profileConfigString').textContent = user.config;
-                extensionBlock.style.display = 'block';
+                document.getElementById('profileExpiryDate').textContent = new Date(currentUser.expiry).toLocaleDateString();
+                box.classList.add('active');
+                document.getElementById('profileConfigString').textContent = currentUser.config || 'Ключ не сгенерирован. Нажмите «Сгенерировать новый».';
+                extBlock.style.display = 'block';
             } else {
                 document.getElementById('profileSubStatus').textContent = 'Неактивна';
                 document.getElementById('profileExpiryDate').textContent = '—';
-                document.getElementById('profileConfigBox').classList.remove('active');
-                extensionBlock.style.display = 'none';
+                box.classList.remove('active');
+                extBlock.style.display = 'none';
             }
         }
 
-        function regenerateConfig() {
-            if (!confirm('Старый ключ перестанет работать. Сгенерировать новый?')) return;
-            const user = getCurrentUser();
-            if (!user || !isSubscriptionActive()) { showToast('Нет активной подписки'); return; }
-            user.config = generateConfigString(user.uid);
-            saveCurrentUser(user);
-            document.getElementById('profileConfigString').textContent = user.config;
-            showToast('Новый ключ сгенерирован');
-        }
-
-        function copyProfileConfig() {
-            const txt = document.getElementById('profileConfigString').textContent;
-            if (!txt) return;
-            navigator.clipboard.writeText(txt).then(() => showToast('Ключ скопирован в буфер обмена'));
-        }
-
         function logout() {
-            localStorage.removeItem('lvpn_current');
+            localStorage.removeItem('lvpn_email');
+            currentUser = null;
             updateProfileUI();
             showSection('home');
         }
 
-        // ======================== PAYMENT ========================
-        const API_BASE = 'https://lamsvpn.vercel.app';
-        let pendingPurchase = null;
+        async function regenerateConfig() {
+            if (!confirm('Старый ключ перестанет работать. Сгенерировать новый?')) return;
+            try {
+                currentUser.config = await getMarzbanConfig();
+                updateProfileUI();
+                toast('Новый ключ сгенерирован');
+            } catch (e) { toast(e.message); }
+        }
 
-        function initiatePurchase(btn) {
-            if (!getCurrentUser()) {
-                openAuth();
-                showToast('Для покупки необходимо войти в аккаунт');
-                return;
+        function copyProfileConfig() {
+            const txt = document.getElementById('profileConfigString').textContent;
+            if (!txt || txt.includes('не сгенерирован')) return toast('Сначала сгенерируйте ключ');
+            navigator.clipboard.writeText(txt).then(() => toast('Ключ скопирован'));
+        }
+
+        // ====================== UI ======================
+        function showSection(name) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById('sec-' + name).classList.add('active');
+            window.scrollTo(0,0);
+            if (name === 'profile') populateProfileData();
+        }
+        function toggleMenu() { document.getElementById('navLinks').classList.toggle('open'); }
+        function closeMenu() { document.getElementById('navLinks').classList.remove('open'); }
+        function toggleFaq(el) { el.parentElement.classList.toggle('open'); }
+
+        function openAuth() { document.getElementById('authModal').classList.add('open'); }
+        function closeAuth() { document.getElementById('authModal').classList.remove('open'); }
+        function switchTab(tab) {
+            document.getElementById('tabLogin').classList.toggle('active', tab==='login');
+            document.getElementById('tabReg').classList.toggle('active', tab==='reg');
+            document.getElementById('formLogin').style.display = tab==='login'?'block':'none';
+            document.getElementById('formReg').style.display = tab==='reg'?'block':'none';
+        }
+
+        async function doLogin() {
+            const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+            const pass = document.getElementById('loginPass').value;
+            try {
+                await login(email, pass);
+                setEmail(email);
+                currentUser = await fetchUser();
+                closeAuth();
+                updateProfileUI();
+                toast('Добро пожаловать!');
+            } catch (e) {
+                document.getElementById('loginErr').textContent = e.message;
+                document.getElementById('loginErr').style.display = 'block';
             }
+        }
+
+        async function doRegister() {
+            const email = document.getElementById('regEmail').value.trim().toLowerCase();
+            const name = document.getElementById('regName').value.trim();
+            const pass = document.getElementById('regPass').value;
+            const pass2 = document.getElementById('regPass2').value;
+            try {
+                if (pass !== pass2) throw new Error('Пароли не совпадают');
+                if (pass.length < 6) throw new Error('Минимум 6 символов');
+                await register(email, name, pass);
+                setEmail(email);
+                currentUser = await fetchUser();
+                closeAuth();
+                updateProfileUI();
+                toast('Регистрация успешна!');
+            } catch (e) {
+                document.getElementById('regErr').textContent = e.message;
+                document.getElementById('regErr').style.display = 'block';
+            }
+        }
+
+        // ====================== PAYMENT ======================
+        let pendingPurchase = null;
+        function initiatePurchase(btn) {
+            if (!currentUser) { openAuth(); toast('Сначала войдите'); return; }
             const card = btn.closest('.plan-card');
             const activeTab = card.querySelector('.price-tab.active');
             if (!activeTab) return;
-            const plan = btn.getAttribute('data-plan');
-            const price = parseInt(activeTab.getAttribute('data-price'));
-            const period = activeTab.getAttribute('data-period');
-            const days = parseInt(activeTab.getAttribute('data-days'));
+            const plan = btn.dataset.plan;
+            const price = parseInt(activeTab.dataset.price);
+            const period = activeTab.dataset.period;
+            const days = parseInt(activeTab.dataset.days);
             const planName = plan === 'basic' ? 'Базовый' : 'Семейный';
             pendingPurchase = { plan, price, days, period, planName };
-            document.getElementById('payPlanName').innerText = planName;
+            document.getElementById('payPlanName').textContent = planName;
             document.getElementById('payAmount').innerHTML = price + ' ₽';
-            document.getElementById('payPeriodDesc').innerText = `срок: ${period}`;
+            document.getElementById('payPeriodDesc').textContent = `срок: ${period}`;
             document.getElementById('yookassa-widget-container').innerHTML = '';
             document.getElementById('payButton').style.display = 'block';
             document.getElementById('paymentStatus').style.display = 'none';
@@ -604,13 +664,13 @@
         function extendSubscriptionFromProfile() {
             const activeTab = document.querySelector('#profileExtensionTabs .price-tab.active');
             if (!activeTab) return;
-            const days = parseInt(activeTab.getAttribute('data-days'));
-            const price = parseInt(activeTab.getAttribute('data-price'));
-            const period = activeTab.getAttribute('data-period');
+            const days = parseInt(activeTab.dataset.days);
+            const price = parseInt(activeTab.dataset.price);
+            const period = activeTab.dataset.period;
             pendingPurchase = { plan: 'extension', price, days, period, planName: 'Продление' };
-            document.getElementById('payPlanName').innerText = 'Продление';
+            document.getElementById('payPlanName').textContent = 'Продление';
             document.getElementById('payAmount').innerHTML = price + ' ₽';
-            document.getElementById('payPeriodDesc').innerText = `срок: ${period}`;
+            document.getElementById('payPeriodDesc').textContent = `срок: ${period}`;
             document.getElementById('yookassa-widget-container').innerHTML = '';
             document.getElementById('payButton').style.display = 'block';
             document.getElementById('paymentStatus').style.display = 'none';
@@ -619,83 +679,61 @@
         }
 
         function openPaymentModal() { document.getElementById('paymentModal').classList.add('open'); }
-        function closePaymentModal() {
-            document.getElementById('paymentModal').classList.remove('open');
-            pendingPurchase = null;
-        }
+        function closePaymentModal() { document.getElementById('paymentModal').classList.remove('open'); pendingPurchase = null; }
 
         async function startPayment() {
             if (!pendingPurchase) return;
             const payBtn = document.getElementById('payButton');
             payBtn.disabled = true;
             payBtn.textContent = 'Создание платежа...';
-
             try {
-                const res = await fetch(`${API_BASE}/api/create-payment`, {
+                const res = await fetch('/api/create-payment', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {'Content-Type':'application/json'},
                     body: JSON.stringify({
                         amount: pendingPurchase.price,
                         currency: 'RUB',
                         description: `${pendingPurchase.planName} на ${pendingPurchase.period}`,
-                        metadata: {
-                            email: getCurrentUser().email,
-                            days: pendingPurchase.days
-                        }
+                        metadata: { email: getEmail(), days: pendingPurchase.days }
                     })
                 });
                 const data = await res.json();
-                if (!data.confirmation_token) {
-                    throw new Error(data.error || 'Не удалось получить токен');
-                }
-
+                if (!data.confirmation_token) throw new Error(data.error || 'Ошибка');
                 payBtn.style.display = 'none';
                 const checkout = new YooMoneyCheckoutWidget({
                     confirmation_token: data.confirmation_token,
                     customization: { colors: { primary: '#c8ff00', background: '#111' } },
                     error_callback: (err) => {
                         console.error(err);
-                        showToast('Ошибка платежа. Попробуйте позже.');
+                        toast('Ошибка платежа');
                         payBtn.style.display = 'block';
                         payBtn.disabled = false;
                         payBtn.textContent = 'Оплатить';
                     }
                 });
-
-                checkout.on('success', () => {
+                checkout.on('success', async () => {
                     try {
                         document.getElementById('yookassa-widget-container').innerHTML = '';
                         document.getElementById('paymentStatus').style.display = 'block';
-                        const newExpiry = extendSubscription(pendingPurchase.days);
+                        await extendSubscription(pendingPurchase.days);
+                        currentUser = await fetchUser();
+                        if (!currentUser.config) {
+                            currentUser.config = await getMarzbanConfig();
+                        }
                         updateProfileUI();
                         document.getElementById('closeAfterSuccess').style.display = 'block';
-                        showToast(`Подписка продлена до ${new Date(newExpiry).toLocaleDateString()}.`);
-                    } catch (e) {
-                        console.error('Ошибка в success callback:', e);
-                        showToast('Ошибка при продлении подписки: ' + e.message);
-                    }
+                    } catch (e) { toast(e.message); }
                 });
-
                 checkout.render('yookassa-widget-container');
-            } catch (e) {
-                showToast('Ошибка: ' + e.message);
-                payBtn.disabled = false;
-                payBtn.textContent = 'Оплатить';
-            }
+            } catch (e) { toast(e.message); payBtn.disabled = false; payBtn.textContent = 'Оплатить'; }
         }
- // ======================== АДМИН-ПАНЕЛЬ ========================
-        
-        const ADMIN_PASSWORD_HASH = 'e4215a91f10a1d962c4f79a540e6e6a1eeab628c2a2812bc9f3702e8015f5ce2';
 
-        let adminClickCount = 0;
-        let adminClickTimer = null;
-
-        document.getElementById('adminTrigger').addEventListener('click', function(e) {
+        // ====================== ADMIN ======================
+        let adminClickCount = 0, adminClickTimer = null;
+        document.getElementById('adminTrigger').addEventListener('click', (e) => {
             e.preventDefault();
             adminClickCount++;
-            if (adminClickCount === 1) {
-                adminClickTimer = setTimeout(() => { adminClickCount = 0; }, 1000);
-            }
+            if (adminClickCount === 1) adminClickTimer = setTimeout(() => adminClickCount=0, 1000);
             if (adminClickCount === 3) {
                 clearTimeout(adminClickTimer);
                 adminClickCount = 0;
@@ -708,181 +746,95 @@
             document.getElementById('adminPasswordInput').value = '';
             document.getElementById('adminPasswordError').style.display = 'none';
         }
-
-        function closeAdminPassword() {
-            document.getElementById('adminPasswordModal').classList.remove('open');
-        }
+        function closeAdminPassword() { document.getElementById('adminPasswordModal').classList.remove('open'); }
 
         async function checkAdminPassword() {
             const input = document.getElementById('adminPasswordInput').value;
-            // Хешируем введённый пароль
             const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input));
             const hashArray = Array.from(new Uint8Array(hashBuffer));
-            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-            if (hashHex === ADMIN_PASSWORD_HASH) {
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2,'0')).join('');
+            try {
+                await api('/api/admin', 'GET', null, { authorization: hashHex });
                 closeAdminPassword();
                 openAdmin();
-            } else {
+                loadAdminUsers();
+            } catch {
                 document.getElementById('adminPasswordError').style.display = 'block';
             }
         }
 
-        function openAdmin() {
-            document.getElementById('adminModal').classList.add('open');
-            showAllUsers();
+        async function apiAdmin(url, method, body) {
+            const input = document.getElementById('adminPasswordInput')?.value || '';
+            const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input));
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2,'0')).join('');
+            return api(url, method, body, { authorization: hashHex });
         }
 
-        function closeAdmin() {
-            document.getElementById('adminModal').classList.remove('open');
+        async function loadAdminUsers() {
+            try {
+                const users = await apiAdmin('/api/admin');
+                renderAdminList(users);
+            } catch (e) { toast(e.message); }
         }
 
-        function showAllUsers() {
-            const users = getUsers();
-            const container = document.getElementById('adminUserList');
-            if (Object.keys(users).length === 0) {
-                container.innerHTML = '<p style="color:#666;">Нет зарегистрированных пользователей.</p>';
-                return;
-            }
-            let html = '';
-            for (const [email, user] of Object.entries(users)) {
-                html += renderUserRow(email, user);
-            }
-            container.innerHTML = html;
-        }
-
-        function searchUser() {
+        async function searchUser() {
             const query = document.getElementById('adminSearchInput').value.trim();
-            const users = getUsers();
-            const container = document.getElementById('adminUserList');
-            if (!query) {
-                showAllUsers();
-                return;
-            }
-            const found = Object.entries(users).find(([email, user]) => 
-                user.uid === query || email.toLowerCase().includes(query.toLowerCase()) || user.name.toLowerCase().includes(query.toLowerCase())
-            );
-            if (found) {
-                container.innerHTML = renderUserRow(found[0], found[1]);
-            } else {
-                container.innerHTML = '<p style="color:#666;">Пользователь не найден.</p>';
-            }
+            if (!query) return loadAdminUsers();
+            try {
+                const users = await apiAdmin('/api/admin');
+                const found = users.filter(u => u.uid === query || u.email.includes(query) || u.name.includes(query));
+                renderAdminList(found);
+            } catch (e) { toast(e.message); }
         }
 
-        function renderUserRow(email, user) {
-            const expiry = user.expiry ? new Date(user.expiry).toLocaleDateString() : '—';
-            const status = (user.expiry && user.expiry > Date.now()) ? 'Активна' : 'Неактивна';
-            return `
+        function renderAdminList(users) {
+            const container = document.getElementById('adminUserList');
+            if (!users.length) { container.innerHTML = '<p style="color:#666;">Пользователи не найдены.</p>'; return; }
+            container.innerHTML = users.map(u => `
                 <div class="admin-user-row">
-                    <div><strong>Имя:</strong> ${user.name}</div>
-                    <div><strong>Email:</strong> ${email}</div>
-                    <div><strong>UID:</strong> ${user.uid}</div>
-                    <div><strong>Подписка до:</strong> ${expiry} (${status})</div>
+                    <div><strong>Имя:</strong> ${u.name}</div>
+                    <div><strong>Email:</strong> ${u.email}</div>
+                    <div><strong>UID:</strong> ${u.uid}</div>
+                    <div><strong>Подписка до:</strong> ${u.expiry ? new Date(u.expiry).toLocaleDateString() : '—'} (${u.expiry && u.expiry > Date.now() ? 'Активна' : 'Неактивна'})</div>
                     <div class="admin-actions">
-                        <input type="date" id="date-${user.uid}" value="${user.expiry ? new Date(user.expiry).toISOString().split('T')[0] : ''}">
-                        <button onclick="setSubscription('${email}', document.getElementById('date-${user.uid}').value)">Установить дату</button>
-                        <input type="number" id="days-${user.uid}" placeholder="Дни" style="width:60px;">
-                        <button onclick="addDays('${email}', parseInt(document.getElementById('days-${user.uid}').value))">Добавить дни</button>
-                        <button class="danger" onclick="deleteUser('${email}')">Удалить</button>
+                        <input type="date" id="date-${u.uid}" value="${u.expiry ? new Date(u.expiry).toISOString().split('T')[0] : ''}">
+                        <button onclick="adminSetExpiry('${u.email}', document.getElementById('date-${u.uid}').value)">Установить дату</button>
+                        <input type="number" id="days-${u.uid}" placeholder="Дни" style="width:60px;">
+                        <button onclick="adminAddDays('${u.email}', parseInt(document.getElementById('days-${u.uid}').value))">Добавить дни</button>
+                        <button class="danger" onclick="adminDeleteUser('${u.email}')">Удалить</button>
                     </div>
                 </div>
-            `;
+            `).join('');
         }
 
-        function setSubscription(email, dateStr) {
+        async function adminSetExpiry(email, dateStr) {
             if (!dateStr) return;
-            const users = getUsers();
-            if (!users[email]) return showToast('Пользователь не найден');
-            users[email].expiry = new Date(dateStr).getTime();
-            saveUsers(users);
-            showToast('Дата подписки обновлена');
-            searchUser();
+            try { await apiAdmin('/api/admin', 'POST', { email, action: 'setExpiry', date: dateStr }); loadAdminUsers(); toast('Дата обновлена'); }
+            catch(e) { toast(e.message); }
+        }
+        async function adminAddDays(email, days) {
+            if (!days || isNaN(days)) return;
+            try { await apiAdmin('/api/admin', 'POST', { email, action: 'addDays', days }); loadAdminUsers(); toast(`Добавлено ${days} дн.`); }
+            catch(e) { toast(e.message); }
+        }
+        async function adminDeleteUser(email) {
+            if (!confirm('Удалить пользователя?')) return;
+            try { await apiAdmin('/api/admin', 'POST', { email, action: 'delete' }); loadAdminUsers(); toast('Пользователь удалён'); }
+            catch(e) { toast(e.message); }
         }
 
-        function addDays(email, days) {
-            if (!days || isNaN(days)) return showToast('Введите корректное число дней');
-            const users = getUsers();
-            if (!users[email]) return showToast('Пользователь не найден');
-            const user = users[email];
-            const now = Date.now();
-            const currentExpiry = user.expiry ? Number(user.expiry) : 0;
-            const newExpiry = Math.max(now, currentExpiry) + days * 86400000;
-            user.expiry = newExpiry;
-            saveUsers(users);
-            showToast(`Добавлено ${days} дн. Новая дата: ${new Date(newExpiry).toLocaleDateString()}`);
-            searchUser();
-        }
+        function openAdmin() { document.getElementById('adminModal').classList.add('open'); }
+        function closeAdmin() { document.getElementById('adminModal').classList.remove('open'); }
 
-        function deleteUser(email) {
-            if (!confirm(`Удалить пользователя ${email} безвозвратно?`)) return;
-            const users = getUsers();
-            delete users[email];
-            saveUsers(users);
-            showToast('Пользователь удалён');
-            searchUser();
-        }
-
-        // ======================== UI HELPERS ========================
-        function showSection(name) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            const sec = document.getElementById('sec-' + name);
-            if (sec) sec.classList.add('active');
-            window.scrollTo(0, 0);
-            if (name === 'profile') {
-                populateProfileData();
-            }
-        }
-
-        function toggleMenu() { document.getElementById('navLinks').classList.toggle('open'); }
-        function closeMenu() { document.getElementById('navLinks').classList.remove('open'); }
-        function toggleFaq(el) { el.parentElement.classList.toggle('open'); }
-
-        function openAuth() { document.getElementById('authModal').classList.add('open'); }
-        function closeAuth() { document.getElementById('authModal').classList.remove('open'); }
-        function switchTab(tab) {
-            document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
-            document.getElementById('tabReg').classList.toggle('active', tab === 'reg');
-            document.getElementById('formLogin').style.display = tab === 'login' ? 'block' : 'none';
-            document.getElementById('formReg').style.display = tab === 'reg' ? 'block' : 'none';
-        }
-        function doLogin() {
-            const email = document.getElementById('loginEmail').value.trim().toLowerCase();
-            const pass = document.getElementById('loginPass').value;
-            try {
-                loginUser(email, pass);
-                closeAuth();
-                updateProfileUI();
-                showToast('Добро пожаловать!');
-            } catch (e) {
-                document.getElementById('loginErr').textContent = e.message;
-                document.getElementById('loginErr').style.display = 'block';
-            }
-        }
-        function doRegister() {
-            const email = document.getElementById('regEmail').value.trim().toLowerCase();
-            const name = document.getElementById('regName').value.trim();
-            const pass = document.getElementById('regPass').value;
-            const pass2 = document.getElementById('regPass2').value;
-            try {
-                registerUser(email, name, pass, pass2);
-                setCurrentEmail(email);
-                closeAuth();
-                updateProfileUI();
-                showToast('Регистрация успешна! Теперь вы можете оплатить подписку.');
-            } catch (e) {
-                document.getElementById('regErr').textContent = e.message;
-                document.getElementById('regErr').style.display = 'block';
-            }
-        }
-
-        // Инициализация переключения табов цен
+        // ====================== ИНИЦИАЛИЗАЦИЯ ======================
         document.querySelectorAll('.price-tab').forEach(tab => {
-            tab.addEventListener('click', function(e) {
+            tab.addEventListener('click', function() {
                 const parent = this.closest('.price-tabs');
-                if (!parent) return;
                 parent.querySelectorAll('.price-tab').forEach(t => t.classList.remove('active'));
                 this.classList.add('active');
-                const price = this.getAttribute('data-price');
-                const period = this.getAttribute('data-period');
+                const price = this.dataset.price;
+                const period = this.dataset.period;
                 if (parent.id === 'profileExtensionTabs') {
                     document.getElementById('profileExtensionPriceAmount').innerHTML = `<sup>₽</sup>${price}`;
                     document.getElementById('profileExtensionPricePeriod').textContent = `/ ${period}`;
@@ -894,7 +846,8 @@
             });
         });
 
-        window.addEventListener('load', () => {
+        window.addEventListener('load', async () => {
+            currentUser = await fetchUser();
             updateProfileUI();
             document.getElementById('authModal').addEventListener('click', function(e) { if (e.target === this) closeAuth(); });
             document.getElementById('paymentModal').addEventListener('click', function(e) { if (e.target === this) closePaymentModal(); });
