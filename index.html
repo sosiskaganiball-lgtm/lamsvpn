@@ -17,7 +17,7 @@
         h1, h2, h3 { font-family: 'Syne', sans-serif; }
         nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,10,10,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid #222; height: 60px; display: flex; align-items: center; }
         nav .inner { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 24px; }
-        .logo { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 8px; cursor: pointer; }
         .logo span { color: #c8ff00; }
         .logo-dot { width: 8px; height: 8px; background: #c8ff00; border-radius: 50%; display: inline-block; }
         nav ul { list-style: none; display: flex; gap: 4px; }
@@ -180,62 +180,30 @@
         .profile-btn { display: flex; align-items: center; gap: 8px; padding: 6px 14px; background: #181818; border: 1px solid #2a2a2a; border-radius: 6px; color: #e8e8e8; cursor: pointer; font-size: 13px; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
         .profile-btn:hover { border-color: #666; }
         .profile-avatar { width: 22px; height: 22px; border-radius: 50%; background: #c8ff00; color: #000; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
-        /* Стили для блока успешной оплаты */
-        #paymentStatus {
-            display: none;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        #paymentStatus .success-icon {
-            font-size: 48px;
-            color: #4ade80;
-            display: block;
-            margin-bottom: 12px;
-            animation: scaleIn 0.4s ease;
-        }
-        @keyframes scaleIn {
-            0% { transform: scale(0); opacity: 0; }
-            80% { transform: scale(1.2); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        #paymentStatus .success-text {
-            font-size: 22px;
-            font-weight: 700;
-            color: #c8ff00;
-            margin-bottom: 8px;
-        }
-        #paymentStatus .success-sub {
-            font-size: 14px;
-            color: #aaa;
-            max-width: 280px;
-            margin: 0 auto;
-            line-height: 1.4;
-        }
-        #closeAfterSuccess {
-            display: none;
-            margin: 0 auto;
-            background: #1a1a1a;
-            color: #fff;
-            border: 1px solid #444;
-            padding: 12px 40px;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        #closeAfterSuccess:hover {
-            background: #333;
-            border-color: #666;
-        }
-        @media (max-width: 768px) { nav ul { display: none; } nav ul.open { display: flex; flex-direction: column; position: fixed; top: 60px; left: 0; right: 0; background: #111; border-bottom: 1px solid #222; padding: 12px 16px; gap: 2px; } .hamburger { display: flex; } .hero-grid { grid-template-columns: 1fr; gap: 40px; } .tariffs-grid { grid-template-columns: 1fr; } .servers-grid { grid-template-columns: 1fr; } .hero h1 { font-size: 36px; } }
+        #closeAfterSuccess { display: none; margin: 0 auto; background: #1a1a1a; color: #fff; border: 1px solid #444; padding: 12px 40px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        #closeAfterSuccess:hover { background: #333; border-color: #666; }
+        #paymentStatus .success-icon { font-size: 48px; color: #4ade80; display: block; margin-bottom: 12px; animation: scaleIn 0.4s ease; }
+        @keyframes scaleIn { 0% { transform: scale(0); opacity: 0; } 80% { transform: scale(1.2); } 100% { transform: scale(1); opacity: 1; } }
+        #paymentStatus .success-text { font-size: 22px; font-weight: 700; color: #c8ff00; margin-bottom: 8px; }
+        #paymentStatus .success-sub { font-size: 14px; color: #aaa; max-width: 280px; margin: 0 auto; line-height: 1.4; }
+
+        /* Админ-панель */
+        .admin-modal { max-width: 600px; max-height: 80vh; overflow-y: auto; }
+        .admin-user-row { background: #181818; border: 1px solid #2a2a2a; border-radius: 10px; padding: 16px; margin-bottom: 10px; font-size: 13px; }
+        .admin-user-row strong { color: #c8ff00; }
+        .admin-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+        .admin-actions input { padding: 6px 10px; background: #111; border: 1px solid #333; color: #e8e8e8; border-radius: 6px; font-size: 12px; width: 100px; }
+        .admin-actions button { padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid #444; background: #1e1e1e; color: #e8e8e8; transition: all 0.2s; }
+        .admin-actions button:hover { background: #2a2a2a; }
+        .admin-actions button.danger { border-color: #ff4444; color: #ff4444; }
+        .admin-actions button.danger:hover { background: #331111; }
     </style>
 </head>
 <body>
     <div id="toast-container"></div>
     <nav>
         <div class="inner">
-            <a class="logo" href="#" onclick="showSection('home')"><div class="logo-dot"></div>Lams<span>VPN</span></a>
+            <a class="logo" id="adminTrigger" title="Тройной клик — админ-панель"><div class="logo-dot"></div>Lams<span>VPN</span></a>
             <ul id="navLinks">
                 <li><a href="#" onclick="showSection('home'); closeMenu()">Главная</a></li>
                 <li><a href="#" onclick="showSection('tariffs'); closeMenu()">Тарифы</a></li>
@@ -415,7 +383,7 @@
                 <span class="sum" id="payAmount">0 ₽</span><br>
                 <span id="payPeriodDesc"></span>
             </div>
-            <div id="paymentStatus">
+            <div id="paymentStatus" style="display:none;">
                 <span class="success-icon">✅</span>
                 <div class="success-text">Оплата прошла успешно!</div>
                 <p class="success-sub">Подписка активирована. Ключ доступен в вашем профиле.</p>
@@ -424,6 +392,34 @@
             <button class="btn-submit" id="payButton" onclick="startPayment()">Оплатить</button>
             <button class="btn-ghost" id="closeAfterSuccess" onclick="closePaymentModal()" style="display:none;">Закрыть</button>
             <div class="test-payment-note">⚡ Тестовый режим: средства не спишутся.</div>
+        </div>
+    </div>
+
+    <!-- АДМИН-ПАНЕЛЬ -->
+    <div class="modal-overlay" id="adminModal">
+        <div class="modal admin-modal">
+            <button class="modal-close" onclick="closeAdmin()">✕</button>
+            <h3>🛡️ Админ-панель</h3>
+            <div class="form-group" style="margin-bottom:16px;">
+                <label>ПОИСК ПО ID</label>
+                <input type="text" id="adminSearchInput" placeholder="Введите ID пользователя" oninput="searchUser()">
+            </div>
+            <div id="adminUserList" style="max-height: 50vh; overflow-y: auto;"></div>
+            <button class="btn-ghost" onclick="showAllUsers()" style="margin-top:12px;">Показать всех пользователей</button>
+        </div>
+    </div>
+
+    <!-- Модалка ввода пароля -->
+    <div class="modal-overlay" id="adminPasswordModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeAdminPassword()">✕</button>
+            <h3>🔐 Вход в админ-панель</h3>
+            <div class="form-group">
+                <label>Пароль</label>
+                <input type="password" id="adminPasswordInput" placeholder="Введите пароль">
+            </div>
+            <div class="form-error" id="adminPasswordError">Неверный пароль</div>
+            <button class="btn-submit" onclick="checkAdminPassword()">Войти</button>
         </div>
     </div>
 
@@ -576,7 +572,7 @@
             showSection('home');
         }
 
-        // ======================== PAYMENT (РАБОЧАЯ) ========================
+        // ======================== PAYMENT ========================
         const API_BASE = 'https://lamsvpn.vercel.app';
         let pendingPurchase = null;
 
@@ -666,12 +662,10 @@
                     }
                 });
 
-                // ГАРАНТИРОВАННЫЙ ВЫЗОВ ПОСЛЕ УСПЕШНОЙ ОПЛАТЫ
                 checkout.on('success', () => {
                     try {
                         document.getElementById('yookassa-widget-container').innerHTML = '';
                         document.getElementById('paymentStatus').style.display = 'block';
-                        
                         const newExpiry = extendSubscription(pendingPurchase.days);
                         updateProfileUI();
                         document.getElementById('closeAfterSuccess').style.display = 'block';
@@ -688,6 +682,143 @@
                 payBtn.disabled = false;
                 payBtn.textContent = 'Оплатить';
             }
+        }
+ // ======================== АДМИН-ПАНЕЛЬ ========================
+        
+        const ADMIN_PASSWORD_HASH = 'e4215a91f10a1d962c4f79a540e6e6a1eeab628c2a2812bc9f3702e8015f5ce2';
+
+        let adminClickCount = 0;
+        let adminClickTimer = null;
+
+        document.getElementById('adminTrigger').addEventListener('click', function(e) {
+            e.preventDefault();
+            adminClickCount++;
+            if (adminClickCount === 1) {
+                adminClickTimer = setTimeout(() => { adminClickCount = 0; }, 1000);
+            }
+            if (adminClickCount === 3) {
+                clearTimeout(adminClickTimer);
+                adminClickCount = 0;
+                openAdminPasswordModal();
+            }
+        });
+
+        function openAdminPasswordModal() {
+            document.getElementById('adminPasswordModal').classList.add('open');
+            document.getElementById('adminPasswordInput').value = '';
+            document.getElementById('adminPasswordError').style.display = 'none';
+        }
+
+        function closeAdminPassword() {
+            document.getElementById('adminPasswordModal').classList.remove('open');
+        }
+
+        async function checkAdminPassword() {
+            const input = document.getElementById('adminPasswordInput').value;
+            // Хешируем введённый пароль
+            const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input));
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            if (hashHex === ADMIN_PASSWORD_HASH) {
+                closeAdminPassword();
+                openAdmin();
+            } else {
+                document.getElementById('adminPasswordError').style.display = 'block';
+            }
+        }
+
+        function openAdmin() {
+            document.getElementById('adminModal').classList.add('open');
+            showAllUsers();
+        }
+
+        function closeAdmin() {
+            document.getElementById('adminModal').classList.remove('open');
+        }
+
+        function showAllUsers() {
+            const users = getUsers();
+            const container = document.getElementById('adminUserList');
+            if (Object.keys(users).length === 0) {
+                container.innerHTML = '<p style="color:#666;">Нет зарегистрированных пользователей.</p>';
+                return;
+            }
+            let html = '';
+            for (const [email, user] of Object.entries(users)) {
+                html += renderUserRow(email, user);
+            }
+            container.innerHTML = html;
+        }
+
+        function searchUser() {
+            const query = document.getElementById('adminSearchInput').value.trim();
+            const users = getUsers();
+            const container = document.getElementById('adminUserList');
+            if (!query) {
+                showAllUsers();
+                return;
+            }
+            const found = Object.entries(users).find(([email, user]) => 
+                user.uid === query || email.toLowerCase().includes(query.toLowerCase()) || user.name.toLowerCase().includes(query.toLowerCase())
+            );
+            if (found) {
+                container.innerHTML = renderUserRow(found[0], found[1]);
+            } else {
+                container.innerHTML = '<p style="color:#666;">Пользователь не найден.</p>';
+            }
+        }
+
+        function renderUserRow(email, user) {
+            const expiry = user.expiry ? new Date(user.expiry).toLocaleDateString() : '—';
+            const status = (user.expiry && user.expiry > Date.now()) ? 'Активна' : 'Неактивна';
+            return `
+                <div class="admin-user-row">
+                    <div><strong>Имя:</strong> ${user.name}</div>
+                    <div><strong>Email:</strong> ${email}</div>
+                    <div><strong>UID:</strong> ${user.uid}</div>
+                    <div><strong>Подписка до:</strong> ${expiry} (${status})</div>
+                    <div class="admin-actions">
+                        <input type="date" id="date-${user.uid}" value="${user.expiry ? new Date(user.expiry).toISOString().split('T')[0] : ''}">
+                        <button onclick="setSubscription('${email}', document.getElementById('date-${user.uid}').value)">Установить дату</button>
+                        <input type="number" id="days-${user.uid}" placeholder="Дни" style="width:60px;">
+                        <button onclick="addDays('${email}', parseInt(document.getElementById('days-${user.uid}').value))">Добавить дни</button>
+                        <button class="danger" onclick="deleteUser('${email}')">Удалить</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function setSubscription(email, dateStr) {
+            if (!dateStr) return;
+            const users = getUsers();
+            if (!users[email]) return showToast('Пользователь не найден');
+            users[email].expiry = new Date(dateStr).getTime();
+            saveUsers(users);
+            showToast('Дата подписки обновлена');
+            searchUser();
+        }
+
+        function addDays(email, days) {
+            if (!days || isNaN(days)) return showToast('Введите корректное число дней');
+            const users = getUsers();
+            if (!users[email]) return showToast('Пользователь не найден');
+            const user = users[email];
+            const now = Date.now();
+            const currentExpiry = user.expiry ? Number(user.expiry) : 0;
+            const newExpiry = Math.max(now, currentExpiry) + days * 86400000;
+            user.expiry = newExpiry;
+            saveUsers(users);
+            showToast(`Добавлено ${days} дн. Новая дата: ${new Date(newExpiry).toLocaleDateString()}`);
+            searchUser();
+        }
+
+        function deleteUser(email) {
+            if (!confirm(`Удалить пользователя ${email} безвозвратно?`)) return;
+            const users = getUsers();
+            delete users[email];
+            saveUsers(users);
+            showToast('Пользователь удалён');
+            searchUser();
         }
 
         // ======================== UI HELPERS ========================
