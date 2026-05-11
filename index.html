@@ -218,7 +218,7 @@
         <div class="container"><footer><div class="logo">Lams<span style="color:#c8ff00">VPN</span></div><p>© 2025 LamsVPN. Все права защищены.</p><div class="footer-links"><a href="#" onclick="showSection('support')">Поддержка</a><a href="#" onclick="showSection('faq')">FAQ</a></div></footer></div>
     </div>
 
-    <!-- TARIFFS (обновлённые цены, без 1 дня) -->
+    <!-- TARIFFS -->
     <div id="sec-tariffs" class="section">
         <div class="container">
             <div class="sec-header"><div class="tag">Тарифы</div><h2>Выберите свой план</h2><p>Оплата картой через ЮKassa</p></div>
@@ -251,7 +251,7 @@
         </div>
     </div>
 
-    <!-- SERVERS (обновлённые названия) -->
+    <!-- SERVERS -->
     <div id="sec-servers" class="section">
         <div class="container">
             <div class="sec-header"><div class="tag">Серверы</div><h2>Доступные локации</h2><p>4 локации уже работают. Все серверы — выделенные, без шаринга.</p></div>
@@ -265,7 +265,7 @@
         </div>
     </div>
 
-    <!-- FAQ (без изменений) -->
+    <!-- FAQ -->
     <div id="sec-faq" class="section">
         <div class="container">
             <div class="sec-header"><div class="tag">FAQ</div><h2>Частые вопросы</h2><p>Не нашли ответ? Пишите в поддержку — @lamssupport</p></div>
@@ -293,7 +293,7 @@
         </div></div>
     </div>
 
-    <!-- PROFILE (с обновлённым блоком продления и скрытием) -->
+    <!-- PROFILE -->
     <div id="sec-profile" class="section">
         <div class="container">
             <div class="profile-page">
@@ -308,7 +308,7 @@
                     <div class="detail-row"><span>Ваш ID профиля:</span> <span id="profileUid">—</span></div>
                 </div>
 
-                <!-- Продление показывается только при активной подписке -->
+                <!-- Продление (только при активной подписке) -->
                 <div class="profile-extension" id="profileExtensionBlock">
                     <h3>🔄 Продлить подписку</h3>
                     <div class="price-tabs" id="profileExtensionTabs">
@@ -336,7 +336,7 @@
                 <div class="profile-instructions">
                     <h3>📲 Инструкция по подключению</h3>
                     <div class="instr-steps">
-                        <div class="instr-step"><div class="step-num">1</div><div class="step-content"><h4>Установите приложение</h4><p>Скачайте подходящее приложение для вашего устройства:</p><div class="apps-row"><a class="app-link" href="https://play.google.com/store/apps/details?id=com.v2ray.ang" target="_blank">📱 Android — V2Ray</a><a class="app-link" href="https://apps.apple.com/app/happ/id6443899232" target="_blank">🍎 iOS — Happ</a><a class="app-link" href="https://github.com/2dust/v2rayN/releases" target="_blank">💻 Windows — V2Ray</a></div></div></div>
+                        <div class="instr-step"><div class="step-num">1</div><div class="step-content"><h4>Установите приложение</h4><p>Скачайте подходящее приложение для вашего устройства:</p><div class="apps-row"><a class="app-link" href="https://play.google.com/store/apps/details?id=com.v2raytun.android&pcampaignid=web_share" target="_blank">📱 Android — V2Ray</a><a class="app-link" href="https://apps.apple.com/us/app/happ-proxy-utility/id6504287215" target="_blank">🍎 iOS — Happ</a><a class="app-link" href="https://github.com/2dust/v2rayN/releases" target="_blank">💻 Windows — V2Ray</a></div></div></div>
                         <div class="instr-step"><div class="step-num">2</div><div class="step-content"><h4>Скопируйте ваш ключ</h4><p>Нажмите кнопку «Скопировать ключ» выше. Ключ автоматически сохранится в буфер обмена.</p></div></div>
                         <div class="instr-step"><div class="step-num">3</div><div class="step-content"><h4>Добавьте ключ в приложение</h4><p><strong style="color:#fff">Android (V2Ray):</strong> Кнопка + → «Импорт из буфера»</p><p><strong style="color:#fff">Windows (V2Ray):</strong> Серверы → «Импорт URL из буфера»</p><div class="streisand-detail"><p><strong style="color:#c8ff00;">🍎 Для Happ (iOS):</strong></p><ol><li>Установите Happ из App Store.</li><li>Скопируйте ключ в буфер обмена.</li><li>В приложении нажмите <strong>«+»</strong> (правый верхний угол).</li><li>Выберите <strong>«Импортировать из буфера обмена»</strong>.</li><li>Конфигурация добавится автоматически. Нажмите на неё для подключения.</li><li>При первом подключении разрешите добавление VPN-профиля (системный запрос).</li></ol></div></div></div>
                         <div class="instr-step"><div class="step-num">4</div><div class="step-content"><h4>Включите VPN</h4><p>Нажмите кнопку подключения в приложении. Готово! Проверьте на <a href="https://2ip.ru" target="_blank">2ip.ru</a>, что IP изменился.</p></div></div>
@@ -350,7 +350,7 @@
         </div>
     </div>
 
-    <!-- AUTH MODAL (без изменений) -->
+    <!-- AUTH MODAL -->
     <div class="modal-overlay" id="authModal">
         <div class="modal"><button class="modal-close" onclick="closeAuth()">✕</button><h3>LamsVPN</h3><p>Войдите или создайте аккаунт</p>
             <div class="modal-tabs"><button class="modal-tab active" id="tabLogin" onclick="switchTab('login')">Войти</button><button class="modal-tab" id="tabReg" onclick="switchTab('reg')">Регистрация</button></div>
@@ -359,7 +359,7 @@
         </div>
     </div>
 
-    <!-- PAYMENT MODAL (исправленная кнопка Закрыть и начисление подписки) -->
+    <!-- PAYMENT MODAL -->
     <div class="modal-overlay" id="paymentModal">
         <div class="modal pay-modal">
             <button class="modal-close" onclick="closePaymentModal()">✕</button>
@@ -526,7 +526,7 @@
             showSection('home');
         }
 
-        // ======================== PAYMENT (исправленная) ========================
+        // ======================== PAYMENT (НАДЁЖНАЯ ВЕРСИЯ) ========================
         const API_BASE = 'https://lamsvpn.vercel.app';
         let pendingPurchase = null;
 
@@ -614,20 +614,15 @@
                         payBtn.disabled = false;
                         payBtn.textContent = 'Оплатить';
                     },
-                    success_callback: async () => {
+                    success_callback: () => {
                         document.getElementById('yookassa-widget-container').innerHTML = '';
                         document.getElementById('paymentStatus').style.display = 'block';
                         document.getElementById('paymentStatus').innerHTML = '<span style="color:#c8ff00;">Оплата прошла успешно!</span>';
                         
-                        // Начисляем подписку
-                        try {
-                            const newExpiry = extendSubscription(pendingPurchase.days);
-                            updateProfileUI(); // обновит и панель навигации и, если открыт, профиль
-                            document.getElementById('closeAfterSuccess').style.display = 'inline-block';
-                            showToast(`Подписка активна до ${new Date(newExpiry).toLocaleDateString()}`);
-                        } catch (e) {
-                            showToast('Ошибка продления: ' + e.message);
-                        }
+                        const newExpiry = extendSubscription(pendingPurchase.days);
+                        updateProfileUI();
+                        document.getElementById('closeAfterSuccess').style.display = 'inline-block';
+                        showToast(`Подписка продлена до ${new Date(newExpiry).toLocaleDateString()}.`);
                     }
                 });
                 checkout.render('yookassa-widget-container');
