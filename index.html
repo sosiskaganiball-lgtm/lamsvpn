@@ -141,6 +141,7 @@
         .streisand-detail ol { list-style-position: inside; color: #aaa; font-size: 13px; line-height: 1.8; }
         .streisand-detail ol li strong { color: #fff; }
         .profile-actions { display: flex; flex-wrap: wrap; gap: 12px; width: 100%; max-width: 600px; justify-content: center; }
+        .profile-extension { display: none; } /* будет показываться только при активной подписке */
         .profile-extension h3 { font-size: 18px; margin-bottom: 16px; }
         .profile-extension .price-display { margin: 16px 0; }
         #toast-container { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; align-items: center; pointer-events: none; }
@@ -174,13 +175,12 @@
         .form-error { color: #ff6b6b; font-size: 12px; margin-top: 8px; display: none; }
         .payment-summary { background: #181818; border-radius: 12px; padding: 16px; margin-bottom: 20px; text-align: center; }
         .payment-summary .sum { font-size: 28px; font-weight: 800; color: #c8ff00; }
-        .card-input { display: flex; gap: 12px; margin-bottom: 14px; }
-        .card-input input { width: 100%; }
         .test-payment-note { font-size: 11px; text-align: center; margin-top: 12px; color: #666; }
         .subscription-badge { display: inline-block; background: #c8ff00; color: #000; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-left: 12px; }
         .profile-btn { display: flex; align-items: center; gap: 8px; padding: 6px 14px; background: #181818; border: 1px solid #2a2a2a; border-radius: 6px; color: #e8e8e8; cursor: pointer; font-size: 13px; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
         .profile-btn:hover { border-color: #666; }
         .profile-avatar { width: 22px; height: 22px; border-radius: 50%; background: #c8ff00; color: #000; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+        #closeAfterSuccess { display: none; margin-top: 15px; }
         @media (max-width: 768px) { nav ul { display: none; } nav ul.open { display: flex; flex-direction: column; position: fixed; top: 60px; left: 0; right: 0; background: #111; border-bottom: 1px solid #222; padding: 12px 16px; gap: 2px; } .hamburger { display: flex; } .hero-grid { grid-template-columns: 1fr; gap: 40px; } .tariffs-grid { grid-template-columns: 1fr; } .servers-grid { grid-template-columns: 1fr; } .hero h1 { font-size: 36px; } }
     </style>
 </head>
@@ -209,11 +209,16 @@
 
     <!-- HOME -->
     <div id="sec-home" class="section active">
-        <div class="hero"><div class="container"><div class="hero-grid"><div><div class="hero-label"><div class="dot"></div><span>Работает прямо сейчас</span></div><h1>Интернет без<br><em>ограничений</em></h1><p>LamsVPN — быстрый и стабильный доступ к любому контенту. Обход блокировок, защита данных, никаких логов.</p><div class="hero-btns"><button class="btn-primary" onclick="showSection('tariffs')">Выбрать тариф</button><button class="btn-ghost" onclick="showSection('servers')">Серверы →</button></div></div><div><div class="hero-card"><div class="stat-row"><div class="stat"><span class="stat-num">4<span>+</span></span><span class="stat-label">Локации</span></div><div class="stat-divider"></div><div class="stat"><span class="stat-num">99<span>%</span></span><span class="stat-label">Аптайм</span></div><div class="stat-divider"></div><div class="stat"><span class="stat-num">0</span><span class="stat-label">Логов</span></div></div><div class="feature-list"><div class="feature-item"><span class="feature-icon">⚡</span>Протокол VLESS — скорость без компромиссов</div><div class="feature-item"><span class="feature-icon">🛡️</span>Обход белых списков РКН</div><div class="feature-item"><span class="feature-icon">📱</span>Работает на всех устройствах</div><div class="feature-item"><span class="feature-icon">🔒</span>Полная конфиденциальность</div></div><div class="server-pills"><span class="server-pill">🇷🇺 Москва</span><span class="server-pill">🇺🇸 Шарлотт</span><span class="server-pill">🇸🇪 Стокгольм</span><span class="server-pill">🇫🇮 Хельсинки</span></div></div></div></div></div></div>
+        <div class="hero"><div class="container"><div class="hero-grid"><div><div class="hero-label"><div class="dot"></div><span>Работает прямо сейчас</span></div><h1>Интернет без<br><em>ограничений</em></h1><p>LamsVPN — быстрый и стабильный доступ к любому контенту. Обход блокировок, защита данных, никаких логов.</p><div class="hero-btns"><button class="btn-primary" onclick="showSection('tariffs')">Выбрать тариф</button><button class="btn-ghost" onclick="showSection('servers')">Серверы →</button></div></div><div><div class="hero-card"><div class="stat-row"><div class="stat"><span class="stat-num">4<span>+</span></span><span class="stat-label">Локации</span></div><div class="stat-divider"></div><div class="stat"><span class="stat-num">99<span>%</span></span><span class="stat-label">Аптайм</span></div><div class="stat-divider"></div><div class="stat"><span class="stat-num">0</span><span class="stat-label">Логов</span></div></div><div class="feature-list"><div class="feature-item"><span class="feature-icon">⚡</span>Протокол VLESS — скорость без компромиссов</div><div class="feature-item"><span class="feature-icon">🛡️</span>Обход белых списков РКН</div><div class="feature-item"><span class="feature-icon">📱</span>Работает на всех устройствах</div><div class="feature-item"><span class="feature-icon">🔒</span>Полная конфиденциальность</div></div><div class="server-pills">
+                <span class="server-pill">🇫🇷 Франция</span>
+                <span class="server-pill">🇺🇸 Шарлотт</span>
+                <span class="server-pill">🇸🇪 Стокгольм</span>
+                <span class="server-pill">🇳🇱 Нидерланды</span>
+            </div></div></div></div></div></div>
         <div class="container"><footer><div class="logo">Lams<span style="color:#c8ff00">VPN</span></div><p>© 2025 LamsVPN. Все права защищены.</p><div class="footer-links"><a href="#" onclick="showSection('support')">Поддержка</a><a href="#" onclick="showSection('faq')">FAQ</a></div></footer></div>
     </div>
 
-    <!-- TARIFFS -->
+    <!-- TARIFFS (обновлённые цены, без 1 дня) -->
     <div id="sec-tariffs" class="section">
         <div class="container">
             <div class="sec-header"><div class="tag">Тарифы</div><h2>Выберите свой план</h2><p>Оплата картой через ЮKassa</p></div>
@@ -221,26 +226,24 @@
                 <div class="plan-card">
                     <div class="plan-name">Базовый</div><div class="plan-title">До 3 устройств</div>
                     <div class="price-tabs" id="tabs-basic">
-                        <button class="price-tab active" data-plan="basic" data-price="15" data-period="1 день" data-days="1">1 день</button>
-                        <button class="price-tab" data-plan="basic" data-price="100" data-period="мес." data-days="30">1 мес.</button>
-                        <button class="price-tab" data-plan="basic" data-price="297" data-period="3 мес." data-days="90">3 мес.</button>
-                        <button class="price-tab" data-plan="basic" data-price="594" data-period="6 мес." data-days="180">6 мес.</button>
-                        <button class="price-tab" data-plan="basic" data-price="1188" data-period="год" data-days="365">1 год</button>
+                        <button class="price-tab active" data-plan="basic" data-price="100" data-period="мес." data-days="30">1 мес.</button>
+                        <button class="price-tab" data-plan="basic" data-price="285" data-period="3 мес." data-days="90">3 мес. -5%</button>
+                        <button class="price-tab" data-plan="basic" data-price="540" data-period="6 мес." data-days="180">6 мес. -10%</button>
+                        <button class="price-tab" data-plan="basic" data-price="1020" data-period="год" data-days="365">1 год -15%</button>
                     </div>
-                    <div class="price-display"><span class="price-amount" id="price-basic"><sup>₽</sup>15</span><span class="price-period" id="period-basic">/ 1 день</span></div>
-                    <ul class="plan-features"><li>До 3 устройств одновременно</li><li>Обход белых списков РКН</li><li>Серверы: Москва, Шарлотт, Стокгольм, Хельсинки</li><li>Протокол VLESS — высокая скорость</li><li>Персональная конфигурация</li><li>Поддержка 24/7 в Telegram</li></ul>
+                    <div class="price-display"><span class="price-amount" id="price-basic"><sup>₽</sup>100</span><span class="price-period" id="period-basic">/ мес.</span></div>
+                    <ul class="plan-features"><li>До 3 устройств одновременно</li><li>Обход белых списков РКН</li><li>Серверы: Франция, Шарлотт, Стокгольм, Нидерланды</li><li>Протокол VLESS — высокая скорость</li><li>Персональная конфигурация</li><li>Поддержка 24/7 в Telegram</li></ul>
                     <button class="btn-plan" data-plan="basic" onclick="initiatePurchase(this)">Подключить →</button>
                 </div>
                 <div class="plan-card featured">
                     <div class="plan-name">Семейный</div><div class="plan-title">До 6 устройств</div>
                     <div class="price-tabs" id="tabs-family">
-                        <button class="price-tab active" data-plan="family" data-price="30" data-period="1 день" data-days="1">1 день</button>
-                        <button class="price-tab" data-plan="family" data-price="210" data-period="мес." data-days="30">1 мес.</button>
-                        <button class="price-tab" data-plan="family" data-price="630" data-period="3 мес." data-days="90">3 мес.</button>
-                        <button class="price-tab" data-plan="family" data-price="1260" data-period="6 мес." data-days="180">6 мес.</button>
-                        <button class="price-tab" data-plan="family" data-price="2520" data-period="год" data-days="365">1 год</button>
+                        <button class="price-tab active" data-plan="family" data-price="210" data-period="мес." data-days="30">1 мес.</button>
+                        <button class="price-tab" data-plan="family" data-price="599" data-period="3 мес." data-days="90">3 мес. -5%</button>
+                        <button class="price-tab" data-plan="family" data-price="1134" data-period="6 мес." data-days="180">6 мес. -10%</button>
+                        <button class="price-tab" data-plan="family" data-price="2142" data-period="год" data-days="365">1 год -15%</button>
                     </div>
-                    <div class="price-display"><span class="price-amount" id="price-family"><sup>₽</sup>30</span><span class="price-period" id="period-family">/ 1 день</span></div>
+                    <div class="price-display"><span class="price-amount" id="price-family"><sup>₽</sup>210</span><span class="price-period" id="period-family">/ мес.</span></div>
                     <ul class="plan-features"><li>До 6 устройств одновременно</li><li>Обход белых списков РКН</li><li>Все серверы включены</li><li>Приоритетная скорость на серверах</li><li>Протокол VLESS — максимальная скорость</li><li>Поддержка 24/7 — приоритетная очередь</li></ul>
                     <button class="btn-plan accent" data-plan="family" onclick="initiatePurchase(this)">Подключить →</button>
                 </div>
@@ -248,26 +251,26 @@
         </div>
     </div>
 
-    <!-- SERVERS -->
+    <!-- SERVERS (обновлённые названия) -->
     <div id="sec-servers" class="section">
         <div class="container">
             <div class="sec-header"><div class="tag">Серверы</div><h2>Доступные локации</h2><p>4 локации уже работают. Все серверы — выделенные, без шаринга.</p></div>
             <div class="servers-grid">
-                <div class="server-card"><div class="server-flag">🇷🇺</div><div class="server-info"><div class="server-city">Москва</div><div class="server-country">Россия</div><div class="server-tags"><span class="stag bypass">✦ Обход блокировок</span><span class="stag">Низкий пинг</span></div></div><div class="server-status"><div class="status-dot"></div></div></div>
+                <div class="server-card"><div class="server-flag">🇫🇷</div><div class="server-info"><div class="server-city">Франция</div><div class="server-country">Париж</div><div class="server-tags"><span class="stag bypass">✦ Обход блокировок</span><span class="stag">Низкий пинг</span></div></div><div class="server-status"><div class="status-dot"></div></div></div>
                 <div class="server-card"><div class="server-flag">🇺🇸</div><div class="server-info"><div class="server-city">Шарлотт</div><div class="server-country">США</div><div class="server-tags"><span class="stag">Высокая скорость</span><span class="stag">Стримы</span></div></div><div class="server-status"><div class="status-dot"></div></div></div>
                 <div class="server-card"><div class="server-flag">🇸🇪</div><div class="server-info"><div class="server-city">Стокгольм</div><div class="server-country">Швеция</div><div class="server-tags"><span class="stag">Европа</span><span class="stag">Стабильный</span></div></div><div class="server-status"><div class="status-dot"></div></div></div>
-                <div class="server-card"><div class="server-flag">🇫🇮</div><div class="server-info"><div class="server-city">Хельсинки</div><div class="server-country">Финляндия</div><div class="server-tags"><span class="stag bypass">✦ Обход блокировок</span><span class="stag">Европа</span></div></div><div class="server-status"><div class="status-dot"></div></div></div>
+                <div class="server-card"><div class="server-flag">🇳🇱</div><div class="server-info"><div class="server-city">Нидерланды</div><div class="server-country">Амстердам</div><div class="server-tags"><span class="stag bypass">✦ Обход блокировок</span><span class="stag">Европа</span></div></div><div class="server-status"><div class="status-dot"></div></div></div>
             </div>
             <div class="servers-note"><strong>🔄 Список серверов пополняется.</strong><br>Следите за обновлениями в нашем канале <a href="https://t.me/LamsVPN" target="_blank" style="color:#c8ff00; text-decoration:none;">@LamsVPN</a></div>
         </div>
     </div>
 
-    <!-- FAQ -->
+    <!-- FAQ (без изменений) -->
     <div id="sec-faq" class="section">
         <div class="container">
             <div class="sec-header"><div class="tag">FAQ</div><h2>Частые вопросы</h2><p>Не нашли ответ? Пишите в поддержку — @lamssupport</p></div>
             <div class="faq-list">
-                <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Что такое обход белых списков? <span class="faq-arrow">▼</span></div><div class="faq-a">В России Роскомнадзор блокирует сайты через «белые списки» — разрешённые ресурсы. Наши серверы в Москве и Хельсинки специально настроены так, чтобы обходить эти ограничения без замедления скорости, при этом трафик на российские сайты идёт напрямую.</div></div>
+                <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Что такое обход белых списков? <span class="faq-arrow">▼</span></div><div class="faq-a">В России Роскомнадзор блокирует сайты через «белые списки» — разрешённые ресурсы. Наши серверы во Франции и Нидерландах специально настроены так, чтобы обходить эти ограничения без замедления скорости, при этом трафик на российские сайты идёт напрямую.</div></div>
                 <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Как быстро подключиться после оплаты? <span class="faq-arrow">▼</span></div><div class="faq-a">Сразу после оплаты через сайт вы получите персональный VLESS конфиг прямо в своём профиле. Добавляете его в приложение — и готово. Занимает не больше 2 минут.</div></div>
                 <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Какие устройства поддерживаются? <span class="faq-arrow">▼</span></div><div class="faq-a">Android, iOS, Windows, macOS, Linux. Для каждой платформы есть подробная инструкция в вашем профиле.</div></div>
                 <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Вы храните логи моей активности? <span class="faq-arrow">▼</span></div><div class="faq-a">Нет. Мы не ведём логи посещённых сайтов, запросов или активности пользователей. Хранится только минимально необходимая информация для работы сервиса — срок действия подписки.</div></div>
@@ -290,7 +293,7 @@
         </div></div>
     </div>
 
-    <!-- PROFILE -->
+    <!-- PROFILE (с обновлённым блоком продления и скрытием) -->
     <div id="sec-profile" class="section">
         <div class="container">
             <div class="profile-page">
@@ -305,18 +308,18 @@
                     <div class="detail-row"><span>Ваш ID профиля:</span> <span id="profileUid">—</span></div>
                 </div>
 
-                <div class="profile-extension">
+                <!-- Продление показывается только при активной подписке -->
+                <div class="profile-extension" id="profileExtensionBlock">
                     <h3>🔄 Продлить подписку</h3>
                     <div class="price-tabs" id="profileExtensionTabs">
-                        <button class="price-tab active" data-days="1" data-price="15" data-period="1 день">1 день</button>
-                        <button class="price-tab" data-days="30" data-price="100" data-period="мес.">1 мес.</button>
-                        <button class="price-tab" data-days="90" data-price="297" data-period="3 мес.">3 мес.</button>
-                        <button class="price-tab" data-days="180" data-price="594" data-period="6 мес.">6 мес.</button>
-                        <button class="price-tab" data-days="365" data-price="1188" data-period="год">1 год</button>
+                        <button class="price-tab active" data-days="30" data-price="100" data-period="мес.">1 мес.</button>
+                        <button class="price-tab" data-days="90" data-price="285" data-period="3 мес.">3 мес. -5%</button>
+                        <button class="price-tab" data-days="180" data-price="540" data-period="6 мес.">6 мес. -10%</button>
+                        <button class="price-tab" data-days="365" data-price="1020" data-period="год">1 год -15%</button>
                     </div>
                     <div class="price-display">
-                        <span class="price-amount" id="profileExtensionPriceAmount"><sup>₽</sup>15</span>
-                        <span class="price-period" id="profileExtensionPricePeriod">/ 1 день</span>
+                        <span class="price-amount" id="profileExtensionPriceAmount"><sup>₽</sup>100</span>
+                        <span class="price-period" id="profileExtensionPricePeriod">/ мес.</span>
                     </div>
                     <button class="btn-primary" onclick="extendSubscriptionFromProfile()">Оплатить продление</button>
                 </div>
@@ -347,7 +350,7 @@
         </div>
     </div>
 
-    <!-- AUTH MODAL -->
+    <!-- AUTH MODAL (без изменений) -->
     <div class="modal-overlay" id="authModal">
         <div class="modal"><button class="modal-close" onclick="closeAuth()">✕</button><h3>LamsVPN</h3><p>Войдите или создайте аккаунт</p>
             <div class="modal-tabs"><button class="modal-tab active" id="tabLogin" onclick="switchTab('login')">Войти</button><button class="modal-tab" id="tabReg" onclick="switchTab('reg')">Регистрация</button></div>
@@ -356,7 +359,7 @@
         </div>
     </div>
 
-    <!-- PAYMENT MODAL -->
+    <!-- PAYMENT MODAL (с кнопкой Закрыть после успеха) -->
     <div class="modal-overlay" id="paymentModal">
         <div class="modal pay-modal">
             <button class="modal-close" onclick="closePaymentModal()">✕</button>
@@ -369,6 +372,7 @@
             <div id="paymentStatus" style="display:none; margin-bottom:16px;"></div>
             <div id="yookassa-widget-container" style="min-height: 100px;"></div>
             <button class="btn-submit" id="payButton" onclick="startPayment()">Оплатить</button>
+            <button class="btn-ghost" id="closeAfterSuccess" onclick="closePaymentModal()" style="display:none;">Закрыть</button>
             <div class="test-payment-note">⚡ Тестовый режим: средства не спишутся.</div>
         </div>
     </div>
@@ -484,15 +488,19 @@
             document.getElementById('profileEmailDisplay').textContent = user.email;
             document.getElementById('profileAvatarBig').textContent = user.name[0].toUpperCase();
             document.getElementById('profileUid').textContent = user.uid;
+            
+            const extensionBlock = document.getElementById('profileExtensionBlock');
             if (isSubscriptionActive()) {
                 document.getElementById('profileSubStatus').textContent = 'Активна';
                 document.getElementById('profileExpiryDate').textContent = new Date(user.expiry).toLocaleDateString();
                 document.getElementById('profileConfigBox').classList.add('active');
                 document.getElementById('profileConfigString').textContent = user.config;
+                extensionBlock.style.display = 'block'; // показываем продление
             } else {
                 document.getElementById('profileSubStatus').textContent = 'Неактивна';
                 document.getElementById('profileExpiryDate').textContent = '—';
                 document.getElementById('profileConfigBox').classList.remove('active');
+                extensionBlock.style.display = 'none'; // скрываем продление
             }
         }
 
@@ -543,6 +551,7 @@
             document.getElementById('yookassa-widget-container').innerHTML = '';
             document.getElementById('payButton').style.display = 'block';
             document.getElementById('paymentStatus').style.display = 'none';
+            document.getElementById('closeAfterSuccess').style.display = 'none';
             openPaymentModal();
         }
 
@@ -559,6 +568,7 @@
             document.getElementById('yookassa-widget-container').innerHTML = '';
             document.getElementById('payButton').style.display = 'block';
             document.getElementById('paymentStatus').style.display = 'none';
+            document.getElementById('closeAfterSuccess').style.display = 'none';
             openPaymentModal();
         }
 
@@ -594,7 +604,6 @@
                 }
 
                 payBtn.style.display = 'none';
-                // Инициализируем виджет с правильным именем конструктора
                 const checkout = new YooMoneyCheckoutWidget({
                     confirmation_token: data.confirmation_token,
                     customization: { colors: { primary: '#c8ff00', background: '#111' } },
@@ -610,9 +619,8 @@
                         document.getElementById('paymentStatus').style.display = 'block';
                         document.getElementById('paymentStatus').innerHTML = '<span style="color:#c8ff00;">Оплата прошла успешно!</span>';
                         const newExpiry = extendSubscription(pendingPurchase.days);
-                        closePaymentModal();
                         updateProfileUI();
-                        showToast(`Подписка продлена до ${new Date(newExpiry).toLocaleDateString()}.`);
+                        document.getElementById('closeAfterSuccess').style.display = 'inline-block';
                     }
                 });
                 checkout.render('yookassa-widget-container');
