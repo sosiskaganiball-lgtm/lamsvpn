@@ -215,7 +215,7 @@
                 <span class="server-pill">🇸🇪 Стокгольм</span>
                 <span class="server-pill">🇳🇱 Нидерланды</span>
             </div></div></div></div></div></div>
-        <div class="container"><footer><div class="logo">Lams<span style="color:#c8ff00">VPN</span></div><p></p><div class="footer-links"><a href="#" onclick="showSection('support')">Поддержка</a><a href="#" onclick="showSection('faq')">FAQ</a></div></footer></div>
+        <!-- Футер убран, как вы просили -->
     </div>
 
     <!-- TARIFFS -->
@@ -526,7 +526,7 @@
             showSection('home');
         }
 
-        // ======================== PAYMENT (НАДЁЖНАЯ ВЕРСИЯ) ========================
+        // ======================== PAYMENT (ИСПРАВЛЕНО) ========================
         const API_BASE = 'https://lamsvpn.vercel.app';
         let pendingPurchase = null;
 
@@ -604,6 +604,7 @@
                 }
 
                 payBtn.style.display = 'none';
+                // Инициализация виджета
                 const checkout = new YooMoneyCheckoutWidget({
                     confirmation_token: data.confirmation_token,
                     customization: { colors: { primary: '#c8ff00', background: '#111' } },
@@ -615,14 +616,21 @@
                         payBtn.textContent = 'Оплатить';
                     },
                     success_callback: () => {
-                        document.getElementById('yookassa-widget-container').innerHTML = '';
-                        document.getElementById('paymentStatus').style.display = 'block';
-                        document.getElementById('paymentStatus').innerHTML = '<span style="color:#c8ff00;">Оплата прошла успешно!</span>';
-                        
-                        const newExpiry = extendSubscription(pendingPurchase.days);
-                        updateProfileUI();
-                        document.getElementById('closeAfterSuccess').style.display = 'inline-block';
-                        showToast(`Подписка продлена до ${new Date(newExpiry).toLocaleDateString()}.`);
+                        try {
+                            // Очищаем виджет
+                            document.getElementById('yookassa-widget-container').innerHTML = '';
+                            document.getElementById('paymentStatus').style.display = 'block';
+                            document.getElementById('paymentStatus').innerHTML = '<span style="color:#c8ff00;">Оплата прошла успешно!</span>';
+                            
+                            // Начисляем подписку
+                            const newExpiry = extendSubscription(pendingPurchase.days);
+                            updateProfileUI(); // обновит и навигацию, и профиль если открыт
+                            document.getElementById('closeAfterSuccess').style.display = 'inline-block';
+                            showToast(`Подписка продлена до ${new Date(newExpiry).toLocaleDateString()}.`);
+                        } catch (e) {
+                            console.error(e);
+                            showToast('Ошибка продления подписки: ' + e.message);
+                        }
                     }
                 });
                 checkout.render('yookassa-widget-container');
