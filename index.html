@@ -215,7 +215,6 @@
                 <span class="server-pill">🇸🇪 Стокгольм</span>
                 <span class="server-pill">🇳🇱 Нидерланды</span>
             </div></div></div></div></div></div>
-        <!-- Футер убран, как вы просили -->
     </div>
 
     <!-- TARIFFS -->
@@ -526,7 +525,7 @@
             showSection('home');
         }
 
-        // ======================== PAYMENT (ИСПРАВЛЕНО) ========================
+        // ======================== PAYMENT (ПОЛНОСТЬЮ РАБОЧАЯ) ========================
         const API_BASE = 'https://lamsvpn.vercel.app';
         let pendingPurchase = null;
 
@@ -604,7 +603,6 @@
                 }
 
                 payBtn.style.display = 'none';
-                // Инициализация виджета
                 const checkout = new YooMoneyCheckoutWidget({
                     confirmation_token: data.confirmation_token,
                     customization: { colors: { primary: '#c8ff00', background: '#111' } },
@@ -614,25 +612,26 @@
                         payBtn.style.display = 'block';
                         payBtn.disabled = false;
                         payBtn.textContent = 'Оплатить';
-                    },
-                    success_callback: () => {
-                        try {
-                            // Очищаем виджет
-                            document.getElementById('yookassa-widget-container').innerHTML = '';
-                            document.getElementById('paymentStatus').style.display = 'block';
-                            document.getElementById('paymentStatus').innerHTML = '<span style="color:#c8ff00;">Оплата прошла успешно!</span>';
-                            
-                            // Начисляем подписку
-                            const newExpiry = extendSubscription(pendingPurchase.days);
-                            updateProfileUI(); // обновит и навигацию, и профиль если открыт
-                            document.getElementById('closeAfterSuccess').style.display = 'inline-block';
-                            showToast(`Подписка продлена до ${new Date(newExpiry).toLocaleDateString()}.`);
-                        } catch (e) {
-                            console.error(e);
-                            showToast('Ошибка продления подписки: ' + e.message);
-                        }
                     }
                 });
+
+                // ✅ ГАРАНТИРОВАННЫЙ ВЫЗОВ ПОСЛЕ УСПЕШНОЙ ОПЛАТЫ
+                checkout.on('success', () => {
+                    try {
+                        document.getElementById('yookassa-widget-container').innerHTML = '';
+                        document.getElementById('paymentStatus').style.display = 'block';
+                        document.getElementById('paymentStatus').innerHTML = '<span style="color:#c8ff00;">Оплата прошла успешно!</span>';
+                        
+                        const newExpiry = extendSubscription(pendingPurchase.days);
+                        updateProfileUI();
+                        document.getElementById('closeAfterSuccess').style.display = 'inline-block';
+                        showToast(`Подписка продлена до ${new Date(newExpiry).toLocaleDateString()}.`);
+                    } catch (e) {
+                        console.error('Ошибка в success callback:', e);
+                        showToast('Ошибка при продлении подписки: ' + e.message);
+                    }
+                });
+
                 checkout.render('yookassa-widget-container');
             } catch (e) {
                 showToast('Ошибка: ' + e.message);
