@@ -141,7 +141,7 @@
         .streisand-detail ol { list-style-position: inside; color: #aaa; font-size: 13px; line-height: 1.8; }
         .streisand-detail ol li strong { color: #fff; }
         .profile-actions { display: flex; flex-wrap: wrap; gap: 12px; width: 100%; max-width: 600px; justify-content: center; }
-        .profile-extension { display: none; } /* будет показываться только при активной подписке */
+        .profile-extension { display: none; }
         .profile-extension h3 { font-size: 18px; margin-bottom: 16px; }
         .profile-extension .price-display { margin: 16px 0; }
         #toast-container { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; align-items: center; pointer-events: none; }
@@ -359,7 +359,7 @@
         </div>
     </div>
 
-    <!-- PAYMENT MODAL (с кнопкой Закрыть после успеха) -->
+    <!-- PAYMENT MODAL (исправленная кнопка Закрыть и начисление подписки) -->
     <div class="modal-overlay" id="paymentModal">
         <div class="modal pay-modal">
             <button class="modal-close" onclick="closePaymentModal()">✕</button>
@@ -495,12 +495,12 @@
                 document.getElementById('profileExpiryDate').textContent = new Date(user.expiry).toLocaleDateString();
                 document.getElementById('profileConfigBox').classList.add('active');
                 document.getElementById('profileConfigString').textContent = user.config;
-                extensionBlock.style.display = 'block'; // показываем продление
+                extensionBlock.style.display = 'block';
             } else {
                 document.getElementById('profileSubStatus').textContent = 'Неактивна';
                 document.getElementById('profileExpiryDate').textContent = '—';
                 document.getElementById('profileConfigBox').classList.remove('active');
-                extensionBlock.style.display = 'none'; // скрываем продление
+                extensionBlock.style.display = 'none';
             }
         }
 
@@ -526,8 +526,8 @@
             showSection('home');
         }
 
-        // ======================== PAYMENT (РЕАЛЬНАЯ) ========================
-        const API_BASE = 'https://lamsvpn.vercel.app'; // ваш домен Vercel
+        // ======================== PAYMENT (исправленная) ========================
+        const API_BASE = 'https://lamsvpn.vercel.app';
         let pendingPurchase = null;
 
         function initiatePurchase(btn) {
@@ -618,9 +618,16 @@
                         document.getElementById('yookassa-widget-container').innerHTML = '';
                         document.getElementById('paymentStatus').style.display = 'block';
                         document.getElementById('paymentStatus').innerHTML = '<span style="color:#c8ff00;">Оплата прошла успешно!</span>';
-                        const newExpiry = extendSubscription(pendingPurchase.days);
-                        updateProfileUI();
-                        document.getElementById('closeAfterSuccess').style.display = 'inline-block';
+                        
+                        // Начисляем подписку
+                        try {
+                            const newExpiry = extendSubscription(pendingPurchase.days);
+                            updateProfileUI();
+                            // Показываем кнопку закрыть
+                            document.getElementById('closeAfterSuccess').style.display = 'inline-block';
+                        } catch (e) {
+                            showToast('Ошибка при продлении: ' + e.message);
+                        }
                     }
                 });
                 checkout.render('yookassa-widget-container');
