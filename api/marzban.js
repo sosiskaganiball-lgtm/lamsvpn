@@ -1,12 +1,17 @@
-import { get, put, del } from '@vercel/blob';
+import { Redis } from '@upstash/redis';
+
+const redis = new Redis({
+  url: process.env.KV_REST_API_URL,
+  token: process.env.KV_REST_API_TOKEN,
+});
 
 export default async function handler(req, res) {
   const { email, action } = req.body;
   if (!email) return res.status(400).json({ error: 'Email обязателен' });
 
-  const blob = await get(`user:${email}`).catch(() => null);
-  if (!blob) return res.status(404).json({ error: 'Пользователь не найден' });
-  const user = JSON.parse(blob);
+  const data = await redis.get(`user:${email}`);
+  if (!data) return res.status(404).json({ error: 'Пользователь не найден' });
+  const user = JSON.parse(data);
 
   const MARZBAN_URL = process.env.MARZBAN_URL;
   const MARZBAN_API_KEY = process.env.MARZBAN_API_KEY;
@@ -35,7 +40,7 @@ export default async function handler(req, res) {
       });
       const linkData = await linkResp.json();
       user.config = linkData.vless_link || linkData.vlink;
-      await put(`user:${email}`, JSON.stringify(user));
+      await redis.set(`user:${email}`, JSON.stringify(user));
       return res.json({ config: user.config });
     }
 
@@ -44,7 +49,7 @@ export default async function handler(req, res) {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${MARZBAN_API_KEY}` }
       }).catch(() => {});
-      await del(`user:${email}`);
+      await redis.del(`user:${email}`);
       return res.json({ success: true });
     }
 
@@ -60,7 +65,7 @@ export default async function handler(req, res) {
         body: JSON.stringify({ expire: Math.floor(newExpiry / 1000) }),
       }).catch(() => {});
       user.expiry = newExpiry;
-      await put(`user:${email}`, JSON.stringify(user));
+      await redis.set(`user:${email}`, JSON.stringify(user));
       return res.json({ success: true });
     }
 
