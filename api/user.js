@@ -23,7 +23,7 @@ export default async function handler(req, res) {
       const prev = user.expiry ? Number(user.expiry) : 0;
       user.expiry = Math.max(now, prev) + days * 86400000;
       if (!user.config) user.config = null;
-      await put(`user:${email}`, JSON.stringify(user), { access: 'public' });
+      await put(`user:${email}`, JSON.stringify(user));
       return res.json({ newExpiry: user.expiry });
     }
     if (action === 'delete') {
