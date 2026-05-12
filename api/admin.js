@@ -12,6 +12,7 @@ export default async function handler(req, res) {
     return res.status(403).json({ error: 'Доступ запрещён' });
   }
 
+  // ===== GET – список всех пользователей =====
   if (req.method === 'GET') {
     try {
       const keys = await redis.keys('user:*');
@@ -20,21 +21,18 @@ export default async function handler(req, res) {
       for (const key of keys) {
         const raw = await redis.get(key);
         let user;
-
-        // Upstash может вернуть уже распарсенный объект
         if (typeof raw === 'string') {
           try {
             user = JSON.parse(raw);
           } catch (e) {
             console.error('Ошибка парсинга для ключа', key, e);
-            continue; // пропускаем битые записи
+            continue;
           }
         } else if (raw && typeof raw === 'object') {
-          user = raw; // уже объект
+          user = raw;
         } else {
-          continue; // неизвестный формат
+          continue;
         }
-
         users.push({ email: key.replace(/^user:/, ''), ...user });
       }
 
@@ -45,9 +43,61 @@ export default async function handler(req, res) {
     }
   }
 
-  // Остальные методы (POST) оставьте без изменений,
-  // либо добавьте аналогичную проверку в местах, где есть JSON.parse(raw)
-  // …
+  // ===== POST – управление пользователями =====
+  if (req.method === 'POST') {
+    const { email, action, days, date } = req.body;
+    if (!email) return res.status(400).json({ error: 'Email обязателен' });
 
+    try {
+      const raw = await redis.get(`user:${email}`);
+      let user;
+      if (typeof raw === 'string') {
+        user = JSON.parse(raw);
+      } else if (raw && typeof raw === 'object') {
+        user = raw;
+      } else {
+        return res.status(404).json({ error: 'Пользователь не найден' });
+      }
+
+      if (action === 'setExpiry' && date) {
+        user.expiry = new Date(date).getTime();
+        await redis.set(`user:${email}`, JSON.stringify(user));
+        return res.json({ success: true, message: 'Дата подписки обновлена' });
+      }
+
+      if (action === 'addDays' && days) {
+        const now = Date.now();
+        const prev = user.expiry ? Number(user.expiry) : 0;
+        user.expiry = Math.max(now, prev) + days * 86400000;
+        await redis.set(`user:${email}`, JSON.stringify(user));
+        return res.json({ success: true, message: `Добавлено ${days} дн.` });
+      }
+
+      if (action === 'delete') {
+        // Удаляем из Redis
+        await redis.del(`user:${email}`);
+        // Удаляем из Marzban, если есть UID
+        try {
+          if (user.uid) {
+            await fetch(`${process.env.MARZBAN_URL}/api/user/${user.uid}`, {
+              method: 'DELETE',
+              headers: { 'Authorization': `Bearer ${process.env.MARZBAN_API_KEY}` },
+            });
+          }
+        } catch (err) {
+          console.error('Ошибка при удалении из Marzban:', err);
+          // Не критично, пользователь всё равно удалён из базы
+        }
+        return res.json({ success: true, message: 'Пользователь удалён' });
+      }
+
+      return res.status(400).json({ error: 'Неизвестное действие' });
+    } catch (error) {
+      console.error('Ошибка в POST /api/admin:', error);
+      return res.status(500).json({ error: 'Внутренняя ошибка сервера' });
+    }
+  }
+
+  // Остальные методы запрещены
   return res.status(405).json({ error: 'Метод не поддерживается' });
 }
