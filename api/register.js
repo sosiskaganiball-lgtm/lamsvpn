@@ -17,6 +17,7 @@ export default async function handler(req, res) {
   const passHash = btoa(password + 'lams-salt');
   const newUser = { name, passHash, uid, config: null, expiry: null };
 
+  // Явно сохраняем как строку
   await redis.set(`user:${email}`, JSON.stringify(newUser));
   res.status(201).json({ success: true });
 }
