@@ -1,4 +1,4 @@
-import { kv } from '@vercel/kv';
+import { get, put, list, del } from '@vercel/blob';
 import crypto from 'crypto';
 
 const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
