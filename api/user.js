@@ -26,7 +26,6 @@ export default async function handler(req, res) {
       await put(`user:${email}`, JSON.stringify(user), { access: 'public' });
       return res.json({ newExpiry: user.expiry });
     }
-
     if (action === 'delete') {
       await del(`user:${email}`);
       return res.json({ success: true });
