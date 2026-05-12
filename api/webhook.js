@@ -14,7 +14,7 @@ export default async function handler(req, res) {
       const now = Date.now();
       const prev = user.expiry ? Number(user.expiry) : 0;
       user.expiry = Math.max(now, prev) + days * 86400000;
-      await put(`user:${email}`, JSON.stringify(user), { access: 'public' });
+      await put(`user:${email}`, JSON.stringify(user));
     }
   }
   res.sendStatus(200);
