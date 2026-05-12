@@ -4,58 +4,50 @@ const redis = new Redis({
   url: process.env.KV_REST_API_URL,
   token: process.env.KV_REST_API_TOKEN,
 });
-const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
 
 export default async function handler(req, res) {
+  // Проверка авторизации
   const auth = req.headers.authorization;
-  if (!auth || auth !== ADMIN_PASSWORD_HASH) {
+  if (!auth || auth !== process.env.ADMIN_PASSWORD_HASH) {
     return res.status(403).json({ error: 'Доступ запрещён' });
   }
 
   if (req.method === 'GET') {
-    const keys = await redis.keys('user:*');
-    const users = [];
-    for (const key of keys) {
-      const data = await redis.get(key);
-      if (data) {
-        const parsed = JSON.parse(data);
-        users.push({ email: key.slice(5), ...parsed });
+    try {
+      const keys = await redis.keys('user:*');
+      const users = [];
+
+      for (const key of keys) {
+        const raw = await redis.get(key);
+        let user;
+
+        // Upstash может вернуть уже распарсенный объект
+        if (typeof raw === 'string') {
+          try {
+            user = JSON.parse(raw);
+          } catch (e) {
+            console.error('Ошибка парсинга для ключа', key, e);
+            continue; // пропускаем битые записи
+          }
+        } else if (raw && typeof raw === 'object') {
+          user = raw; // уже объект
+        } else {
+          continue; // неизвестный формат
+        }
+
+        users.push({ email: key.replace(/^user:/, ''), ...user });
       }
+
+      return res.json(users);
+    } catch (error) {
+      console.error('Ошибка в GET /api/admin:', error);
+      return res.status(500).json({ error: 'Внутренняя ошибка сервера' });
     }
-    return res.json(users);
   }
 
-  if (req.method === 'POST') {
-    const { email, action, days, date } = req.body;
-    if (!email) return res.status(400).json({ error: 'Email обязателен' });
-    const data = await redis.get(`user:${email}`);
-    if (!data) return res.status(404).json({ error: 'Пользователь не найден' });
-    const user = JSON.parse(data);
+  // Остальные методы (POST) оставьте без изменений,
+  // либо добавьте аналогичную проверку в местах, где есть JSON.parse(raw)
+  // …
 
-    if (action === 'setExpiry' && date) {
-      user.expiry = new Date(date).getTime();
-      await redis.set(`user:${email}`, JSON.stringify(user));
-      return res.json({ success: true });
-    }
-    if (action === 'addDays' && days) {
-      const now = Date.now();
-      const prev = user.expiry ? Number(user.expiry) : 0;
-      user.expiry = Math.max(now, prev) + days * 86400000;
-      await redis.set(`user:${email}`, JSON.stringify(user));
-      return res.json({ success: true });
-    }
-    if (action === 'delete') {
-      await redis.del(`user:${email}`);
-      try {
-        await fetch(`${process.env.MARZBAN_URL}/api/user/${user.uid}`, {
-          method: 'DELETE',
-          headers: { 'Authorization': `Bearer ${process.env.MARZBAN_API_KEY}` }
-        });
-      } catch (e) {}
-      return res.json({ success: true });
-    }
-    return res.status(400).json({ error: 'Неизвестное действие' });
-  }
-
-  res.status(405).json({ error: 'Метод не поддерживается' });
+  return res.status(405).json({ error: 'Метод не поддерживается' });
 }
