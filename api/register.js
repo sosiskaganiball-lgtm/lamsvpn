@@ -12,6 +12,6 @@ export default async function handler(req, res) {
   const passHash = btoa(password + 'lams-salt');
   const newUser = { name, passHash, uid, config: null, expiry: null };
 
-  await put(`user:${email}`, JSON.stringify(newUser), { access: 'public' });
+  await put(`user:${email}`, JSON.stringify(newUser));
   res.status(201).json({ success: true });
 }
