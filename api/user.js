@@ -26,11 +26,11 @@ export default async function handler(req, res) {
       const { passHash, ...safeUser } = user;
       return res.status(200).json(safeUser);
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'Внутренняя ошибка' });
+      console.error('GET /api/user error:', error);
+      return res.status(500).json({ error: 'Внутренняя ошибка сервера' });
     }
   }
 
-  // PUT — продление / удаление (оставь как было)
-  // ...
+  // ... PUT логика (extend / delete) без изменений ...
+  return res.status(405).json({ error: 'Метод не поддерживается' });
 }
