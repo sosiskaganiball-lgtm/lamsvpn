@@ -35,7 +35,7 @@ export default async function handler(req, res) {
       });
       const linkData = await linkResp.json();
       user.config = linkData.vless_link || linkData.vlink;
-      await put(`user:${email}`, JSON.stringify(user), { access: 'public' });
+      await put(`user:${email}`, JSON.stringify(user));
       return res.json({ config: user.config });
     }
 
@@ -60,7 +60,7 @@ export default async function handler(req, res) {
         body: JSON.stringify({ expire: Math.floor(newExpiry / 1000) }),
       }).catch(() => {});
       user.expiry = newExpiry;
-      await put(`user:${email}`, JSON.stringify(user), { access: 'public' });
+      await put(`user:${email}`, JSON.stringify(user));
       return res.json({ success: true });
     }
 
