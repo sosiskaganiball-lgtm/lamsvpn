@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     const payment = event.object;
     const email = payment.metadata.email;
     const days = payment.metadata.days;
-    
+
     const blob = await get(`user:${email}`).catch(() => null);
     if (blob) {
       const user = JSON.parse(blob);
