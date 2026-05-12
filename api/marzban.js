@@ -23,31 +23,30 @@ export default async function handler(req, res) {
 
     // Генерация/получение ключа
     if (req.method === 'POST' && action === 'create') {
-      // Генерируем UUID, если ещё нет
       if (!user.marzban_uuid) {
         user.marzban_uuid = crypto.randomUUID();
         await redis.set(`user:${email}`, JSON.stringify(user));
       }
 
-      // Проверяем, существует ли уже пользователь в Marzban
+      // Проверяем, существует ли пользователь в Marzban
       const checkResp = await fetch(`${MARZBAN_URL}/api/user/${user.marzban_uuid}`, {
         headers: { 'Authorization': `Bearer ${MARZBAN_API_KEY}` }
       });
 
       if (checkResp.ok) {
-        // Пользователь уже есть — просто получаем его конфиг
         const linkData = await checkResp.json();
-        user.config = linkData.vless_link || linkData.vlink || linkData.subscription_url;
+        // Берём относительный путь подписки и делаем полный URL
+        const subPath = linkData.subscription_url || linkData.vless_link || linkData.vlink;
+        if (subPath) {
+          user.config = `${MARZBAN_URL}${subPath}`;
+        }
         await redis.set(`user:${email}`, JSON.stringify(user));
         return res.json({ config: user.config });
       }
 
-      // Если пользователя нет — создаём с правильным полем proxies
       if (checkResp.status === 404) {
         const proxies = {
-          vless: {
-            "VLESS_Reality": {}   // можно добавить отдельные настройки, но пустой объект работает
-          }
+          vless: { "VLESS_Reality": {} }
         };
 
         const response = await fetch(`${MARZBAN_URL}/api/user`, {
@@ -59,11 +58,11 @@ export default async function handler(req, res) {
           body: JSON.stringify({
             username: user.marzban_uuid,
             status: 'active',
-            proxies: proxies,               // <-- правильное поле
+            proxies: proxies,
             expire: user.expiry ? Math.floor(user.expiry / 1000) : 0,
             data_limit: 0,
             data_limit_reset_strategy: "no_reset",
-            inbounds: { vless: ["VLESS_Reality"] }, // на всякий случай тоже оставим
+            inbounds: { vless: ["VLESS_Reality"] },
           }),
         });
 
@@ -72,12 +71,14 @@ export default async function handler(req, res) {
           throw new Error(`Ошибка создания в Marzban: ${err}`);
         }
 
-        // Получаем готовую ссылку
         const linkResp = await fetch(`${MARZBAN_URL}/api/user/${user.marzban_uuid}`, {
           headers: { 'Authorization': `Bearer ${MARZBAN_API_KEY}` }
         });
         const linkData = await linkResp.json();
-        user.config = linkData.vless_link || linkData.vlink || linkData.subscription_url;
+        const subPath = linkData.subscription_url || linkData.vless_link || linkData.vlink;
+        if (subPath) {
+          user.config = `${MARZBAN_URL}${subPath}`;
+        }
         await redis.set(`user:${email}`, JSON.stringify(user));
         return res.json({ config: user.config });
       }
