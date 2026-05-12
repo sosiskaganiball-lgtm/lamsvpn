@@ -363,7 +363,6 @@
                     <div class="detail-row"><span>Ваш ID профиля:</span> <span id="profileUid">—</span></div>
                 </div>
 
-                <!-- Продление (только при активной подписке) -->
                 <div class="profile-extension" id="profileExtensionBlock">
                     <h3>🔄 Продлить подписку</h3>
                     <div class="price-tabs" id="profileExtensionTabs">
@@ -611,6 +610,9 @@
                 if (res.success) {
                     setEmail(email);
                     currentUser = await fetchUser();
+                    if (!currentUser) {
+                        throw new Error('Не удалось загрузить данные профиля. Попробуйте ещё раз.');
+                    }
                     closeAuth();
                     updateProfileUI();
                     showToast('Добро пожаловать!');
