@@ -1,4 +1,4 @@
-import { kv } from '@vercel/kv';
+import { get, put, list, del } from '@vercel/blob';
 
 export default async function handler(req, res) {
   const { email, action } = req.body;
