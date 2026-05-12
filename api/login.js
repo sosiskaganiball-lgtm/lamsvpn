@@ -5,10 +5,10 @@ export default async function handler(req, res) {
   const { email, password } = req.body;
   if (!email || !password) return res.status(400).json({ error: 'Email и пароль обязательны' });
 
-  const userData = await get(`user:${email}`).catch(() => null);
-  if (!userData) return res.status(401).json({ error: 'Неверный email или пароль' });
+  const blob = await get(`user:${email}`).catch(() => null);
+  if (!blob) return res.status(401).json({ error: 'Неверный email или пароль' });
 
-  const user = typeof userData === 'string' ? JSON.parse(userData) : userData;
+  const user = JSON.parse(blob);
   if (user.passHash !== btoa(password + 'lams-salt')) return res.status(401).json({ error: 'Неверный email или пароль' });
 
   res.json({ success: true, email: email });
