@@ -1,20 +1,18 @@
-import { get, put, list, del } from '@vercel/blob';
+import { get, put, del } from '@vercel/blob';
 
 export default async function handler(req, res) {
   const { email, action } = req.body;
   if (!email) return res.status(400).json({ error: 'Email обязателен' });
 
-  const userKey = `user:${email}`;
-  const userData = await kv.get(userKey);
-  if (!userData) return res.status(404).json({ error: 'Пользователь не найден' });
-  const user = typeof userData === 'string' ? JSON.parse(userData) : userData;
+  const blob = await get(`user:${email}`).catch(() => null);
+  if (!blob) return res.status(404).json({ error: 'Пользователь не найден' });
+  const user = JSON.parse(blob);
 
   const MARZBAN_URL = process.env.MARZBAN_URL;
   const MARZBAN_API_KEY = process.env.MARZBAN_API_KEY;
 
   try {
     if (req.method === 'POST' && action === 'create') {
-      // создать пользователя в Marzban
       const response = await fetch(`${MARZBAN_URL}/api/user`, {
         method: 'POST',
         headers: {
@@ -24,7 +22,7 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           username: user.uid,
           status: 'active',
-          inbounds: { "vless": [] }, // имена inbound'ов, которые создадим позже
+          inbounds: { "vless": [] },
           expire: user.expiry ? Math.floor(user.expiry / 1000) : 0,
         }),
       });
@@ -32,13 +30,12 @@ export default async function handler(req, res) {
         const err = await response.text();
         throw new Error(`Marzban error: ${err}`);
       }
-      // получить ссылку
       const linkResp = await fetch(`${MARZBAN_URL}/api/user/${user.uid}`, {
         headers: { 'Authorization': `Bearer ${MARZBAN_API_KEY}` }
       });
       const linkData = await linkResp.json();
-      user.config = linkData.vless_link || linkData.vlink; // обычно ссылка лежит в vless_link
-      await kv.set(userKey, JSON.stringify(user));
+      user.config = linkData.vless_link || linkData.vlink;
+      await put(`user:${email}`, JSON.stringify(user), { access: 'public' });
       return res.json({ config: user.config });
     }
 
@@ -46,8 +43,8 @@ export default async function handler(req, res) {
       await fetch(`${MARZBAN_URL}/api/user/${user.uid}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${MARZBAN_API_KEY}` }
-      });
-      await kv.del(userKey);
+      }).catch(() => {});
+      await del(`user:${email}`);
       return res.json({ success: true });
     }
 
@@ -61,9 +58,9 @@ export default async function handler(req, res) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ expire: Math.floor(newExpiry / 1000) }),
-      });
+      }).catch(() => {});
       user.expiry = newExpiry;
-      await kv.set(userKey, JSON.stringify(user));
+      await put(`user:${email}`, JSON.stringify(user), { access: 'public' });
       return res.json({ success: true });
     }
 
