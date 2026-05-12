@@ -144,7 +144,7 @@
         .profile-extension h3 { font-size: 18px; margin-bottom: 16px; }
         .profile-extension .price-display { margin: 16px 0; }
         #toast-container { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; align-items: center; pointer-events: none; }
-        .toast { background: #1a1a1a; border: 1px solid #2a2a2a; border-left: 4px solid #c8ff00; color: #e8e8e8; padding: 14px 24px; border-radius: 8px; font-size: 14px; font-weight: 500; pointer-events: auto; box-shadow: 0 8px 24px rgba(0,0,0,0.5); animation: toastIn 0.4s ease, toastOut 0.3s ease forwards; animation-delay: 0s, 2.8s; max-width: 380px; text-align: center; }
+        .toast-custom { background: #1a1a1a; border: 1px solid #2a2a2a; border-left: 4px solid #c8ff00; color: #e8e8e8; padding: 14px 24px; border-radius: 8px; font-size: 14px; font-weight: 500; pointer-events: auto; box-shadow: 0 8px 24px rgba(0,0,0,0.5); animation: toastIn 0.4s ease, toastOut 0.3s ease forwards; animation-delay: 0s, 2.8s; max-width: 380px; text-align: center; }
         @keyframes toastIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes toastOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-10px); } }
         footer { border-top: 1px solid #222; padding: 32px 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
@@ -460,18 +460,19 @@
     </div>
 
     <script>
-        // ====================== API HELPER ======================
-        const toast = (msg) => {
-            const c = document.getElementById('toast-container');
-            const t = document.createElement('div');
-            t.className = 'toast';
-            t.textContent = msg;
-            c.appendChild(t);
-            setTimeout(() => t.remove(), 3500);
-        };
+        // ====================== TOAST SYSTEM ======================
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast-custom';
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3500);
+        }
 
-        const api = async (url, method = 'GET', body = null) => {
-            const opts = { method, headers: { 'Content-Type': 'application/json' } };
+        // ====================== API HELPER ======================
+        const api = async (url, method = 'GET', body = null, headers = {}) => {
+            const opts = { method, headers: { 'Content-Type': 'application/json', ...headers } };
             if (body) opts.body = JSON.stringify(body);
             const res = await fetch(url, opts);
             const data = await res.json();
@@ -499,7 +500,7 @@
             await api('/api/login', 'POST', { email, password: pass });
         }
 
-        async function extendSubscription(days) {
+        async function extendSubscriptionAPI(days) {
             const email = getEmail();
             if (!email) throw new Error('Не авторизован');
             return await api('/api/user', 'PUT', { email, action: 'extend', days });
@@ -572,14 +573,14 @@
             try {
                 currentUser.config = await getMarzbanConfig();
                 updateProfileUI();
-                toast('Новый ключ сгенерирован');
-            } catch (e) { toast(e.message); }
+                showToast('Новый ключ сгенерирован');
+            } catch (e) { showToast(e.message); }
         }
 
         function copyProfileConfig() {
             const txt = document.getElementById('profileConfigString').textContent;
-            if (!txt || txt.includes('не сгенерирован')) return toast('Сначала сгенерируйте ключ');
-            navigator.clipboard.writeText(txt).then(() => toast('Ключ скопирован'));
+            if (!txt || txt.includes('не сгенерирован')) return showToast('Сначала сгенерируйте ключ');
+            navigator.clipboard.writeText(txt).then(() => showToast('Ключ скопирован'));
         }
 
         // ====================== UI ======================
@@ -606,12 +607,14 @@
             const email = document.getElementById('loginEmail').value.trim().toLowerCase();
             const pass = document.getElementById('loginPass').value;
             try {
-                await login(email, pass);
-                setEmail(email);
-                currentUser = await fetchUser();
-                closeAuth();
-                updateProfileUI();
-                toast('Добро пожаловать!');
+                const res = await api('/api/login', 'POST', { email, password: pass });
+                if (res.success) {
+                    setEmail(email);
+                    currentUser = await fetchUser();
+                    closeAuth();
+                    updateProfileUI();
+                    showToast('Добро пожаловать!');
+                }
             } catch (e) {
                 document.getElementById('loginErr').textContent = e.message;
                 document.getElementById('loginErr').style.display = 'block';
@@ -631,7 +634,7 @@
                 currentUser = await fetchUser();
                 closeAuth();
                 updateProfileUI();
-                toast('Регистрация успешна!');
+                showToast('Регистрация успешна!');
             } catch (e) {
                 document.getElementById('regErr').textContent = e.message;
                 document.getElementById('regErr').style.display = 'block';
@@ -641,7 +644,7 @@
         // ====================== PAYMENT ======================
         let pendingPurchase = null;
         function initiatePurchase(btn) {
-            if (!currentUser) { openAuth(); toast('Сначала войдите'); return; }
+            if (!currentUser) { openAuth(); showToast('Сначала войдите'); return; }
             const card = btn.closest('.plan-card');
             const activeTab = card.querySelector('.price-tab.active');
             if (!activeTab) return;
@@ -705,7 +708,7 @@
                     customization: { colors: { primary: '#c8ff00', background: '#111' } },
                     error_callback: (err) => {
                         console.error(err);
-                        toast('Ошибка платежа');
+                        showToast('Ошибка платежа');
                         payBtn.style.display = 'block';
                         payBtn.disabled = false;
                         payBtn.textContent = 'Оплатить';
@@ -715,17 +718,17 @@
                     try {
                         document.getElementById('yookassa-widget-container').innerHTML = '';
                         document.getElementById('paymentStatus').style.display = 'block';
-                        await extendSubscription(pendingPurchase.days);
+                        await extendSubscriptionAPI(pendingPurchase.days);
                         currentUser = await fetchUser();
                         if (!currentUser.config) {
                             currentUser.config = await getMarzbanConfig();
                         }
                         updateProfileUI();
                         document.getElementById('closeAfterSuccess').style.display = 'block';
-                    } catch (e) { toast(e.message); }
+                    } catch (e) { showToast(e.message); }
                 });
                 checkout.render('yookassa-widget-container');
-            } catch (e) { toast(e.message); payBtn.disabled = false; payBtn.textContent = 'Оплатить'; }
+            } catch (e) { showToast(e.message); payBtn.disabled = false; payBtn.textContent = 'Оплатить'; }
         }
 
         // ====================== ADMIN ======================
@@ -775,7 +778,7 @@
             try {
                 const users = await apiAdmin('/api/admin');
                 renderAdminList(users);
-            } catch (e) { toast(e.message); }
+            } catch (e) { showToast(e.message); }
         }
 
         async function searchUser() {
@@ -785,7 +788,7 @@
                 const users = await apiAdmin('/api/admin');
                 const found = users.filter(u => u.uid === query || u.email.includes(query) || u.name.includes(query));
                 renderAdminList(found);
-            } catch (e) { toast(e.message); }
+            } catch (e) { showToast(e.message); }
         }
 
         function renderAdminList(users) {
@@ -810,18 +813,18 @@
 
         async function adminSetExpiry(email, dateStr) {
             if (!dateStr) return;
-            try { await apiAdmin('/api/admin', 'POST', { email, action: 'setExpiry', date: dateStr }); loadAdminUsers(); toast('Дата обновлена'); }
-            catch(e) { toast(e.message); }
+            try { await apiAdmin('/api/admin', 'POST', { email, action: 'setExpiry', date: dateStr }); loadAdminUsers(); showToast('Дата обновлена'); }
+            catch(e) { showToast(e.message); }
         }
         async function adminAddDays(email, days) {
             if (!days || isNaN(days)) return;
-            try { await apiAdmin('/api/admin', 'POST', { email, action: 'addDays', days }); loadAdminUsers(); toast(`Добавлено ${days} дн.`); }
-            catch(e) { toast(e.message); }
+            try { await apiAdmin('/api/admin', 'POST', { email, action: 'addDays', days }); loadAdminUsers(); showToast(`Добавлено ${days} дн.`); }
+            catch(e) { showToast(e.message); }
         }
         async function adminDeleteUser(email) {
             if (!confirm('Удалить пользователя?')) return;
-            try { await apiAdmin('/api/admin', 'POST', { email, action: 'delete' }); loadAdminUsers(); toast('Пользователь удалён'); }
-            catch(e) { toast(e.message); }
+            try { await apiAdmin('/api/admin', 'POST', { email, action: 'delete' }); loadAdminUsers(); showToast('Пользователь удалён'); }
+            catch(e) { showToast(e.message); }
         }
 
         function openAdmin() { document.getElementById('adminModal').classList.add('open'); }
