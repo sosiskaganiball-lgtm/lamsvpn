@@ -5,12 +5,12 @@ const redis = new Redis({
   token: process.env.KV_REST_API_TOKEN,
 });
 
-// Конфигурация всех четырёх серверов
+// Конфигурация всех четырёх серверов с одинаковым названием
 const SERVERS = [
-  { name: '🇸🇪 Швеция', address: '109.120.133.34', port: 443 },
-  { name: '🇺🇸 США', address: '77.110.126.243', port: 443 },
-  { name: '🇳🇱 Нидерланды - Обход', address: '202.148.53.137', port: 443 },
-  { name: '🇫🇷 Франция - Обход', address: '82.22.50.190', port: 443 },
+  { address: '109.120.133.34', port: 443 },
+  { address: '77.110.126.243', port: 443 },
+  { address: '202.148.53.137', port: 443 },
+  { address: '82.22.50.190', port: 443 },
 ];
 
 const PUBLIC_KEY = '5Fx2a1nXomfgOPivqDqwWZe-SbBzNfkR2mdMsMs1QFE';
@@ -33,14 +33,14 @@ export default async function handler(req, res) {
     const MARZBAN_URL = process.env.MARZBAN_URL;
     const MARZBAN_API_KEY = process.env.MARZBAN_API_KEY;
 
-    // Генерация ключей
+    // Генерация ключа
     if (req.method === 'POST' && action === 'create') {
       if (!user.marzban_uuid) {
         user.marzban_uuid = crypto.randomUUID();
         await redis.set(`user:${email}`, JSON.stringify(user));
       }
 
-      // Попытаемся создать пользователя в Marzban для учёта трафика (не обязательно для работы VPN)
+      // Пытаемся создать пользователя в Marzban (не обязательно для VPN)
       try {
         await fetch(`${MARZBAN_URL}/api/user`, {
           method: 'POST',
@@ -57,20 +57,21 @@ export default async function handler(req, res) {
             data_limit: 0,
           }),
         });
-      } catch (marzbanError) {
-        console.error('Предупреждение: создание в Marzban не удалось, но ключи будут выданы.', marzbanError);
+      } catch (e) {
+        console.error('Предупреждение: создание в Marzban не удалось, но ключ будет выдан.', e);
       }
 
-      // Формируем прямые ссылки на каждый сервер
-      const links = SERVERS.map(server => {
-        const link = `vless://${user.marzban_uuid}@${server.address}:${server.port}?security=reality&type=tcp&flow=xtls-rprx-vision&sni=${SNI}&fp=chrome&pbk=${PUBLIC_KEY}&sid=#${encodeURIComponent(server.name)}`;
-        return link;
-      });
+      // Генерируем ссылки на все серверы с одинаковым именем
+      const links = SERVERS.map(server =>
+        `vless://${user.marzban_uuid}@${server.address}:${server.port}?security=reality&type=tcp&flow=xtls-rprx-vision&sni=${SNI}&fp=chrome&pbk=${PUBLIC_KEY}&sid=#LamsVPN`
+      );
 
-      // Сохраняем как одну строку, разделённую переносом, чтобы пользователь мог импортировать все разом
-      user.config = links.join('\n');
+      // Объединяем в одну строку и кодируем в base64 — это и есть подписка
+      const subscription = Buffer.from(links.join('\n')).toString('base64');
+      user.config = subscription;
       await redis.set(`user:${email}`, JSON.stringify(user));
-      return res.json({ config: user.config });
+
+      return res.json({ config: subscription });
     }
 
     // Удаление
