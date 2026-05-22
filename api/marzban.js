@@ -6,6 +6,10 @@ const redis = new Redis({
 });
 
 export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Метод не поддерживается' });
+  }
+
   const { email, action } = req.body;
   if (!email) return res.status(400).json({ error: 'Email обязателен' });
 
@@ -13,103 +17,66 @@ export default async function handler(req, res) {
     const raw = await redis.get(`user:${email}`);
     if (!raw) return res.status(404).json({ error: 'Пользователь не найден' });
 
-    let user;
-    if (typeof raw === 'string') user = JSON.parse(raw);
-    else if (raw && typeof raw === 'object') user = raw;
-    else return res.status(500).json({ error: 'Неизвестный формат данных' });
-
+    let user = typeof raw === 'string' ? JSON.parse(raw) : raw;
     const MARZBAN_URL = process.env.MARZBAN_URL;
     const MARZBAN_API_KEY = process.env.MARZBAN_API_KEY;
 
-    // Генерация/получение ключа
-    if (req.method === 'POST' && action === 'create') {
-      if (!user.marzban_uuid) {
-        user.marzban_uuid = crypto.randomUUID();
-        await redis.set(`user:${email}`, JSON.stringify(user));
-      }
-
-      // Проверяем, существует ли уже пользователь в Marzban
-      const checkResp = await fetch(`${MARZBAN_URL}/api/user/${user.marzban_uuid}`, {
-        headers: { 'Authorization': `Bearer ${MARZBAN_API_KEY}` }
-      });
-
-      if (checkResp.ok) {
-        const linkData = await checkResp.json();
-        user.config = `${MARZBAN_URL}${linkData.subscription_url}`;
-        await redis.set(`user:${email}`, JSON.stringify(user));
-        return res.json({ config: user.config });
-      }
-
-      if (checkResp.status === 404) {
-        const response = await fetch(`${MARZBAN_URL}/api/user`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${MARZBAN_API_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username: user.marzban_uuid,
-            status: 'active',
-            proxies: {
-              vless: { flow: 'xtls-rprx-vision' }   // ← ВАЖНО: строчные vless
-            },
-            inbounds: {
-              vless: ['VLESS_Reality']               // ← ВАЖНО: строчные vless
-            },
-            expire: user.expiry ? Math.floor(user.expiry / 1000) : 0,
-            data_limit: 0,
-            data_limit_reset_strategy: 'no_reset',
-          }),
-        });
-
-        if (!response.ok) {
-          const err = await response.text();
-          throw new Error(`Ошибка создания в Marzban: ${err}`);
-        }
-
-        const linkResp = await fetch(`${MARZBAN_URL}/api/user/${user.marzban_uuid}`, {
-          headers: { 'Authorization': `Bearer ${MARZBAN_API_KEY}` }
-        });
-        const linkData = await linkResp.json();
-        user.config = `${MARZBAN_URL}${linkData.subscription_url}`;
-        await redis.set(`user:${email}`, JSON.stringify(user));
-        return res.json({ config: user.config });
-      }
-
-      throw new Error(`Неожиданный ответ Marzban: ${checkResp.status}`);
-    }
-
-    // Удаление
-    if (req.method === 'DELETE' || action === 'delete') {
-      if (user.marzban_uuid) {
-        await fetch(`${MARZBAN_URL}/api/user/${user.marzban_uuid}`, {
-          method: 'DELETE',
-          headers: { 'Authorization': `Bearer ${MARZBAN_API_KEY}` }
-        }).catch(() => {});
-      }
-      return res.json({ success: true });
-    }
-
-    // Продление
-    if (req.method === 'PUT' && action === 'extend') {
-      const days = req.body.days || 0;
-      const newExpiry = (user.expiry ? Number(user.expiry) : Date.now()) + days * 86400000;
-      if (user.marzban_uuid) {
-        await fetch(`${MARZBAN_URL}/api/user/${user.marzban_uuid}`, {
-          method: 'PUT',
-          headers: {
-            'Authorization': `Bearer ${MARZBAN_API_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ expire: Math.floor(newExpiry / 1000) }),
-        }).catch(() => {});
-      }
-      user.expiry = newExpiry;
+    // 1. Генерируем UUID, если ещё нет
+    if (!user.marzban_uuid) {
+      user.marzban_uuid = crypto.randomUUID();
       await redis.set(`user:${email}`, JSON.stringify(user));
-      return res.json({ success: true, newExpiry });
     }
 
-    return res.status(400).json({ error: 'Неизвестное действие' });
+    // 2. Проверяем, существует ли пользователь в Marzban
+    const check = await fetch(`${MARZBAN_URL}/api/user/${user.marzban_uuid}`, {
+      headers: { 'Authorization': `Bearer ${MARZBAN_API_KEY}` }
+    });
+
+    // Если существует – просто возвращаем его подписку
+    if (check.ok) {
+      const linkData = await check.json();
+      user.config = `${MARZBAN_URL}${linkData.subscription_url}`;
+      await redis.set(`user:${email}`, JSON.stringify(user));
+      return res.json({ config: user.config });
+    }
+
+    // 3. Создаём пользователя с ТОЧНО ТАКИМ ЖЕ JSON, как в ручном curl
+    const createResp = await fetch(`${MARZBAN_URL}/api/user`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${MARZBAN_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: user.marzban_uuid,
+        status: 'active',
+        proxies: {
+          vless: { flow: 'xtls-rprx-vision' }
+        },
+        inbounds: {
+          vless: ['VLESS_Reality']
+        },
+        expire: user.expiry ? Math.floor(user.expiry / 1000) : 0,
+        data_limit: 0,
+        data_limit_reset_strategy: 'no_reset',
+      }),
+    });
+
+    if (!createResp.ok) {
+      const err = await createResp.text();
+      throw new Error(`Ошибка создания в Marzban: ${err}`);
+    }
+
+    // 4. Получаем свежую подписку
+    const userResp = await fetch(`${MARZBAN_URL}/api/user/${user.marzban_uuid}`, {
+      headers: { 'Authorization': `Bearer ${MARZBAN_API_KEY}` }
+    });
+    const userData = await userResp.json();
+    user.config = `${MARZBAN_URL}${userData.subscription_url}`;
+    await redis.set(`user:${email}`, JSON.stringify(user));
+
+    return res.json({ config: user.config });
+
   } catch (error) {
     console.error('Ошибка в marzban.js:', error);
     return res.status(500).json({ error: error.message });
