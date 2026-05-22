@@ -29,14 +29,19 @@ export default async function handler(req, res) {
   const user = typeof raw === 'string' ? JSON.parse(raw) : raw;
   const uuid = user.marzban_uuid || 'default-uuid';
 
-  // Генерируем ссылки с флагами и названиями
+  // Генерируем ссылки с флагами
   const links = SERVERS.map(server => {
     const nameEncoded = encodeURIComponent(server.name);
     return `vless://${uuid}@${server.address}:${server.port}?security=reality&type=tcp&flow=xtls-rprx-vision&sni=${SNI}&fp=chrome&pbk=${PUBLIC_KEY}&sid=#${nameEncoded}`;
   });
 
-  // Отдаём как текстовый файл с заголовком для имени подписки
-  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  // === ДОБАВЛЯЕМ СРОК ДЕЙСТВИЯ ПОДПИСКИ ===
+  const expireTimestamp = user.expiry ? Math.floor(user.expiry / 1000) : 0;
+  const userInfo = `upload=0; download=0; total=0; expire=${expireTimestamp}`;
+
+  // Заголовки для имени подписки и срока
   res.setHeader('Profile-Title', 'LamsVPN');
+  res.setHeader('Subscription-Userinfo', userInfo);
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
   res.send(links.join('\n'));
 }
