@@ -51,10 +51,10 @@ export default async function handler(req, res) {
             username: user.marzban_uuid,
             status: 'active',
             proxies: {
-              VLESS: { flow: 'xtls-rprx-vision' }   // ← ВАЖНО: VLESS заглавными
+              vless: { flow: 'xtls-rprx-vision' }   // ← ВАЖНО: строчные vless
             },
             inbounds: {
-              VLESS: ['VLESS_Reality']               // ← ВАЖНО: VLESS заглавными
+              vless: ['VLESS_Reality']               // ← ВАЖНО: строчные vless
             },
             expire: user.expiry ? Math.floor(user.expiry / 1000) : 0,
             data_limit: 0,
