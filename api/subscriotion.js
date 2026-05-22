@@ -5,96 +5,35 @@ const redis = new Redis({
   token: process.env.KV_REST_API_TOKEN,
 });
 
+const SERVERS = [
+  { address: '109.120.133.34', port: 443 },
+  { address: '77.110.126.243', port: 443 },
+  { address: '202.148.53.137', port: 443 },
+  { address: '82.22.50.190', port: 443 },
+];
+
+const PUBLIC_KEY = '5Fx2a1nXomfgOPivqDqwWZe-SbBzNfkR2mdMsMs1QFE';
+const SNI = 'www.google.com';
+
 export default async function handler(req, res) {
-  if (req.method !== 'POST' && req.method !== 'PUT' && req.method !== 'DELETE') {
-    return res.status(405).json({ error: 'Метод не поддерживается' });
-  }
+  const { token } = req.query;
+  if (!token) return res.status(400).json({ error: 'Token обязателен' });
 
-  const { email, action } = req.body;
-  if (!email) return res.status(400).json({ error: 'Email обязателен' });
+  const email = await redis.get(`sub_token:${token}`);
+  if (!email) return res.status(404).json({ error: 'Подписка не найдена' });
 
-  try {
-    const raw = await redis.get(`user:${email}`);
-    if (!raw) return res.status(404).json({ error: 'Пользователь не найден' });
+  const raw = await redis.get(`user:${email}`);
+  if (!raw) return res.status(404).json({ error: 'Пользователь не найден' });
 
-    let user = typeof raw === 'string' ? JSON.parse(raw) : raw;
+  const user = typeof raw === 'string' ? JSON.parse(raw) : raw;
+  const uuid = user.marzban_uuid || 'default-uuid';
 
-    const MARZBAN_URL = process.env.MARZBAN_URL;
-    const MARZBAN_API_KEY = process.env.MARZBAN_API_KEY;
+  // Генерируем открытые ссылки — Happ поймёт такой формат
+  const links = SERVERS.map(server =>
+    `vless://${uuid}@${server.address}:${server.port}?security=reality&type=tcp&flow=xtls-rprx-vision&sni=${SNI}&fp=chrome&pbk=${PUBLIC_KEY}&sid=#LamsVPN`
+  );
 
-    // Генерация ключа
-    if (req.method === 'POST' && action === 'create') {
-      if (!user.marzban_uuid) {
-        user.marzban_uuid = crypto.randomUUID();
-        await redis.set(`user:${email}`, JSON.stringify(user));
-      }
-
-      // Пытаемся создать пользователя в Marzban (не обязательно)
-      try {
-        await fetch(`${MARZBAN_URL}/api/user`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${MARZBAN_API_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username: user.marzban_uuid,
-            status: 'active',
-            proxies: { vless: {} },
-            inbounds: { vless: ['VLESS_Reality'] },
-            expire: user.expiry ? Math.floor(user.expiry / 1000) : 0,
-            data_limit: 0,
-          }),
-        });
-      } catch (e) {
-        console.error('Предупреждение: создание в Marzban не удалось.', e);
-      }
-
-      // Генерируем уникальный токен для подписки
-      const subToken = crypto.randomUUID().replace(/-/g, '');
-      await redis.set(`sub_token:${subToken}`, email);
-
-      // Сохраняем URL подписки в профиле пользователя
-      const subscriptionUrl = `${process.env.VERCEL_URL || 'https://lamsvpn.vercel.app'}/api/subscription?token=${subToken}`;
-      user.config = subscriptionUrl;
-      await redis.set(`user:${email}`, JSON.stringify(user));
-
-      return res.json({ config: subscriptionUrl });
-    }
-
-    // Удаление
-    if (req.method === 'DELETE' || action === 'delete') {
-      if (user.marzban_uuid) {
-        await fetch(`${MARZBAN_URL}/api/user/${user.marzban_uuid}`, {
-          method: 'DELETE',
-          headers: { 'Authorization': `Bearer ${MARZBAN_API_KEY}` }
-        }).catch(() => {});
-      }
-      return res.json({ success: true });
-    }
-
-    // Продление
-    if (req.method === 'PUT' && action === 'extend') {
-      const days = req.body.days || 0;
-      const newExpiry = (user.expiry ? Number(user.expiry) : Date.now()) + days * 86400000;
-      if (user.marzban_uuid) {
-        await fetch(`${MARZBAN_URL}/api/user/${user.marzban_uuid}`, {
-          method: 'PUT',
-          headers: {
-            'Authorization': `Bearer ${MARZBAN_API_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ expire: Math.floor(newExpiry / 1000) }),
-        }).catch(() => {});
-      }
-      user.expiry = newExpiry;
-      await redis.set(`user:${email}`, JSON.stringify(user));
-      return res.json({ success: true, newExpiry });
-    }
-
-    return res.status(400).json({ error: 'Неизвестное действие' });
-  } catch (error) {
-    console.error('Ошибка в marzban.js:', error);
-    return res.status(500).json({ error: error.message });
-  }
+  // Отдаём как простой текст, Happ его спокойно читает
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  res.send(links.join('\n'));
 }
