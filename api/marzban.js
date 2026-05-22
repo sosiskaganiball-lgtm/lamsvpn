@@ -5,17 +5,6 @@ const redis = new Redis({
   token: process.env.KV_REST_API_TOKEN,
 });
 
-// Конфигурация всех четырёх серверов с одинаковым названием
-const SERVERS = [
-  { address: '109.120.133.34', port: 443 },
-  { address: '77.110.126.243', port: 443 },
-  { address: '202.148.53.137', port: 443 },
-  { address: '82.22.50.190', port: 443 },
-];
-
-const PUBLIC_KEY = '5Fx2a1nXomfgOPivqDqwWZe-SbBzNfkR2mdMsMs1QFE';
-const SNI = 'www.google.com';
-
 export default async function handler(req, res) {
   if (req.method !== 'POST' && req.method !== 'PUT' && req.method !== 'DELETE') {
     return res.status(405).json({ error: 'Метод не поддерживается' });
@@ -40,7 +29,6 @@ export default async function handler(req, res) {
         await redis.set(`user:${email}`, JSON.stringify(user));
       }
 
-      // Пытаемся создать пользователя в Marzban (не обязательно для VPN)
       try {
         await fetch(`${MARZBAN_URL}/api/user`, {
           method: 'POST',
@@ -58,20 +46,19 @@ export default async function handler(req, res) {
           }),
         });
       } catch (e) {
-        console.error('Предупреждение: создание в Marzban не удалось, но ключ будет выдан.', e);
+        console.error('Предупреждение: создание в Marzban не удалось.', e);
       }
 
-      // Генерируем ссылки на все серверы с одинаковым именем
-      const links = SERVERS.map(server =>
-        `vless://${user.marzban_uuid}@${server.address}:${server.port}?security=reality&type=tcp&flow=xtls-rprx-vision&sni=${SNI}&fp=chrome&pbk=${PUBLIC_KEY}&sid=#LamsVPN`
-      );
+      // Создаём токен для подписки
+      const subToken = crypto.randomUUID().replace(/-/g, '');
+      await redis.set(`sub_token:${subToken}`, email);
 
-      // Объединяем в одну строку и кодируем в base64 — это и есть подписка
-      const subscription = Buffer.from(links.join('\n')).toString('base64');
-      user.config = subscription;
+      // Формируем URL – он будет показан на сайте
+      const subscriptionUrl = `https://lamsvpn.vercel.app/api/subscription?token=${subToken}`;
+      user.config = subscriptionUrl;
       await redis.set(`user:${email}`, JSON.stringify(user));
 
-      return res.json({ config: subscription });
+      return res.json({ config: subscriptionUrl });
     }
 
     // Удаление
