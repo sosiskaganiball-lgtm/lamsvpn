@@ -5,11 +5,6 @@ const redis = new Redis({
   token: process.env.KV_REST_API_TOKEN,
 });
 
-// Параметры твоего сервера Reality
-const SERVER_IP = '109.120.133.34'; // главный IP
-const PUBLIC_KEY = '5Fx2a1nXomfgOPivqDqwWZe-SbBzNfkR2mdMsMs1QFE';
-const SNI = 'www.google.com';
-
 export default async function handler(req, res) {
   if (req.method !== 'POST' && req.method !== 'PUT' && req.method !== 'DELETE') {
     return res.status(405).json({ error: 'Метод не поддерживается' });
@@ -34,34 +29,51 @@ export default async function handler(req, res) {
         await redis.set(`user:${email}`, JSON.stringify(user));
       }
 
-      // Создаём пользователя в Marzban (чтобы трафик работал)
-      try {
-        await fetch(`${MARZBAN_URL}/api/user`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${MARZBAN_API_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username: user.marzban_uuid,
-            status: 'active',
-            proxies: { vless: {} },
-            inbounds: { vless: ['VLESS_Reality'] },
-            expire: user.expiry ? Math.floor(user.expiry / 1000) : 0,
-            data_limit: 0,
-          }),
-        });
-      } catch (marzbanError) {
-        // Игнорируем ошибку создания – главное, чтобы ключ был
-        console.error('Предупреждение: создание в Marzban не удалось, но ключ будет выдан.', marzbanError);
+      // Пытаемся получить существующую подписку
+      const checkResp = await fetch(`${MARZBAN_URL}/api/user/${user.marzban_uuid}`, {
+        headers: { 'Authorization': `Bearer ${MARZBAN_API_KEY}` }
+      });
+
+      if (checkResp.ok) {
+        const linkData = await checkResp.json();
+        user.config = `${MARZBAN_URL}${linkData.subscription_url}`;
+        await redis.set(`user:${email}`, JSON.stringify(user));
+        return res.json({ config: user.config });
       }
 
-      // Формируем прямую ссылку (работает всегда)
-      const directLink = `vless://${user.marzban_uuid}@${SERVER_IP}:443?security=reality&type=tcp&flow=xtls-rprx-vision&sni=${SNI}&fp=chrome&pbk=${PUBLIC_KEY}&sid=#LamsVPN`;
-      user.config = directLink;
-      await redis.set(`user:${email}`, JSON.stringify(user));
+      // Создаём пользователя через тот же метод, что работает вручную
+      const createResp = await fetch(`${MARZBAN_URL}/api/user`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${MARZBAN_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: user.marzban_uuid,
+          status: 'active',
+          proxies: { vless: {} },
+          inbounds: { vless: ['VLESS_Reality'] },
+          expire: user.expiry ? Math.floor(user.expiry / 1000) : 0,
+          data_limit: 0,
+        }),
+      });
 
-      return res.json({ config: directLink });
+      if (!createResp.ok) {
+        const err = await createResp.text();
+        throw new Error(`Ошибка создания в Marzban: ${err}`);
+      }
+
+      // Немного ждём, чтобы Marzban успел сгенерировать подписку
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Получаем свежую подписку
+      const userResp = await fetch(`${MARZBAN_URL}/api/user/${user.marzban_uuid}`, {
+        headers: { 'Authorization': `Bearer ${MARZBAN_API_KEY}` }
+      });
+      const userData = await userResp.json();
+      user.config = `${MARZBAN_URL}${userData.subscription_url}`;
+      await redis.set(`user:${email}`, JSON.stringify(user));
+      return res.json({ config: user.config });
     }
 
     // Удаление
