@@ -5,6 +5,17 @@ const redis = new Redis({
   token: process.env.KV_REST_API_TOKEN,
 });
 
+// Конфигурация всех четырёх серверов
+const SERVERS = [
+  { name: '🇸🇪 Швеция', address: '109.120.133.34', port: 443 },
+  { name: '🇺🇸 США', address: '77.110.126.243', port: 443 },
+  { name: '🇳🇱 Нидерланды - Обход', address: '202.148.53.137', port: 443 },
+  { name: '🇫🇷 Франция - Обход', address: '82.22.50.190', port: 443 },
+];
+
+const PUBLIC_KEY = '5Fx2a1nXomfgOPivqDqwWZe-SbBzNfkR2mdMsMs1QFE';
+const SNI = 'www.google.com';
+
 export default async function handler(req, res) {
   if (req.method !== 'POST' && req.method !== 'PUT' && req.method !== 'DELETE') {
     return res.status(405).json({ error: 'Метод не поддерживается' });
@@ -22,56 +33,42 @@ export default async function handler(req, res) {
     const MARZBAN_URL = process.env.MARZBAN_URL;
     const MARZBAN_API_KEY = process.env.MARZBAN_API_KEY;
 
-    // Генерация/получение ключа
+    // Генерация ключей
     if (req.method === 'POST' && action === 'create') {
       if (!user.marzban_uuid) {
         user.marzban_uuid = crypto.randomUUID();
         await redis.set(`user:${email}`, JSON.stringify(user));
       }
 
-      // Пытаемся получить существующую подписку
-      const checkResp = await fetch(`${MARZBAN_URL}/api/user/${user.marzban_uuid}`, {
-        headers: { 'Authorization': `Bearer ${MARZBAN_API_KEY}` }
-      });
-
-      if (checkResp.ok) {
-        const linkData = await checkResp.json();
-        user.config = `${MARZBAN_URL}${linkData.subscription_url}`;
-        await redis.set(`user:${email}`, JSON.stringify(user));
-        return res.json({ config: user.config });
+      // Попытаемся создать пользователя в Marzban для учёта трафика (не обязательно для работы VPN)
+      try {
+        await fetch(`${MARZBAN_URL}/api/user`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${MARZBAN_API_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            username: user.marzban_uuid,
+            status: 'active',
+            proxies: { vless: {} },
+            inbounds: { vless: ['VLESS_Reality'] },
+            expire: user.expiry ? Math.floor(user.expiry / 1000) : 0,
+            data_limit: 0,
+          }),
+        });
+      } catch (marzbanError) {
+        console.error('Предупреждение: создание в Marzban не удалось, но ключи будут выданы.', marzbanError);
       }
 
-      // Создаём пользователя через тот же метод, что работает вручную
-      const createResp = await fetch(`${MARZBAN_URL}/api/user`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${MARZBAN_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: user.marzban_uuid,
-          status: 'active',
-          proxies: { vless: {} },
-          inbounds: { vless: ['VLESS_Reality'] },
-          expire: user.expiry ? Math.floor(user.expiry / 1000) : 0,
-          data_limit: 0,
-        }),
+      // Формируем прямые ссылки на каждый сервер
+      const links = SERVERS.map(server => {
+        const link = `vless://${user.marzban_uuid}@${server.address}:${server.port}?security=reality&type=tcp&flow=xtls-rprx-vision&sni=${SNI}&fp=chrome&pbk=${PUBLIC_KEY}&sid=#${encodeURIComponent(server.name)}`;
+        return link;
       });
 
-      if (!createResp.ok) {
-        const err = await createResp.text();
-        throw new Error(`Ошибка создания в Marzban: ${err}`);
-      }
-
-      // Немного ждём, чтобы Marzban успел сгенерировать подписку
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      // Получаем свежую подписку
-      const userResp = await fetch(`${MARZBAN_URL}/api/user/${user.marzban_uuid}`, {
-        headers: { 'Authorization': `Bearer ${MARZBAN_API_KEY}` }
-      });
-      const userData = await userResp.json();
-      user.config = `${MARZBAN_URL}${userData.subscription_url}`;
+      // Сохраняем как одну строку, разделённую переносом, чтобы пользователь мог импортировать все разом
+      user.config = links.join('\n');
       await redis.set(`user:${email}`, JSON.stringify(user));
       return res.json({ config: user.config });
     }
