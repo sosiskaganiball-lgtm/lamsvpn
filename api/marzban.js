@@ -5,6 +5,17 @@ const redis = new Redis({
   token: process.env.KV_REST_API_TOKEN,
 });
 
+// Все серверы
+const SERVERS = [
+  { address: '109.120.133.34', port: 443 },
+  { address: '77.110.126.243', port: 443 },
+  { address: '202.148.53.137', port: 443 },
+  { address: '82.22.50.190', port: 443 },
+];
+
+const PUBLIC_KEY = '5Fx2a1nXomfgOPivqDqwWZe-SbBzNfkR2mdMsMs1QFE';
+const SNI = 'www.google.com';
+
 export default async function handler(req, res) {
   if (req.method !== 'POST' && req.method !== 'PUT' && req.method !== 'DELETE') {
     return res.status(405).json({ error: 'Метод не поддерживается' });
@@ -29,6 +40,7 @@ export default async function handler(req, res) {
         await redis.set(`user:${email}`, JSON.stringify(user));
       }
 
+      // Пытаемся создать пользователя в Marzban для учёта
       try {
         await fetch(`${MARZBAN_URL}/api/user`, {
           method: 'POST',
@@ -49,16 +61,15 @@ export default async function handler(req, res) {
         console.error('Предупреждение: создание в Marzban не удалось.', e);
       }
 
-      // Создаём токен для подписки
-      const subToken = crypto.randomUUID().replace(/-/g, '');
-      await redis.set(`sub_token:${subToken}`, email);
+      // Генерируем ссылки на все серверы с одним именем
+      const links = SERVERS.map(server =>
+        `vless://${user.marzban_uuid}@${server.address}:${server.port}?security=reality&type=tcp&flow=xtls-rprx-vision&sni=${SNI}&fp=chrome&pbk=${PUBLIC_KEY}&sid=#LamsVPN`
+      ).join('\n');
 
-      // Формируем URL – он будет показан на сайте
-      const subscriptionUrl = `https://lamsvpn.vercel.app/api/subscription?token=${subToken}`;
-      user.config = subscriptionUrl;
+      user.config = links;
       await redis.set(`user:${email}`, JSON.stringify(user));
 
-      return res.json({ config: subscriptionUrl });
+      return res.json({ config: links });
     }
 
     // Удаление
