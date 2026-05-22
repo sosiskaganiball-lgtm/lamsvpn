@@ -23,7 +23,6 @@ export default async function handler(req, res) {
 
     // Генерация/получение ключа
     if (req.method === 'POST' && action === 'create') {
-      // Генерируем UUID, если ещё нет
       if (!user.marzban_uuid) {
         user.marzban_uuid = crypto.randomUUID();
         await redis.set(`user:${email}`, JSON.stringify(user));
@@ -35,14 +34,12 @@ export default async function handler(req, res) {
       });
 
       if (checkResp.ok) {
-        // Пользователь уже есть – получаем его конфиг
         const linkData = await checkResp.json();
         user.config = `${MARZBAN_URL}${linkData.subscription_url}`;
         await redis.set(`user:${email}`, JSON.stringify(user));
         return res.json({ config: user.config });
       }
 
-      // Если пользователя нет – создаём с правильными параметрами
       if (checkResp.status === 404) {
         const response = await fetch(`${MARZBAN_URL}/api/user`, {
           method: 'POST',
@@ -54,10 +51,10 @@ export default async function handler(req, res) {
             username: user.marzban_uuid,
             status: 'active',
             proxies: {
-              vless: { flow: 'xtls-rprx-vision' }  // достаточно указать flow
+              VLESS: { flow: 'xtls-rprx-vision' }   // ← ВАЖНО: VLESS заглавными
             },
             inbounds: {
-              vless: ['VLESS_Reality']
+              VLESS: ['VLESS_Reality']               // ← ВАЖНО: VLESS заглавными
             },
             expire: user.expiry ? Math.floor(user.expiry / 1000) : 0,
             data_limit: 0,
@@ -70,7 +67,6 @@ export default async function handler(req, res) {
           throw new Error(`Ошибка создания в Marzban: ${err}`);
         }
 
-        // Получаем готовую ссылку
         const linkResp = await fetch(`${MARZBAN_URL}/api/user/${user.marzban_uuid}`, {
           headers: { 'Authorization': `Bearer ${MARZBAN_API_KEY}` }
         });
@@ -83,7 +79,7 @@ export default async function handler(req, res) {
       throw new Error(`Неожиданный ответ Marzban: ${checkResp.status}`);
     }
 
-    // Удаление пользователя (для админки)
+    // Удаление
     if (req.method === 'DELETE' || action === 'delete') {
       if (user.marzban_uuid) {
         await fetch(`${MARZBAN_URL}/api/user/${user.marzban_uuid}`, {
@@ -94,7 +90,7 @@ export default async function handler(req, res) {
       return res.json({ success: true });
     }
 
-    // Продление подписки
+    // Продление
     if (req.method === 'PUT' && action === 'extend') {
       const days = req.body.days || 0;
       const newExpiry = (user.expiry ? Number(user.expiry) : Date.now()) + days * 86400000;
