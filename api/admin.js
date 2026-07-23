@@ -8,7 +8,8 @@ const redis = new Redis({
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 
 export default async function handler(req, res) {
-  const email = req.headers['x-admin-email'] || req.body?.email;
+  // Проверяем email из заголовка
+  const email = req.headers['x-admin-email'];
   if (!email || email !== ADMIN_EMAIL) {
     return res.status(403).json({ error: 'Доступ запрещён' });
   }
@@ -58,7 +59,6 @@ export default async function handler(req, res) {
       }
       if (action === 'delete') {
         await redis.del(`user:${targetEmail}`);
-        // Попытаемся удалить и из Marzban, если есть uid
         if (user.marzban_uuid) {
           try {
             await fetch(`${process.env.MARZBAN_URL}/api/user/${user.marzban_uuid}`, {
