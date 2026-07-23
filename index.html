@@ -1,862 +1,837 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LamsVPN — Быстрый и стабильный VPN</title>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-    <script src="https://yookassa.ru/checkout-widget/v1/checkout-widget.js"></script>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #0a0a0a; color: #e8e8e8; font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.6; overflow-x: hidden; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #0a0a0a; }
-        ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 2px; }
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
-        .tag { display: inline-block; font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #c8ff00; border: 1px solid #c8ff00; padding: 4px 10px; border-radius: 2px; margin-bottom: 16px; }
-        h1, h2, h3 { font-family: 'Syne', sans-serif; }
-        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,10,10,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid #222; height: 60px; display: flex; align-items: center; }
-        nav .inner { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 16px; }
-        .logo { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 8px; cursor: pointer; }
-        .logo span { color: #c8ff00; }
-        .logo-dot { width: 8px; height: 8px; background: #c8ff00; border-radius: 50%; display: inline-block; }
-        nav ul { list-style: none; display: flex; gap: 4px; }
-        nav ul a { display: block; padding: 6px 10px; color: #666; text-decoration: none; font-size: 13px; border-radius: 6px; transition: 0.2s; }
-        nav ul a:hover { color: #e8e8e8; background: #181818; }
-        .nav-cta { background: #c8ff00 !important; color: #000 !important; font-weight: 600 !important; padding: 6px 14px !important; }
-        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
-        .hamburger span { width: 22px; height: 2px; background: #e8e8e8; display: block; transition: 0.3s; }
-        .section { display: none; padding-top: 60px; min-height: 100vh; }
-        .section.active { display: block; }
-        .hero { min-height: 100vh; display: flex; align-items: center; padding: 80px 0 60px; position: relative; overflow: hidden; }
-        .hero::before { content: ''; position: absolute; top: 0; right: -200px; width: 700px; height: 700px; background: radial-gradient(circle, rgba(200,255,0,0.04) 0%, transparent 70%); pointer-events: none; }
-        .hero-grid { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 60px; }
-        .hero-label { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; }
-        .hero-label .dot { width: 6px; height: 6px; background: #c8ff00; border-radius: 50%; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.4); } }
-        .hero-label span { font-size: 12px; color: #666; letter-spacing: 1px; text-transform: uppercase; font-weight: 500; }
-        .hero h1 { font-size: clamp(38px, 5vw, 64px); font-weight: 800; line-height: 1.05; margin-bottom: 20px; color: #fff; }
-        .hero h1 em { font-style: normal; color: #c8ff00; }
-        .hero p { font-size: 16px; color: #666; margin-bottom: 36px; max-width: 420px; line-height: 1.7; }
-        .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
-        .btn-primary, .btn-ghost, .btn-plan, .btn-submit, .btn-copy { padding: 12px 24px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; text-decoration: none; display: inline-block; transition: 0.2s; font-family: 'DM Sans', sans-serif; }
-        .btn-primary { background: #c8ff00; color: #000; }
-        .btn-primary:hover { background: #a8d900; transform: translateY(-1px); }
-        .btn-ghost { background: transparent; color: #e8e8e8; border: 1px solid #2a2a2a; }
-        .btn-ghost:hover { border-color: #666; background: #181818; }
-        .hero-card { background: #111; border: 1px solid #222; border-radius: 16px; padding: 32px; position: relative; }
-        .hero-card::before { content: ''; position: absolute; top: -1px; left: 32px; right: 32px; height: 1px; background: linear-gradient(90deg, transparent, #c8ff00, transparent); }
-        .stat-row { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 28px; }
-        .stat { text-align: center; }
-        .stat-num { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; color: #fff; display: block; }
-        .stat-num span { color: #c8ff00; }
-        .stat-label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
-        .stat-divider { width: 1px; background: #222; }
-        .feature-list { display: flex; flex-direction: column; gap: 10px; }
-        .feature-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: #181818; border-radius: 8px; border: 1px solid #222; font-size: 13px; color: #e8e8e8; }
-        .feature-icon { color: #c8ff00; font-size: 16px; flex-shrink: 0; }
-        .server-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
-        .server-pill { background: #181818; border: 1px solid #222; padding: 5px 12px; border-radius: 20px; font-size: 12px; color: #666; }
-        .sec-header { text-align: center; padding: 70px 0 48px; }
-        .sec-header h2 { font-size: clamp(28px, 4vw, 44px); font-weight: 800; color: #fff; margin-bottom: 12px; }
-        .sec-header p { color: #666; max-width: 500px; margin: 0 auto; font-size: 15px; }
-        .tariffs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding-bottom: 80px; }
-        .plan-card { background: #111; border: 1px solid #222; border-radius: 16px; padding: 32px; position: relative; transition: border-color 0.3s; }
-        .plan-card:hover { border-color: #2a2a2a; }
-        .plan-card.featured { border-color: #c8ff00; background: linear-gradient(135deg, #111 0%, rgba(200,255,0,0.03) 100%); }
-        .plan-card.featured::before { content: 'ПОПУЛЯРНЫЙ'; position: absolute; top: -1px; right: 24px; background: #c8ff00; color: #000; font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; padding: 4px 10px; border-radius: 0 0 6px 6px; }
-        .plan-name { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #666; margin-bottom: 8px; }
-        .plan-title { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 24px; }
-        .price-tabs { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
-        .price-tab { padding: 7px 14px; border-radius: 6px; font-size: 13px; border: 1px solid #2a2a2a; background: #181818; color: #666; cursor: pointer; transition: 0.2s; font-family: 'DM Sans', sans-serif; }
-        .price-tab:hover { border-color: #666; color: #e8e8e8; }
-        .price-tab.active { border-color: #c8ff00; color: #c8ff00; background: rgba(200,255,0,0.06); }
-        .price-display { margin-bottom: 24px; }
-        .price-amount { font-family: 'Syne', sans-serif; font-size: 42px; font-weight: 800; color: #fff; }
-        .price-amount sup { font-size: 20px; vertical-align: super; }
-        .price-period { font-size: 13px; color: #666; margin-left: 4px; }
-        .plan-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
-        .plan-features li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: #e8e8e8; }
-        .plan-features li::before { content: '✓'; color: #c8ff00; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
-        .btn-plan { width: 100%; padding: 13px; border: 1px solid #2a2a2a; background: #1e1e1e; color: #e8e8e8; font-weight: 600; }
-        .btn-plan:hover { background: #2a2a2a; border-color: #444; }
-        .btn-plan.accent { background: #c8ff00; color: #000; border-color: #c8ff00; }
-        .btn-plan.accent:hover { background: #a8d900; }
-        .servers-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; padding-bottom: 60px; }
-        .server-card { background: #111; border: 1px solid #222; border-radius: 12px; padding: 24px; display: flex; align-items: center; gap: 20px; transition: border-color 0.2s; }
-        .server-card:hover { border-color: #2a2a2a; }
-        .server-flag { font-size: 36px; flex-shrink: 0; }
-        .server-info { flex: 1; }
-        .server-city { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 4px; }
-        .server-country { font-size: 12px; color: #666; margin-bottom: 10px; }
-        .server-tags { display: flex; gap: 6px; flex-wrap: wrap; }
-        .stag { font-size: 11px; padding: 3px 8px; border-radius: 4px; border: 1px solid #2a2a2a; color: #666; }
-        .stag.bypass { border-color: rgba(200,255,0,0.3); color: #c8ff00; background: rgba(200,255,0,0.04); }
-        .server-status { flex-shrink: 0; }
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 8px rgba(74,222,128,0.5); animation: pulse 3s infinite; }
-        .servers-note { text-align: center; padding: 32px; background: #111; border: 1px dashed #222; border-radius: 12px; color: #666; font-size: 14px; margin-bottom: 80px; }
-        .servers-note strong { color: #c8ff00; }
-        .faq-list { display: flex; flex-direction: column; gap: 8px; padding-bottom: 80px; max-width: 760px; margin: 0 auto; }
-        .faq-item { background: #111; border: 1px solid #222; border-radius: 10px; overflow: hidden; }
-        .faq-q { padding: 18px 22px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 500; font-size: 15px; color: #e8e8e8; user-select: none; gap: 16px; transition: background 0.2s; }
-        .faq-q:hover { background: #181818; }
-        .faq-arrow { font-size: 12px; color: #666; flex-shrink: 0; transition: transform 0.3s; }
-        .faq-item.open .faq-arrow { transform: rotate(180deg); }
-        .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.3s; font-size: 14px; color: #666; line-height: 1.7; padding: 0 22px; }
-        .faq-item.open .faq-a { max-height: 300px; padding: 0 22px 20px; }
-        .support-center { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; min-height: calc(100vh - 60px); gap: 32px; padding: 60px 0; }
-        .support-icon { width: 90px; height: 90px; border-radius: 22px; background: #111; border: 1px solid #222; display: flex; align-items: center; justify-content: center; font-size: 40px; }
-        .support-center h2 { font-size: 36px; font-weight: 800; color: #fff; }
-        .support-center p { color: #666; max-width: 400px; font-size: 15px; line-height: 1.7; }
-        .support-links { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 360px; }
-        .support-link { display: flex; align-items: center; gap: 14px; padding: 16px 22px; background: #111; border: 1px solid #222; border-radius: 10px; text-decoration: none; color: #e8e8e8; transition: 0.2s; }
-        .support-link:hover { border-color: #2a2a2a; background: #181818; }
-        .support-link-icon { font-size: 22px; }
-        .support-link-text { text-align: left; }
-        .support-link-title { font-weight: 600; font-size: 14px; display: block; }
-        .support-link-sub { font-size: 12px; color: #666; }
-        .profile-page { min-height: calc(100vh - 120px); display: flex; flex-direction: column; align-items: center; padding: 60px 0; gap: 32px; }
-        .profile-header { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
-        .profile-avatar-big { width: 90px; height: 90px; border-radius: 50%; background: #c8ff00; color: #000; font-size: 42px; font-weight: 800; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; }
-        .profile-details, .profile-extension, .profile-config-box, .profile-instructions { background: #111; border: 1px solid #222; border-radius: 16px; padding: 24px 32px; width: 100%; max-width: 600px; }
-        .detail-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #181818; font-size: 14px; color: #e8e8e8; }
-        .detail-row:last-child { border-bottom: none; }
-        .detail-row span:first-child { color: #666; }
-        .profile-config-box { display: none; }
-        .profile-config-box.active { display: block; }
-        .config-string { background: #181818; border: 1px solid #2a2a2a; border-radius: 8px; padding: 14px 16px; font-family: monospace; font-size: 12px; color: #aaa; word-break: break-all; line-height: 1.5; margin: 16px 0; }
-        .config-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
-        .profile-instructions { margin-top: 8px; }
-        .instr-steps { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
-        .instr-step { background: #181818; border-radius: 12px; padding: 20px; display: flex; gap: 16px; align-items: flex-start; }
-        .step-num { width: 32px; height: 32px; flex-shrink: 0; background: #c8ff00; color: #000; border-radius: 8px; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; }
-        .step-content h4 { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 6px; }
-        .step-content p { font-size: 13px; color: #666; line-height: 1.6; }
-        .step-content a { color: #c8ff00; text-decoration: none; }
-        .apps-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
-        .app-link { display: flex; align-items: center; gap: 6px; padding: 8px 14px; background: #222; border: 1px solid #2a2a2a; border-radius: 6px; text-decoration: none; color: #e8e8e8; font-size: 12px; transition: 0.2s; }
-        .app-link:hover { border-color: #666; }
-        .streisand-detail { background: #111; border-left: 4px solid #c8ff00; border-radius: 6px; padding: 14px; margin-top: 10px; }
-        .streisand-detail ol { list-style-position: inside; color: #aaa; font-size: 13px; line-height: 1.8; }
-        .streisand-detail ol li strong { color: #fff; }
-        .profile-actions { display: flex; flex-wrap: wrap; gap: 12px; width: 100%; max-width: 600px; justify-content: center; }
-        .profile-extension { display: none; }
-        .profile-extension h3 { font-size: 18px; margin-bottom: 16px; }
-        .profile-extension .price-display { margin: 16px 0; }
-        #toast-container { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; align-items: center; pointer-events: none; }
-        .toast-custom { background: #1a1a1a; border: 1px solid #2a2a2a; border-left: 4px solid #c8ff00; color: #e8e8e8; padding: 14px 24px; border-radius: 8px; font-size: 14px; font-weight: 500; pointer-events: auto; box-shadow: 0 8px 24px rgba(0,0,0,0.5); animation: toastIn 0.4s ease, toastOut 0.3s ease forwards; animation-delay: 0s, 2.8s; max-width: 380px; text-align: center; }
-        @keyframes toastIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes toastOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-10px); } }
-        footer { border-top: 1px solid #222; padding: 32px 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
-        footer .logo { font-size: 16px; }
-        footer p { font-size: 12px; color: #666; }
-        .footer-links { display: flex; gap: 20px; }
-        .footer-links a { font-size: 13px; color: #666; text-decoration: none; }
-        .footer-links a:hover { color: #e8e8e8; }
-        .modal-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; padding: 16px; }
-        .modal-overlay.open { display: flex; }
-        .modal { background: #111; border: 1px solid #2a2a2a; border-radius: 16px; width: 100%; max-width: 420px; padding: 28px 24px; position: relative; animation: slideUp 0.3s ease; max-height: 90vh; overflow-y: auto; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .modal-close { position: absolute; top: 12px; right: 12px; background: #181818; border: 1px solid #222; color: #666; width: 30px; height: 30px; border-radius: 6px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
-        .modal-close:hover { color: #e8e8e8; }
-        .modal h3 { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 6px; }
-        .modal p { color: #666; font-size: 13px; margin-bottom: 20px; }
-        .modal-tabs { display: flex; gap: 4px; margin-bottom: 24px; background: #181818; padding: 4px; border-radius: 8px; }
-        .modal-tab { flex: 1; padding: 8px; border-radius: 6px; background: none; border: none; color: #666; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.2s; font-family: 'DM Sans', sans-serif; }
-        .modal-tab.active { background: #111; color: #e8e8e8; }
-        .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
-        .form-group label { font-size: 12px; color: #666; letter-spacing: 0.5px; }
-        .form-group input { padding: 12px 14px; background: #181818; border: 1px solid #2a2a2a; border-radius: 8px; color: #e8e8e8; font-size: 14px; font-family: 'DM Sans', sans-serif; transition: border-color 0.2s; outline: none; }
-        .form-group input:focus { border-color: #c8ff00; }
-        .form-group input::placeholder { color: #444; }
-        .btn-submit { width: 100%; padding: 13px; background: #c8ff00; color: #000; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; margin-top: 6px; transition: 0.2s; }
-        .btn-submit:hover { background: #a8d900; }
-        .form-error { color: #ff6b6b; font-size: 12px; margin-top: 8px; display: none; }
-        .payment-summary { background: #181818; border-radius: 12px; padding: 16px; margin-bottom: 20px; text-align: center; }
-        .payment-summary .sum { font-size: 28px; font-weight: 800; color: #c8ff00; }
-        .test-payment-note { font-size: 11px; text-align: center; margin-top: 12px; color: #666; }
-        .subscription-badge { display: inline-block; background: #c8ff00; color: #000; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-left: 12px; }
-        .profile-btn { display: flex; align-items: center; gap: 8px; padding: 6px 14px; background: #181818; border: 1px solid #2a2a2a; border-radius: 6px; color: #e8e8e8; cursor: pointer; font-size: 13px; font-family: 'DM Sans', sans-serif; transition: 0.2s; }
-        .profile-btn:hover { border-color: #666; }
-        #closeAfterSuccess { display: none; margin: 0 auto; background: #1a1a1a; color: #fff; border: 1px solid #444; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        #closeAfterSuccess:hover { background: #333; border-color: #666; }
-        #paymentStatus .success-icon { font-size: 48px; color: #4ade80; display: block; margin-bottom: 12px; animation: scaleIn 0.4s ease; }
-        @keyframes scaleIn { 0% { transform: scale(0); opacity: 0; } 80% { transform: scale(1.2); } 100% { transform: scale(1); opacity: 1; } }
-        #paymentStatus .success-text { font-size: 22px; font-weight: 700; color: #c8ff00; margin-bottom: 8px; }
-        #paymentStatus .success-sub { font-size: 14px; color: #aaa; max-width: 280px; margin: 0 auto; line-height: 1.4; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LamsVPN — Быстрый и стабильный VPN</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://yookassa.ru/checkout-widget/v1/checkout-widget.js"></script>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:#0a0a0a; color:#e8e8e8; font-family:'DM Sans',sans-serif; font-size:15px; line-height:1.6; overflow-x:hidden; }
+    ::-webkit-scrollbar { width:4px; }
+    ::-webkit-scrollbar-track { background:#0a0a0a; }
+    ::-webkit-scrollbar-thumb { background:#2a2a2a; border-radius:2px; }
+    .container { max-width:1100px; margin:0 auto; padding:0 16px; }
+    .tag { display:inline-block; font-family:'Syne',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#c8ff00; border:1px solid #c8ff00; padding:4px 10px; border-radius:2px; margin-bottom:16px; }
+    h1,h2,h3 { font-family:'Syne',sans-serif; }
+    nav { position:fixed; top:0; left:0; right:0; z-index:100; background:rgba(10,10,10,0.92); backdrop-filter:blur(12px); border-bottom:1px solid #222; height:60px; display:flex; align-items:center; }
+    nav .inner { display:flex; align-items:center; justify-content:space-between; width:100%; max-width:1100px; margin:0 auto; padding:0 16px; }
+    .logo { font-family:'Syne',sans-serif; font-size:20px; font-weight:800; color:#fff; text-decoration:none; display:flex; align-items:center; gap:8px; cursor:pointer; }
+    .logo span { color:#c8ff00; }
+    .logo-dot { width:8px; height:8px; background:#c8ff00; border-radius:50%; display:inline-block; }
+    nav ul { list-style:none; display:flex; gap:4px; }
+    nav ul a { display:block; padding:6px 10px; color:#666; text-decoration:none; font-size:13px; border-radius:6px; transition:0.2s; }
+    nav ul a:hover { color:#e8e8e8; background:#181818; }
+    .nav-cta { background:#c8ff00 !important; color:#000 !important; font-weight:600 !important; padding:6px 14px !important; }
+    .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:4px; }
+    .hamburger span { width:22px; height:2px; background:#e8e8e8; display:block; transition:0.3s; }
+    .section { display:none; padding-top:60px; min-height:100vh; }
+    .section.active { display:block; }
+    .hero { min-height:100vh; display:flex; align-items:center; padding:80px 0 60px; position:relative; overflow:hidden; }
+    .hero::before { content:''; position:absolute; top:0; right:-200px; width:700px; height:700px; background:radial-gradient(circle, rgba(200,255,0,0.04) 0%, transparent 70%); pointer-events:none; }
+    .hero-grid { display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:60px; }
+    .hero-label { display:flex; align-items:center; gap:8px; margin-bottom:24px; }
+    .hero-label .dot { width:6px; height:6px; background:#c8ff00; border-radius:50%; animation:pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:0.5; transform:scale(1.4); } }
+    .hero-label span { font-size:12px; color:#666; letter-spacing:1px; text-transform:uppercase; font-weight:500; }
+    .hero h1 { font-size:clamp(38px,5vw,64px); font-weight:800; line-height:1.05; margin-bottom:20px; color:#fff; }
+    .hero h1 em { font-style:normal; color:#c8ff00; }
+    .hero p { font-size:16px; color:#666; margin-bottom:36px; max-width:420px; line-height:1.7; }
+    .hero-btns { display:flex; gap:12px; flex-wrap:wrap; }
+    .btn-primary, .btn-ghost, .btn-plan, .btn-submit, .btn-copy { padding:12px 24px; border-radius:8px; font-weight:700; font-size:14px; cursor:pointer; border:none; text-decoration:none; display:inline-block; transition:0.2s; font-family:'DM Sans',sans-serif; }
+    .btn-primary { background:#c8ff00; color:#000; }
+    .btn-primary:hover { background:#a8d900; transform:translateY(-1px); }
+    .btn-ghost { background:transparent; color:#e8e8e8; border:1px solid #2a2a2a; }
+    .btn-ghost:hover { border-color:#666; background:#181818; }
+    .hero-card { background:#111; border:1px solid #222; border-radius:16px; padding:32px; position:relative; }
+    .hero-card::before { content:''; position:absolute; top:-1px; left:32px; right:32px; height:1px; background:linear-gradient(90deg, transparent, #c8ff00, transparent); }
+    .stat-row { display:flex; justify-content:space-between; gap:16px; margin-bottom:28px; }
+    .stat { text-align:center; }
+    .stat-num { font-family:'Syne',sans-serif; font-size:32px; font-weight:800; color:#fff; display:block; }
+    .stat-num span { color:#c8ff00; }
+    .stat-label { font-size:11px; color:#666; text-transform:uppercase; letter-spacing:1px; }
+    .stat-divider { width:1px; background:#222; }
+    .feature-list { display:flex; flex-direction:column; gap:10px; }
+    .feature-item { display:flex; align-items:center; gap:10px; padding:10px 14px; background:#181818; border-radius:8px; border:1px solid #222; font-size:13px; color:#e8e8e8; }
+    .feature-icon { color:#c8ff00; font-size:16px; flex-shrink:0; }
+    .server-pills { display:flex; gap:8px; flex-wrap:wrap; margin-top:20px; }
+    .server-pill { background:#181818; border:1px solid #222; padding:5px 12px; border-radius:20px; font-size:12px; color:#666; }
+    .sec-header { text-align:center; padding:70px 0 48px; }
+    .sec-header h2 { font-size:clamp(28px,4vw,44px); font-weight:800; color:#fff; margin-bottom:12px; }
+    .sec-header p { color:#666; max-width:500px; margin:0 auto; font-size:15px; }
+    .tariffs-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; padding-bottom:80px; }
+    .plan-card { background:#111; border:1px solid #222; border-radius:16px; padding:32px; position:relative; transition:border-color 0.3s; }
+    .plan-card:hover { border-color:#2a2a2a; }
+    .plan-card.featured { border-color:#c8ff00; background:linear-gradient(135deg, #111 0%, rgba(200,255,0,0.03) 100%); }
+    .plan-card.featured::before { content:'ПОПУЛЯРНЫЙ'; position:absolute; top:-1px; right:24px; background:#c8ff00; color:#000; font-family:'Syne',sans-serif; font-size:10px; font-weight:700; letter-spacing:1.5px; padding:4px 10px; border-radius:0 0 6px 6px; }
+    .plan-name { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#666; margin-bottom:8px; }
+    .plan-title { font-size:22px; font-weight:700; color:#fff; margin-bottom:24px; }
+    .price-tabs { display:flex; gap:6px; margin-bottom:20px; flex-wrap:wrap; }
+    .price-tab { padding:7px 14px; border-radius:6px; font-size:13px; border:1px solid #2a2a2a; background:#181818; color:#666; cursor:pointer; transition:0.2s; font-family:'DM Sans',sans-serif; }
+    .price-tab:hover { border-color:#666; color:#e8e8e8; }
+    .price-tab.active { border-color:#c8ff00; color:#c8ff00; background:rgba(200,255,0,0.06); }
+    .price-display { margin-bottom:24px; }
+    .price-amount { font-family:'Syne',sans-serif; font-size:42px; font-weight:800; color:#fff; }
+    .price-amount sup { font-size:20px; vertical-align:super; }
+    .price-period { font-size:13px; color:#666; margin-left:4px; }
+    .plan-features { list-style:none; display:flex; flex-direction:column; gap:10px; margin-bottom:28px; }
+    .plan-features li { display:flex; align-items:flex-start; gap:10px; font-size:14px; color:#e8e8e8; }
+    .plan-features li::before { content:'✓'; color:#c8ff00; font-weight:700; flex-shrink:0; margin-top:1px; }
+    .btn-plan { width:100%; padding:13px; border:1px solid #2a2a2a; background:#1e1e1e; color:#e8e8e8; font-weight:600; }
+    .btn-plan:hover { background:#2a2a2a; border-color:#444; }
+    .btn-plan.accent { background:#c8ff00; color:#000; border-color:#c8ff00; }
+    .btn-plan.accent:hover { background:#a8d900; }
+    .servers-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; padding-bottom:60px; }
+    .server-card { background:#111; border:1px solid #222; border-radius:12px; padding:24px; display:flex; align-items:center; gap:20px; transition:border-color 0.2s; }
+    .server-card:hover { border-color:#2a2a2a; }
+    .server-flag { font-size:36px; flex-shrink:0; }
+    .server-info { flex:1; }
+    .server-city { font-size:16px; font-weight:600; color:#fff; margin-bottom:4px; }
+    .server-country { font-size:12px; color:#666; margin-bottom:10px; }
+    .server-tags { display:flex; gap:6px; flex-wrap:wrap; }
+    .stag { font-size:11px; padding:3px 8px; border-radius:4px; border:1px solid #2a2a2a; color:#666; }
+    .stag.bypass { border-color:rgba(200,255,0,0.3); color:#c8ff00; background:rgba(200,255,0,0.04); }
+    .server-status { flex-shrink:0; }
+    .status-dot { width:8px; height:8px; border-radius:50%; background:#4ade80; box-shadow:0 0 8px rgba(74,222,128,0.5); animation:pulse 3s infinite; }
+    .servers-note { text-align:center; padding:32px; background:#111; border:1px dashed #222; border-radius:12px; color:#666; font-size:14px; margin-bottom:80px; }
+    .servers-note strong { color:#c8ff00; }
+    .faq-list { display:flex; flex-direction:column; gap:8px; padding-bottom:80px; max-width:760px; margin:0 auto; }
+    .faq-item { background:#111; border:1px solid #222; border-radius:10px; overflow:hidden; }
+    .faq-q { padding:18px 22px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; font-weight:500; font-size:15px; color:#e8e8e8; user-select:none; gap:16px; transition:background 0.2s; }
+    .faq-q:hover { background:#181818; }
+    .faq-arrow { font-size:12px; color:#666; flex-shrink:0; transition:transform 0.3s; }
+    .faq-item.open .faq-arrow { transform:rotate(180deg); }
+    .faq-a { max-height:0; overflow:hidden; transition:max-height 0.35s ease, padding 0.3s; font-size:14px; color:#666; line-height:1.7; padding:0 22px; }
+    .faq-item.open .faq-a { max-height:300px; padding:0 22px 20px; }
+    .support-center { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; min-height:calc(100vh - 60px); gap:32px; padding:60px 0; }
+    .support-icon { width:90px; height:90px; border-radius:22px; background:#111; border:1px solid #222; display:flex; align-items:center; justify-content:center; font-size:40px; }
+    .support-center h2 { font-size:36px; font-weight:800; color:#fff; }
+    .support-center p { color:#666; max-width:400px; font-size:15px; line-height:1.7; }
+    .support-links { display:flex; flex-direction:column; gap:12px; width:100%; max-width:360px; }
+    .support-link { display:flex; align-items:center; gap:14px; padding:16px 22px; background:#111; border:1px solid #222; border-radius:10px; text-decoration:none; color:#e8e8e8; transition:0.2s; }
+    .support-link:hover { border-color:#2a2a2a; background:#181818; }
+    .support-link-icon { font-size:22px; }
+    .support-link-text { text-align:left; }
+    .support-link-title { font-weight:600; font-size:14px; display:block; }
+    .support-link-sub { font-size:12px; color:#666; }
+    .profile-page { min-height:calc(100vh - 120px); display:flex; flex-direction:column; align-items:center; padding:60px 0; gap:32px; }
+    .profile-header { display:flex; flex-direction:column; align-items:center; gap:12px; text-align:center; }
+    .profile-avatar-big { width:90px; height:90px; border-radius:50%; background:#c8ff00; color:#000; font-size:42px; font-weight:800; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; }
+    .profile-details, .profile-extension, .profile-config-box, .profile-instructions { background:#111; border:1px solid #222; border-radius:16px; padding:24px 32px; width:100%; max-width:600px; }
+    .detail-row { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #181818; font-size:14px; color:#e8e8e8; }
+    .detail-row:last-child { border-bottom:none; }
+    .detail-row span:first-child { color:#666; }
+    .profile-config-box { display:none; }
+    .profile-config-box.active { display:block; }
+    .config-string { background:#181818; border:1px solid #2a2a2a; border-radius:8px; padding:14px 16px; font-family:monospace; font-size:12px; color:#aaa; word-break:break-all; line-height:1.5; margin:16px 0; }
+    .config-actions { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
+    .profile-instructions { margin-top:8px; }
+    .instr-steps { display:flex; flex-direction:column; gap:16px; margin-top:16px; }
+    .instr-step { background:#181818; border-radius:12px; padding:20px; display:flex; gap:16px; align-items:flex-start; }
+    .step-num { width:32px; height:32px; flex-shrink:0; background:#c8ff00; color:#000; border-radius:8px; font-weight:800; font-size:15px; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; }
+    .step-content h4 { font-size:15px; font-weight:600; color:#fff; margin-bottom:6px; }
+    .step-content p { font-size:13px; color:#666; line-height:1.6; }
+    .step-content a { color:#c8ff00; text-decoration:none; }
+    .apps-row { display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; }
+    .app-link { display:flex; align-items:center; gap:6px; padding:8px 14px; background:#222; border:1px solid #2a2a2a; border-radius:6px; text-decoration:none; color:#e8e8e8; font-size:12px; transition:0.2s; }
+    .app-link:hover { border-color:#666; }
+    .streisand-detail { background:#111; border-left:4px solid #c8ff00; border-radius:6px; padding:14px; margin-top:10px; }
+    .streisand-detail ol { list-style-position:inside; color:#aaa; font-size:13px; line-height:1.8; }
+    .streisand-detail ol li strong { color:#fff; }
+    .profile-actions { display:flex; flex-wrap:wrap; gap:12px; width:100%; max-width:600px; justify-content:center; }
+    .profile-extension { display:none; }
+    .profile-extension h3 { font-size:18px; margin-bottom:16px; }
+    .profile-extension .price-display { margin:16px 0; }
+    #toast-container { position:fixed; bottom:30px; left:50%; transform:translateX(-50%); z-index:9999; display:flex; flex-direction:column; gap:10px; align-items:center; pointer-events:none; }
+    .toast-custom { background:#1a1a1a; border:1px solid #2a2a2a; border-left:4px solid #c8ff00; color:#e8e8e8; padding:14px 24px; border-radius:8px; font-size:14px; font-weight:500; pointer-events:auto; box-shadow:0 8px 24px rgba(0,0,0,0.5); animation:toastIn 0.4s ease, toastOut 0.3s ease forwards; animation-delay:0s,2.8s; max-width:380px; text-align:center; }
+    @keyframes toastIn { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);} }
+    @keyframes toastOut { from{opacity:1;transform:translateY(0);} to{opacity:0;transform:translateY(-10px);} }
+    footer { border-top:1px solid #222; padding:32px 0; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; }
+    footer .logo { font-size:16px; }
+    footer p { font-size:12px; color:#666; }
+    .footer-links { display:flex; gap:20px; }
+    .footer-links a { font-size:13px; color:#666; text-decoration:none; }
+    .footer-links a:hover { color:#e8e8e8; }
+    .modal-overlay { position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.85); backdrop-filter:blur(6px); display:none; align-items:center; justify-content:center; padding:16px; }
+    .modal-overlay.open { display:flex; }
+    .modal { background:#111; border:1px solid #2a2a2a; border-radius:16px; width:100%; max-width:420px; padding:28px 24px; position:relative; animation:slideUp 0.3s ease; max-height:90vh; overflow-y:auto; }
+    @keyframes slideUp { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);} }
+    .modal-close { position:absolute; top:12px; right:12px; background:#181818; border:1px solid #222; color:#666; width:30px; height:30px; border-radius:6px; cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center; transition:0.2s; }
+    .modal-close:hover { color:#e8e8e8; }
+    .modal h3 { font-size:20px; font-weight:700; color:#fff; margin-bottom:6px; }
+    .modal p { color:#666; font-size:13px; margin-bottom:20px; }
+    .modal-tabs { display:flex; gap:4px; margin-bottom:24px; background:#181818; padding:4px; border-radius:8px; }
+    .modal-tab { flex:1; padding:8px; border-radius:6px; background:none; border:none; color:#666; font-size:13px; font-weight:600; cursor:pointer; transition:0.2s; font-family:'DM Sans',sans-serif; }
+    .modal-tab.active { background:#111; color:#e8e8e8; }
+    .form-group { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
+    .form-group label { font-size:12px; color:#666; letter-spacing:0.5px; }
+    .form-group input { padding:12px 14px; background:#181818; border:1px solid #2a2a2a; border-radius:8px; color:#e8e8e8; font-size:14px; font-family:'DM Sans',sans-serif; transition:border-color 0.2s; outline:none; }
+    .form-group input:focus { border-color:#c8ff00; }
+    .form-group input::placeholder { color:#444; }
+    .btn-submit { width:100%; padding:13px; background:#c8ff00; color:#000; border:none; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; margin-top:6px; transition:0.2s; }
+    .btn-submit:hover { background:#a8d900; }
+    .form-error { color:#ff6b6b; font-size:12px; margin-top:8px; display:none; }
+    .payment-summary { background:#181818; border-radius:12px; padding:16px; margin-bottom:20px; text-align:center; }
+    .payment-summary .sum { font-size:28px; font-weight:800; color:#c8ff00; }
+    .test-payment-note { font-size:11px; text-align:center; margin-top:12px; color:#666; }
+    .subscription-badge { display:inline-block; background:#c8ff00; color:#000; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:600; margin-left:12px; }
+    .profile-btn { display:flex; align-items:center; gap:8px; padding:6px 14px; background:#181818; border:1px solid #2a2a2a; border-radius:6px; color:#e8e8e8; cursor:pointer; font-size:13px; font-family:'DM Sans',sans-serif; transition:0.2s; }
+    .profile-btn:hover { border-color:#666; }
+    #closeAfterSuccess { display:none; margin:0 auto; background:#1a1a1a; color:#fff; border:1px solid #444; padding:12px 24px; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; transition:0.2s; }
+    #closeAfterSuccess:hover { background:#333; border-color:#666; }
+    #paymentStatus .success-icon { font-size:48px; color:#4ade80; display:block; margin-bottom:12px; animation:scaleIn 0.4s ease; }
+    @keyframes scaleIn { 0%{transform:scale(0);opacity:0;} 80%{transform:scale(1.2);} 100%{transform:scale(1);opacity:1;} }
+    #paymentStatus .success-text { font-size:22px; font-weight:700; color:#c8ff00; margin-bottom:8px; }
+    #paymentStatus .success-sub { font-size:14px; color:#aaa; max-width:280px; margin:0 auto; line-height:1.4; }
 
-        /* Админ-панель */
-        .admin-modal { max-width: 640px; }
-        .admin-user-row { background: #181818; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px; margin-bottom: 8px; font-size: 13px; }
-        .admin-user-row strong { color: #c8ff00; }
-        .admin-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-        .admin-actions input { padding: 6px 10px; background: #111; border: 1px solid #333; color: #e8e8e8; border-radius: 6px; font-size: 12px; width: 100px; }
-        .admin-actions button { padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid #444; background: #1e1e1e; color: #e8e8e8; transition: 0.2s; }
-        .admin-actions button:hover { background: #2a2a2a; }
-        .admin-actions button.danger { border-color: #ff4444; color: #ff4444; }
-        .admin-actions button.danger:hover { background: #331111; }
+    /* Админ-панель */
+    .admin-modal { max-width:640px; }
+    .admin-user-row { background:#181818; border:1px solid #2a2a2a; border-radius:10px; padding:12px; margin-bottom:8px; font-size:13px; }
+    .admin-user-row strong { color:#c8ff00; }
+    .admin-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+    .admin-actions input { padding:6px 10px; background:#111; border:1px solid #333; color:#e8e8e8; border-radius:6px; font-size:12px; width:100px; }
+    .admin-actions button { padding:6px 12px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; border:1px solid #444; background:#1e1e1e; color:#e8e8e8; transition:0.2s; }
+    .admin-actions button:hover { background:#2a2a2a; }
+    .admin-actions button.danger { border-color:#ff4444; color:#ff4444; }
+    .admin-actions button.danger:hover { background:#331111; }
 
-        @media (max-width: 768px) {
-            nav ul { display: none; }
-            nav ul.open { display: flex; flex-direction: column; position: fixed; top: 60px; left: 0; right: 0; background: #111; border-bottom: 1px solid #222; padding: 12px 16px; gap: 2px; }
-            .hamburger { display: flex; }
-            .hero-grid { grid-template-columns: 1fr; gap: 32px; }
-            .tariffs-grid, .servers-grid { grid-template-columns: 1fr; }
-            .hero h1 { font-size: 32px; }
-            .profile-page { padding: 40px 16px; }
-            .profile-details, .profile-extension, .profile-config-box, .profile-instructions { padding: 20px 16px; }
-            .instr-step { padding: 16px; }
-            .modal { max-width: 95%; padding: 20px; }
-            .admin-modal { max-width: 100%; }
-            .admin-actions { flex-direction: column; }
-            .admin-actions input { width: 100%; }
-            .price-tab { font-size: 12px; padding: 6px 10px; }
-            .price-amount { font-size: 32px; }
-            .btn-primary, .btn-ghost, .btn-plan { padding: 12px 16px; font-size: 13px; }
-            .logo { font-size: 18px; }
-        }
-    </style>
+    @media (max-width:768px) {
+      nav ul { display:none; }
+      nav ul.open { display:flex; flex-direction:column; position:fixed; top:60px; left:0; right:0; background:#111; border-bottom:1px solid #222; padding:12px 16px; gap:2px; }
+      .hamburger { display:flex; }
+      .hero-grid { grid-template-columns:1fr; gap:32px; }
+      .tariffs-grid, .servers-grid { grid-template-columns:1fr; }
+      .hero h1 { font-size:32px; }
+      .profile-page { padding:40px 16px; }
+      .profile-details, .profile-extension, .profile-config-box, .profile-instructions { padding:20px 16px; }
+      .instr-step { padding:16px; }
+      .modal { max-width:95%; padding:20px; }
+      .admin-modal { max-width:100%; }
+      .admin-actions { flex-direction:column; }
+      .admin-actions input { width:100%; }
+      .price-tab { font-size:12px; padding:6px 10px; }
+      .price-amount { font-size:32px; }
+      .btn-primary, .btn-ghost, .btn-plan { padding:12px 16px; font-size:13px; }
+      .logo { font-size:18px; }
+    }
+  </style>
 </head>
 <body>
-    <div id="toast-container"></div>
-    <nav>
-        <div class="inner">
-            <a class="logo" id="adminTrigger"><div class="logo-dot"></div>Lams<span>VPN</span></a>
-            <ul id="navLinks">
-                <li><a href="#" onclick="showSection('home'); closeMenu()">Главная</a></li>
-                <li><a href="#" onclick="showSection('tariffs'); closeMenu()">Тарифы</a></li>
-                <li><a href="#" onclick="showSection('servers'); closeMenu()">Серверы</a></li>
-                <li><a href="#" onclick="showSection('faq'); closeMenu()">FAQ</a></li>
-                <li><a href="#" onclick="showSection('support'); closeMenu()">Поддержка</a></li>
-                <li><a class="nav-cta" href="#" onclick="openAuth(); closeMenu()">Войти</a></li>
-            </ul>
-            <div id="profileBtnWrap" style="display:none;">
-                <button class="profile-btn" onclick="showSection('profile')">
-                    <div class="profile-avatar" id="profileAvatar">A</div>
-                    <span id="profileName">Аккаунт</span>
-                </button>
-            </div>
-            <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+  <div id="toast-container"></div>
+  <nav>
+    <div class="inner">
+      <a class="logo" id="adminTrigger"><div class="logo-dot"></div>Lams<span>VPN</span></a>
+      <ul id="navLinks">
+        <li><a href="#" onclick="showSection('home'); closeMenu()">Главная</a></li>
+        <li><a href="#" onclick="showSection('tariffs'); closeMenu()">Тарифы</a></li>
+        <li><a href="#" onclick="showSection('servers'); closeMenu()">Серверы</a></li>
+        <li><a href="#" onclick="showSection('faq'); closeMenu()">FAQ</a></li>
+        <li><a href="#" onclick="showSection('support'); closeMenu()">Поддержка</a></li>
+        <li><a class="nav-cta" href="#" onclick="openAuth(); closeMenu()">Войти</a></li>
+      </ul>
+      <div id="profileBtnWrap" style="display:none;">
+        <button class="profile-btn" onclick="showSection('profile')">
+          <div class="profile-avatar" id="profileAvatar">A</div>
+          <span id="profileName">Аккаунт</span>
+        </button>
+        <!-- Кнопка админки (видна только админу) -->
+        <button class="profile-btn" id="adminPanelBtn" onclick="openAdminPanel()" style="display:none; margin-left:6px; background:#c8ff00; color:#000; border-color:#c8ff00;">🛡️ Админ</button>
+      </div>
+      <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+    </div>
+  </nav>
+
+  <!-- HOME -->
+  <div id="sec-home" class="section active">
+    <div class="hero"><div class="container"><div class="hero-grid"><div>
+      <div class="hero-label"><div class="dot"></div><span>Работает прямо сейчас</span></div>
+      <h1>Интернет без<br><em>ограничений</em></h1>
+      <p>LamsVPN — быстрый и стабильный доступ к любому контенту. Обход блокировок, защита данных, никаких логов.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showSection('tariffs')">Выбрать тариф</button>
+        <button class="btn-ghost" onclick="showSection('servers')">Серверы →</button>
+      </div>
+    </div><div><div class="hero-card">
+      <div class="stat-row">
+        <div class="stat"><span class="stat-num">4<span>+</span></span><span class="stat-label">Локации</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">99<span>%</span></span><span class="stat-label">Аптайм</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">0</span><span class="stat-label">Логов</span></div>
+      </div>
+      <div class="feature-list">
+        <div class="feature-item"><span class="feature-icon">⚡</span>Протокол VLESS — скорость без компромиссов</div>
+        <div class="feature-item"><span class="feature-icon">🛡️</span>Обход белых списков РКН</div>
+        <div class="feature-item"><span class="feature-icon">📱</span>Работает на всех устройствах</div>
+        <div class="feature-item"><span class="feature-icon">🔒</span>Полная конфиденциальность</div>
+      </div>
+      <div class="server-pills">
+        <span class="server-pill">🇫🇷 Франция</span>
+        <span class="server-pill">🇺🇸 Шарлотт</span>
+        <span class="server-pill">🇸🇪 Стокгольм</span>
+        <span class="server-pill">🇳🇱 Нидерланды</span>
+      </div>
+    </div></div></div></div></div>
+  </div>
+
+  <!-- TARIFFS -->
+  <div id="sec-tariffs" class="section">
+    <div class="container">
+      <div class="sec-header"><div class="tag">Тарифы</div><h2>Выберите свой план</h2><p>Оплата картой через ЮKassa</p></div>
+      <div class="tariffs-grid">
+        <div class="plan-card">
+          <div class="plan-name">Базовый</div><div class="plan-title">До 3 устройств</div>
+          <div class="price-tabs" id="tabs-basic">
+            <button class="price-tab active" data-plan="basic" data-price="100" data-period="мес." data-days="30">1 мес.</button>
+            <button class="price-tab" data-plan="basic" data-price="285" data-period="3 мес." data-days="90">3 мес. -5%</button>
+            <button class="price-tab" data-plan="basic" data-price="540" data-period="6 мес." data-days="180">6 мес. -10%</button>
+            <button class="price-tab" data-plan="basic" data-price="1020" data-period="год" data-days="365">1 год -15%</button>
+          </div>
+          <div class="price-display"><span class="price-amount" id="price-basic"><sup>₽</sup>100</span><span class="price-period" id="period-basic">/ мес.</span></div>
+          <ul class="plan-features"><li>До 3 устройств одновременно</li><li>Обход белых списков РКН</li><li>Серверы: Франция, Шарлотт, Стокгольм, Нидерланды</li><li>Протокол VLESS — высокая скорость</li><li>Персональная конфигурация</li><li>Поддержка 24/7 в Telegram</li></ul>
+          <button class="btn-plan" data-plan="basic" onclick="initiatePurchase(this)">Подключить →</button>
         </div>
-    </nav>
-
-    <!-- HOME -->
-    <div id="sec-home" class="section active">
-        <div class="hero"><div class="container"><div class="hero-grid"><div>
-            <div class="hero-label"><div class="dot"></div><span>Работает прямо сейчас</span></div>
-            <h1>Интернет без<br><em>ограничений</em></h1>
-            <p>LamsVPN — быстрый и стабильный доступ к любому контенту. Обход блокировок, защита данных, никаких логов.</p>
-            <div class="hero-btns">
-                <button class="btn-primary" onclick="showSection('tariffs')">Выбрать тариф</button>
-                <button class="btn-ghost" onclick="showSection('servers')">Серверы →</button>
-            </div>
-        </div><div><div class="hero-card">
-            <div class="stat-row">
-                <div class="stat"><span class="stat-num">4<span>+</span></span><span class="stat-label">Локации</span></div>
-                <div class="stat-divider"></div>
-                <div class="stat"><span class="stat-num">99<span>%</span></span><span class="stat-label">Аптайм</span></div>
-                <div class="stat-divider"></div>
-                <div class="stat"><span class="stat-num">0</span><span class="stat-label">Логов</span></div>
-            </div>
-            <div class="feature-list">
-                <div class="feature-item"><span class="feature-icon">⚡</span>Протокол VLESS — скорость без компромиссов</div>
-                <div class="feature-item"><span class="feature-icon">🛡️</span>Обход белых списков РКН</div>
-                <div class="feature-item"><span class="feature-icon">📱</span>Работает на всех устройствах</div>
-                <div class="feature-item"><span class="feature-icon">🔒</span>Полная конфиденциальность</div>
-            </div>
-            <div class="server-pills">
-                <span class="server-pill">🇫🇷 Франция</span>
-                <span class="server-pill">🇺🇸 Шарлотт</span>
-                <span class="server-pill">🇸🇪 Стокгольм</span>
-                <span class="server-pill">🇳🇱 Нидерланды</span>
-            </div>
-        </div></div></div></div></div>
-    </div>
-
-    <!-- TARIFFS -->
-    <div id="sec-tariffs" class="section">
-        <div class="container">
-            <div class="sec-header"><div class="tag">Тарифы</div><h2>Выберите свой план</h2><p>Оплата картой через ЮKassa</p></div>
-            <div class="tariffs-grid">
-                <div class="plan-card">
-                    <div class="plan-name">Базовый</div><div class="plan-title">До 3 устройств</div>
-                    <div class="price-tabs" id="tabs-basic">
-                        <button class="price-tab active" data-plan="basic" data-price="100" data-period="мес." data-days="30">1 мес.</button>
-                        <button class="price-tab" data-plan="basic" data-price="285" data-period="3 мес." data-days="90">3 мес. -5%</button>
-                        <button class="price-tab" data-plan="basic" data-price="540" data-period="6 мес." data-days="180">6 мес. -10%</button>
-                        <button class="price-tab" data-plan="basic" data-price="1020" data-period="год" data-days="365">1 год -15%</button>
-                    </div>
-                    <div class="price-display"><span class="price-amount" id="price-basic"><sup>₽</sup>100</span><span class="price-period" id="period-basic">/ мес.</span></div>
-                    <ul class="plan-features"><li>До 3 устройств одновременно</li><li>Обход белых списков РКН</li><li>Серверы: Франция, Шарлотт, Стокгольм, Нидерланды</li><li>Протокол VLESS — высокая скорость</li><li>Персональная конфигурация</li><li>Поддержка 24/7 в Telegram</li></ul>
-                    <button class="btn-plan" data-plan="basic" onclick="initiatePurchase(this)">Подключить →</button>
-                </div>
-                <div class="plan-card featured">
-                    <div class="plan-name">Семейный</div><div class="plan-title">До 6 устройств</div>
-                    <div class="price-tabs" id="tabs-family">
-                        <button class="price-tab active" data-plan="family" data-price="210" data-period="мес." data-days="30">1 мес.</button>
-                        <button class="price-tab" data-plan="family" data-price="599" data-period="3 мес." data-days="90">3 мес. -5%</button>
-                        <button class="price-tab" data-plan="family" data-price="1134" data-period="6 мес." data-days="180">6 мес. -10%</button>
-                        <button class="price-tab" data-plan="family" data-price="2142" data-period="год" data-days="365">1 год -15%</button>
-                    </div>
-                    <div class="price-display"><span class="price-amount" id="price-family"><sup>₽</sup>210</span><span class="price-period" id="period-family">/ мес.</span></div>
-                    <ul class="plan-features"><li>До 6 устройств одновременно</li><li>Обход белых списков РКН</li><li>Все серверы включены</li><li>Приоритетная скорость на серверах</li><li>Протокол VLESS — максимальная скорость</li><li>Поддержка 24/7 — приоритетная очередь</li></ul>
-                    <button class="btn-plan accent" data-plan="family" onclick="initiatePurchase(this)">Подключить →</button>
-                </div>
-            </div>
+        <div class="plan-card featured">
+          <div class="plan-name">Семейный</div><div class="plan-title">До 6 устройств</div>
+          <div class="price-tabs" id="tabs-family">
+            <button class="price-tab active" data-plan="family" data-price="210" data-period="мес." data-days="30">1 мес.</button>
+            <button class="price-tab" data-plan="family" data-price="599" data-period="3 мес." data-days="90">3 мес. -5%</button>
+            <button class="price-tab" data-plan="family" data-price="1134" data-period="6 мес." data-days="180">6 мес. -10%</button>
+            <button class="price-tab" data-plan="family" data-price="2142" data-period="год" data-days="365">1 год -15%</button>
+          </div>
+          <div class="price-display"><span class="price-amount" id="price-family"><sup>₽</sup>210</span><span class="price-period" id="period-family">/ мес.</span></div>
+          <ul class="plan-features"><li>До 6 устройств одновременно</li><li>Обход белых списков РКН</li><li>Все серверы включены</li><li>Приоритетная скорость на серверах</li><li>Протокол VLESS — максимальная скорость</li><li>Поддержка 24/7 — приоритетная очередь</li></ul>
+          <button class="btn-plan accent" data-plan="family" onclick="initiatePurchase(this)">Подключить →</button>
         </div>
+      </div>
     </div>
+  </div>
 
-    <!-- SERVERS -->
-    <div id="sec-servers" class="section">
-        <div class="container">
-            <div class="sec-header"><div class="tag">Серверы</div><h2>Доступные локации</h2><p>4 локации уже работают. Все серверы — выделенные, без шаринга.</p></div>
-            <div class="servers-grid">
-                <div class="server-card"><div class="server-flag">🇫🇷</div><div class="server-info"><div class="server-city">Франция</div><div class="server-country">Париж</div><div class="server-tags"><span class="stag bypass">✦ Обход блокировок</span><span class="stag">Низкий пинг</span></div></div><div class="server-status"><div class="status-dot"></div></div></div>
-                <div class="server-card"><div class="server-flag">🇺🇸</div><div class="server-info"><div class="server-city">Шарлотт</div><div class="server-country">США</div><div class="server-tags"><span class="stag">Высокая скорость</span><span class="stag">Стримы</span></div></div><div class="server-status"><div class="status-dot"></div></div></div>
-                <div class="server-card"><div class="server-flag">🇸🇪</div><div class="server-info"><div class="server-city">Стокгольм</div><div class="server-country">Швеция</div><div class="server-tags"><span class="stag">Европа</span><span class="stag">Стабильный</span></div></div><div class="server-status"><div class="status-dot"></div></div></div>
-                <div class="server-card"><div class="server-flag">🇳🇱</div><div class="server-info"><div class="server-city">Нидерланды</div><div class="server-country">Амстердам</div><div class="server-tags"><span class="stag bypass">✦ Обход блокировок</span><span class="stag">Европа</span></div></div><div class="server-status"><div class="status-dot"></div></div></div>
-            </div>
-            <div class="servers-note"><strong>🔄 Список серверов пополняется.</strong><br>Следите за обновлениями в нашем канале <a href="https://t.me/LamsVPN" target="_blank" style="color:#c8ff00; text-decoration:none;">@LamsVPN</a></div>
+  <!-- SERVERS -->
+  <div id="sec-servers" class="section">
+    <div class="container">
+      <div class="sec-header"><div class="tag">Серверы</div><h2>Доступные локации</h2><p>4 локации уже работают. Все серверы — выделенные, без шаринга.</p></div>
+      <div class="servers-grid">
+        <div class="server-card"><div class="server-flag">🇫🇷</div><div class="server-info"><div class="server-city">Франция</div><div class="server-country">Париж</div><div class="server-tags"><span class="stag bypass">✦ Обход блокировок</span><span class="stag">Низкий пинг</span></div></div><div class="server-status"><div class="status-dot"></div></div></div>
+        <div class="server-card"><div class="server-flag">🇺🇸</div><div class="server-info"><div class="server-city">Шарлотт</div><div class="server-country">США</div><div class="server-tags"><span class="stag">Высокая скорость</span><span class="stag">Стримы</span></div></div><div class="server-status"><div class="status-dot"></div></div></div>
+        <div class="server-card"><div class="server-flag">🇸🇪</div><div class="server-info"><div class="server-city">Стокгольм</div><div class="server-country">Швеция</div><div class="server-tags"><span class="stag">Европа</span><span class="stag">Стабильный</span></div></div><div class="server-status"><div class="status-dot"></div></div></div>
+        <div class="server-card"><div class="server-flag">🇳🇱</div><div class="server-info"><div class="server-city">Нидерланды</div><div class="server-country">Амстердам</div><div class="server-tags"><span class="stag bypass">✦ Обход блокировок</span><span class="stag">Европа</span></div></div><div class="server-status"><div class="status-dot"></div></div></div>
+      </div>
+      <div class="servers-note"><strong>🔄 Список серверов пополняется.</strong><br>Следите за обновлениями в нашем канале <a href="https://t.me/LamsVPN" target="_blank" style="color:#c8ff00; text-decoration:none;">@LamsVPN</a></div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div id="sec-faq" class="section">
+    <div class="container">
+      <div class="sec-header"><div class="tag">FAQ</div><h2>Частые вопросы</h2><p>Не нашли ответ? Пишите в поддержку — @lamssupport</p></div>
+      <div class="faq-list">
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Что такое обход белых списков? <span class="faq-arrow">▼</span></div><div class="faq-a">В России Роскомнадзор блокирует сайты через «белые списки» — разрешённые ресурсы. Наши серверы во Франции и Нидерландах специально настроены так, чтобы обходить эти ограничения без замедления скорости, при этом трафик на российские сайты идёт напрямую.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Как быстро подключиться после оплаты? <span class="faq-arrow">▼</span></div><div class="faq-a">Сразу после оплаты через сайт вы получите персональный VLESS конфиг прямо в своём профиле. Добавляете его в приложение — и готово. Занимает не больше 2 минут.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Какие устройства поддерживаются? <span class="faq-arrow">▼</span></div><div class="faq-a">Android, iOS, Windows, macOS, Linux. Для каждой платформы есть подробная инструкция в вашем профиле.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Вы храните логи моей активности? <span class="faq-arrow">▼</span></div><div class="faq-a">Нет. Мы не ведём логи посещённых сайтов, запросов или активности пользователей. Хранится только минимально необходимая информация для работы сервиса — срок действия подписки.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Какой протокол используется? <span class="faq-arrow">▼</span></div><div class="faq-a">VLESS с транспортом Reality. Это один из самых современных и устойчивых к блокировкам протоколов.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Как оплатить? <span class="faq-arrow">▼</span></div><div class="faq-a">Принимаем банковские карты через ЮKassa. Оплата происходит прямо на сайте, безопасно и быстро.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Что если VPN вдруг перестанет работать? <span class="faq-arrow">▼</span></div><div class="faq-a">Напишите в поддержку @lamssupport — обычно вопрос закрывается в течение нескольких часов. При длительных сбоях по нашей вине компенсируем дни подписки.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Можно ли продлить подписку заранее? <span class="faq-arrow">▼</span></div><div class="faq-a">Да. Дни суммируются: если у вас осталось 10 дней, а вы купили ещё месяц — итого будет 40 дней.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUPPORT -->
+  <div id="sec-support" class="section">
+    <div class="container"><div class="support-center"><div class="support-icon">🆘</div><div><h2>Поддержка</h2><p style="margin-top:10px;">Мы всегда на связи. Среднее время ответа — до 2 часов.</p></div>
+      <div class="support-links">
+        <a class="support-link" href="https://t.me/lamssupport" target="_blank"><span class="support-link-icon">✈️</span><div class="support-link-text"><span class="support-link-title">Написать в Telegram</span><span class="support-link-sub">@lamssupport</span></div></a>
+        <a class="support-link" href="https://t.me/LamsVPN" target="_blank"><span class="support-link-icon">📢</span><div class="support-link-text"><span class="support-link-title">Новостной канал</span><span class="support-link-sub">@LamsVPN — обновления и статус серверов</span></div></a>
+        <a class="support-link" href="#" onclick="showSection('faq')"><span class="support-link-icon">❓</span><div class="support-link-text"><span class="support-link-title">Частые вопросы</span><span class="support-link-sub">Возможно, ответ уже есть в FAQ</span></div></a>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- PROFILE -->
+  <div id="sec-profile" class="section">
+    <div class="container">
+      <div class="profile-page">
+        <div class="profile-header">
+          <div class="profile-avatar-big" id="profileAvatarBig">A</div>
+          <h2 id="profileFullName">Имя</h2>
+          <p id="profileEmailDisplay">email@example.com</p>
         </div>
-    </div>
-
-    <!-- FAQ -->
-    <div id="sec-faq" class="section">
-        <div class="container">
-            <div class="sec-header"><div class="tag">FAQ</div><h2>Частые вопросы</h2><p>Не нашли ответ? Пишите в поддержку — @lamssupport</p></div>
-            <div class="faq-list">
-                <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Что такое обход белых списков? <span class="faq-arrow">▼</span></div><div class="faq-a">В России Роскомнадзор блокирует сайты через «белые списки» — разрешённые ресурсы. Наши серверы во Франции и Нидерландах специально настроены так, чтобы обходить эти ограничения без замедления скорости, при этом трафик на российские сайты идёт напрямую.</div></div>
-                <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Как быстро подключиться после оплаты? <span class="faq-arrow">▼</span></div><div class="faq-a">Сразу после оплаты через сайт вы получите персональный VLESS конфиг прямо в своём профиле. Добавляете его в приложение — и готово. Занимает не больше 2 минут.</div></div>
-                <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Какие устройства поддерживаются? <span class="faq-arrow">▼</span></div><div class="faq-a">Android, iOS, Windows, macOS, Linux. Для каждой платформы есть подробная инструкция в вашем профиле.</div></div>
-                <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Вы храните логи моей активности? <span class="faq-arrow">▼</span></div><div class="faq-a">Нет. Мы не ведём логи посещённых сайтов, запросов или активности пользователей. Хранится только минимально необходимая информация для работы сервиса — срок действия подписки.</div></div>
-                <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Какой протокол используется? <span class="faq-arrow">▼</span></div><div class="faq-a">VLESS с транспортом Reality. Это один из самых современных и устойчивых к блокировкам протоколов.</div></div>
-                <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Как оплатить? <span class="faq-arrow">▼</span></div><div class="faq-a">Принимаем банковские карты через ЮKassa. Оплата происходит прямо на сайте, безопасно и быстро.</div></div>
-                <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Что если VPN вдруг перестанет работать? <span class="faq-arrow">▼</span></div><div class="faq-a">Напишите в поддержку @lamssupport — обычно вопрос закрывается в течение нескольких часов. При длительных сбоях по нашей вине компенсируем дни подписки.</div></div>
-                <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Можно ли продлить подписку заранее? <span class="faq-arrow">▼</span></div><div class="faq-a">Да. Дни суммируются: если у вас осталось 10 дней, а вы купили ещё месяц — итого будет 40 дней.</div></div>
-            </div>
+        <div class="profile-details">
+          <div class="detail-row"><span>Статус подписки:</span> <span id="profileSubStatus">Неактивна</span></div>
+          <div class="detail-row"><span>Дата окончания:</span> <span id="profileExpiryDate">—</span></div>
+          <div class="detail-row"><span>Ваш ID профиля:</span> <span id="profileUid">—</span></div>
         </div>
-    </div>
 
-    <!-- SUPPORT -->
-    <div id="sec-support" class="section">
-        <div class="container"><div class="support-center"><div class="support-icon">🆘</div><div><h2>Поддержка</h2><p style="margin-top:10px;">Мы всегда на связи. Среднее время ответа — до 2 часов.</p></div>
-            <div class="support-links">
-                <a class="support-link" href="https://t.me/lamssupport" target="_blank"><span class="support-link-icon">✈️</span><div class="support-link-text"><span class="support-link-title">Написать в Telegram</span><span class="support-link-sub">@lamssupport</span></div></a>
-                <a class="support-link" href="https://t.me/LamsVPN" target="_blank"><span class="support-link-icon">📢</span><div class="support-link-text"><span class="support-link-title">Новостной канал</span><span class="support-link-sub">@LamsVPN — обновления и статус серверов</span></div></a>
-                <a class="support-link" href="#" onclick="showSection('faq')"><span class="support-link-icon">❓</span><div class="support-link-text"><span class="support-link-title">Частые вопросы</span><span class="support-link-sub">Возможно, ответ уже есть в FAQ</span></div></a>
-            </div>
-        </div></div>
-    </div>
-
-    <!-- PROFILE -->
-    <div id="sec-profile" class="section">
-        <div class="container">
-            <div class="profile-page">
-                <div class="profile-header">
-                    <div class="profile-avatar-big" id="profileAvatarBig">A</div>
-                    <h2 id="profileFullName">Имя</h2>
-                    <p id="profileEmailDisplay">email@example.com</p>
-                </div>
-                <div class="profile-details">
-                    <div class="detail-row"><span>Статус подписки:</span> <span id="profileSubStatus">Неактивна</span></div>
-                    <div class="detail-row"><span>Дата окончания:</span> <span id="profileExpiryDate">—</span></div>
-                    <div class="detail-row"><span>Ваш ID профиля:</span> <span id="profileUid">—</span></div>
-                </div>
-
-                <div class="profile-extension" id="profileExtensionBlock">
-                    <h3>🔄 Продлить подписку</h3>
-                    <div class="price-tabs" id="profileExtensionTabs">
-                        <button class="price-tab active" data-days="30" data-price="100" data-period="мес.">1 мес.</button>
-                        <button class="price-tab" data-days="90" data-price="285" data-period="3 мес.">3 мес. -5%</button>
-                        <button class="price-tab" data-days="180" data-price="540" data-period="6 мес.">6 мес. -10%</button>
-                        <button class="price-tab" data-days="365" data-price="1020" data-period="год">1 год -15%</button>
-                    </div>
-                    <div class="price-display">
-                        <span class="price-amount" id="profileExtensionPriceAmount"><sup>₽</sup>100</span>
-                        <span class="price-period" id="profileExtensionPricePeriod">/ мес.</span>
-                    </div>
-                    <button class="btn-primary" onclick="extendSubscriptionFromProfile()">Оплатить продление</button>
-                </div>
-
-                <div class="profile-config-box" id="profileConfigBox">
-                    <h3>🔑 Ваш персональный ключ</h3>
-                    <div class="config-string" id="profileConfigString"></div>
-                    <div class="config-actions">
-                        <button class="btn-primary" onclick="copyProfileConfig()">📋 Скопировать ключ</button>
-                        <button class="btn-ghost" onclick="regenerateConfig()">🔄 Сгенерировать новый</button>
-                    </div>
-                </div>
-
-                <div class="profile-instructions">
-                    <h3>📲 Инструкция по подключению</h3>
-                    <div class="instr-steps">
-                        <div class="instr-step"><div class="step-num">1</div><div class="step-content"><h4>Установите приложение</h4><p>Скачайте подходящее приложение для вашего устройства:</p><div class="apps-row"><a class="app-link" href="https://play.google.com/store/apps/details?id=com.v2raytun.android&pcampaignid=web_share" target="_blank">📱 Android — V2Ray</a><a class="app-link" href="https://apps.apple.com/us/app/happ-proxy-utility/id6504287215" target="_blank">🍎 iOS — Happ</a><a class="app-link" href="https://github.com/2dust/v2rayN/releases" target="_blank">💻 Windows — V2Ray</a></div></div></div>
-                        <div class="instr-step"><div class="step-num">2</div><div class="step-content"><h4>Скопируйте ваш ключ</h4><p>Нажмите кнопку «Скопировать ключ» выше. Ключ автоматически сохранится в буфер обмена.</p></div></div>
-                        <div class="instr-step"><div class="step-num">3</div><div class="step-content"><h4>Добавьте ключ в приложение</h4><p><strong style="color:#fff">Android (V2Ray):</strong> Кнопка + → «Импорт из буфера»</p><p><strong style="color:#fff">Windows (V2Ray):</strong> Серверы → «Импорт URL из буфера»</p><div class="streisand-detail"><p><strong style="color:#c8ff00;">🍎 Для Happ (iOS):</strong></p><ol><li>Установите Happ из App Store.</li><li>Скопируйте ключ в буфер обмена.</li><li>В приложении нажмите <strong>«+»</strong> (правый верхний угол).</li><li>Выберите <strong>«Импортировать из буфера обмена»</strong>.</li><li>Конфигурация добавится автоматически. Нажмите на неё для подключения.</li><li>При первом подключении разрешите добавление VPN-профиля (системный запрос).</li></ol></div></div></div>
-                        <div class="instr-step"><div class="step-num">4</div><div class="step-content"><h4>Включите VPN</h4><p>Нажмите кнопку подключения в приложении. Готово! Проверьте на <a href="https://2ip.ru" target="_blank">2ip.ru</a>, что IP изменился.</p></div></div>
-                    </div>
-                </div>
-
-                <div class="profile-actions">
-                    <button class="btn-ghost" onclick="logout()">🚪 Выйти из аккаунта</button>
-                </div>
-            </div>
+        <div class="profile-extension" id="profileExtensionBlock">
+          <h3>🔄 Продлить подписку</h3>
+          <div class="price-tabs" id="profileExtensionTabs">
+            <button class="price-tab active" data-days="30" data-price="100" data-period="мес.">1 мес.</button>
+            <button class="price-tab" data-days="90" data-price="285" data-period="3 мес.">3 мес. -5%</button>
+            <button class="price-tab" data-days="180" data-price="540" data-period="6 мес.">6 мес. -10%</button>
+            <button class="price-tab" data-days="365" data-price="1020" data-period="год">1 год -15%</button>
+          </div>
+          <div class="price-display">
+            <span class="price-amount" id="profileExtensionPriceAmount"><sup>₽</sup>100</span>
+            <span class="price-period" id="profileExtensionPricePeriod">/ мес.</span>
+          </div>
+          <button class="btn-primary" onclick="extendSubscriptionFromProfile()">Оплатить продление</button>
         </div>
-    </div>
 
-    <!-- AUTH MODAL -->
-    <div class="modal-overlay" id="authModal">
-        <div class="modal"><button class="modal-close" onclick="closeAuth()">✕</button><h3>LamsVPN</h3><p>Войдите или создайте аккаунт</p>
-            <div class="modal-tabs"><button class="modal-tab active" id="tabLogin" onclick="switchTab('login')">Войти</button><button class="modal-tab" id="tabReg" onclick="switchTab('reg')">Регистрация</button></div>
-            <div id="formLogin"><div class="form-group"><label>EMAIL</label><input type="email" id="loginEmail" placeholder="you@example.com"></div><div class="form-group"><label>ПАРОЛЬ</label><input type="password" id="loginPass" placeholder="••••••••"></div><div class="form-error" id="loginErr">Неверный email или пароль</div><button class="btn-submit" onclick="doLogin()">Войти</button></div>
-            <div id="formReg" style="display:none;"><div class="form-group"><label>EMAIL</label><input type="email" id="regEmail" placeholder="you@example.com"></div><div class="form-group"><label>ИМЯ</label><input type="text" id="regName" placeholder="Ваше имя"></div><div class="form-group"><label>ПАРОЛЬ</label><input type="password" id="regPass" placeholder="Минимум 6 символов"></div><div class="form-group"><label>ПОВТОРИТЕ ПАРОЛЬ</label><input type="password" id="regPass2" placeholder="••••••••"></div><div class="form-error" id="regErr">Ошибка регистрации</div><button class="btn-submit" onclick="doRegister()">Создать аккаунт</button></div>
+        <div class="profile-config-box" id="profileConfigBox">
+          <h3>🔑 Ваш персональный ключ</h3>
+          <div class="config-string" id="profileConfigString"></div>
+          <div class="config-actions">
+            <button class="btn-primary" onclick="copyProfileConfig()">📋 Скопировать ключ</button>
+            <button class="btn-ghost" onclick="regenerateConfig()">🔄 Сгенерировать новый</button>
+          </div>
         </div>
-    </div>
 
-    <!-- PAYMENT MODAL -->
-    <div class="modal-overlay" id="paymentModal">
-        <div class="modal pay-modal">
-            <button class="modal-close" onclick="closePaymentModal()">✕</button>
-            <h3>Оплата через ЮKassa</h3>
-            <div id="paymentDetails" class="payment-summary">
-                <span>Тариф <strong id="payPlanName"></strong></span><br>
-                <span class="sum" id="payAmount">0 ₽</span><br>
-                <span id="payPeriodDesc"></span>
-            </div>
-            <div id="paymentStatus" style="display:none;">
-                <span class="success-icon">✅</span>
-                <div class="success-text">Оплата прошла успешно!</div>
-                <p class="success-sub">Подписка активирована. Ключ доступен в вашем профиле.</p>
-            </div>
-            <div id="yookassa-widget-container" style="min-height: 100px;"></div>
-            <button class="btn-submit" id="payButton" onclick="startPayment()">Оплатить</button>
-            <button class="btn-ghost" id="closeAfterSuccess" onclick="closePaymentModal()" style="display:none;">Закрыть</button>
-            <div class="test-payment-note">⚡ Тестовый режим: средства не спишутся.</div>
+        <div class="profile-instructions">
+          <h3>📲 Инструкция по подключению</h3>
+          <div class="instr-steps">
+            <div class="instr-step"><div class="step-num">1</div><div class="step-content"><h4>Установите приложение</h4><p>Скачайте подходящее приложение для вашего устройства:</p><div class="apps-row"><a class="app-link" href="https://play.google.com/store/apps/details?id=com.v2raytun.android&pcampaignid=web_share" target="_blank">📱 Android — V2Ray</a><a class="app-link" href="https://apps.apple.com/us/app/happ-proxy-utility/id6504287215" target="_blank">🍎 iOS — Happ</a><a class="app-link" href="https://github.com/2dust/v2rayN/releases" target="_blank">💻 Windows — V2Ray</a></div></div></div>
+            <div class="instr-step"><div class="step-num">2</div><div class="step-content"><h4>Скопируйте ваш ключ</h4><p>Нажмите кнопку «Скопировать ключ» выше. Ключ автоматически сохранится в буфер обмена.</p></div></div>
+            <div class="instr-step"><div class="step-num">3</div><div class="step-content"><h4>Добавьте ключ в приложение</h4><p><strong style="color:#fff">Android (V2Ray):</strong> Кнопка + → «Импорт из буфера»</p><p><strong style="color:#fff">Windows (V2Ray):</strong> Серверы → «Импорт URL из буфера»</p><div class="streisand-detail"><p><strong style="color:#c8ff00;">🍎 Для Happ (iOS):</strong></p><ol><li>Установите Happ из App Store.</li><li>Скопируйте ключ в буфер обмена.</li><li>В приложении нажмите <strong>«+»</strong> (правый верхний угол).</li><li>Выберите <strong>«Импортировать из буфера обмена»</strong>.</li><li>Конфигурация добавится автоматически. Нажмите на неё для подключения.</li><li>При первом подключении разрешите добавление VPN-профиля (системный запрос).</li></ol></div></div></div>
+            <div class="instr-step"><div class="step-num">4</div><div class="step-content"><h4>Включите VPN</h4><p>Нажмите кнопку подключения в приложении. Готово! Проверьте на <a href="https://2ip.ru" target="_blank">2ip.ru</a>, что IP изменился.</p></div></div>
+          </div>
         </div>
-    </div>
 
-    <!-- АДМИН-ПАНЕЛЬ -->
-    <div class="modal-overlay" id="adminPasswordModal">
-        <div class="modal">
-            <button class="modal-close" onclick="closeAdminPassword()">✕</button>
-            <h3>🔐 Вход в админ-панель</h3>
-            <div class="form-group"><label>Пароль</label><input type="password" id="adminPasswordInput" placeholder="Введите пароль"></div>
-            <div class="form-error" id="adminPasswordError">Неверный пароль</div>
-            <button class="btn-submit" onclick="checkAdminPassword()">Войти</button>
+        <div class="profile-actions">
+          <button class="btn-ghost" onclick="logout()">🚪 Выйти из аккаунта</button>
         </div>
+      </div>
     </div>
-    <div class="modal-overlay" id="adminModal">
-        <div class="modal admin-modal">
-            <button class="modal-close" onclick="closeAdmin()">✕</button>
-            <h3>🛡️ Админ-панель</h3>
-            <div class="form-group" style="margin-bottom:16px;">
-                <label>ПОИСК ПО ID / EMAIL</label>
-                <input type="text" id="adminSearchInput" placeholder="Введите ID или email" oninput="searchUser()">
-            </div>
-            <div id="adminUserList" style="max-height: 50vh; overflow-y: auto;"></div>
-            <button class="btn-ghost" onclick="loadAdminUsers()" style="margin-top:12px;">Показать всех пользователей</button>
-        </div>
+  </div>
+
+  <!-- AUTH MODAL -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal"><button class="modal-close" onclick="closeAuth()">✕</button><h3>LamsVPN</h3><p>Войдите или создайте аккаунт</p>
+      <div class="modal-tabs"><button class="modal-tab active" id="tabLogin" onclick="switchTab('login')">Войти</button><button class="modal-tab" id="tabReg" onclick="switchTab('reg')">Регистрация</button></div>
+      <div id="formLogin"><div class="form-group"><label>EMAIL</label><input type="email" id="loginEmail" placeholder="you@example.com"></div><div class="form-group"><label>ПАРОЛЬ</label><input type="password" id="loginPass" placeholder="••••••••"></div><div class="form-error" id="loginErr">Неверный email или пароль</div><button class="btn-submit" onclick="doLogin()">Войти</button></div>
+      <div id="formReg" style="display:none;"><div class="form-group"><label>EMAIL</label><input type="email" id="regEmail" placeholder="you@example.com"></div><div class="form-group"><label>ИМЯ</label><input type="text" id="regName" placeholder="Ваше имя"></div><div class="form-group"><label>ПАРОЛЬ</label><input type="password" id="regPass" placeholder="Минимум 6 символов"></div><div class="form-group"><label>ПОВТОРИТЕ ПАРОЛЬ</label><input type="password" id="regPass2" placeholder="••••••••"></div><div class="form-error" id="regErr">Ошибка регистрации</div><button class="btn-submit" onclick="doRegister()">Создать аккаунт</button></div>
     </div>
+  </div>
 
-    <script>
-        // ====================== TOAST SYSTEM ======================
-        function showToast(message) {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = 'toast-custom';
-            toast.textContent = message;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3500);
+  <!-- PAYMENT MODAL -->
+  <div class="modal-overlay" id="paymentModal">
+    <div class="modal pay-modal">
+      <button class="modal-close" onclick="closePaymentModal()">✕</button>
+      <h3>Оплата через ЮKassa</h3>
+      <div id="paymentDetails" class="payment-summary">
+        <span>Тариф <strong id="payPlanName"></strong></span><br>
+        <span class="sum" id="payAmount">0 ₽</span><br>
+        <span id="payPeriodDesc"></span>
+      </div>
+      <div id="paymentStatus" style="display:none;">
+        <span class="success-icon">✅</span>
+        <div class="success-text">Оплата прошла успешно!</div>
+        <p class="success-sub">Подписка активирована. Ключ доступен в вашем профиле.</p>
+      </div>
+      <div id="yookassa-widget-container" style="min-height:100px;"></div>
+      <button class="btn-submit" id="payButton" onclick="startPayment()">Оплатить</button>
+      <button class="btn-ghost" id="closeAfterSuccess" onclick="closePaymentModal()" style="display:none;">Закрыть</button>
+      <div class="test-payment-note">⚡ Тестовый режим: средства не спишутся.</div>
+    </div>
+  </div>
+
+  <!-- АДМИН-ПАНЕЛЬ (модальное окно) -->
+  <div class="modal-overlay" id="adminModal">
+    <div class="modal admin-modal">
+      <button class="modal-close" onclick="closeAdmin()">✕</button>
+      <h3>🛡️ Админ-панель</h3>
+      <div class="form-group" style="margin-bottom:16px;">
+        <label>ПОИСК ПО ID / EMAIL</label>
+        <input type="text" id="adminSearchInput" placeholder="Введите ID или email" oninput="searchUser()">
+      </div>
+      <div id="adminUserList" style="max-height:50vh; overflow-y:auto;"></div>
+      <button class="btn-ghost" onclick="loadAdminUsers()" style="margin-top:12px;">Показать всех пользователей</button>
+    </div>
+  </div>
+
+  <script>
+    // ====================== TOAST ======================
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'toast-custom';
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 3500);
+    }
+
+    // ====================== API HELPER ======================
+    const api = async (url, method = 'GET', body = null, headers = {}) => {
+      const opts = { method, headers: { 'Content-Type': 'application/json', ...headers } };
+      if (body) opts.body = JSON.stringify(body);
+      const res = await fetch(url, opts);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Ошибка сервера');
+      return data;
+    };
+
+    // ====================== AUTH & USER ======================
+    let currentUser = null;
+    let isAdmin = false;
+    const getEmail = () => localStorage.getItem('lvpn_email');
+    const setEmail = (e) => localStorage.setItem('lvpn_email', e);
+
+    async function fetchUser() {
+      const email = getEmail();
+      if (!email) return null;
+      try { return await api(`/api/user?email=${encodeURIComponent(email)}`); }
+      catch { return null; }
+    }
+
+    async function register(email, name, pass) {
+      await api('/api/register', 'POST', { email, name, password: pass });
+    }
+
+    async function login(email, pass) {
+      await api('/api/login', 'POST', { email, password: pass });
+    }
+
+    async function extendSubscriptionAPI(days) {
+      const email = getEmail();
+      if (!email) throw new Error('Не авторизован');
+      return await api('/api/user', 'PUT', { email, action: 'extend', days });
+    }
+
+    async function getMarzbanConfig() {
+      const email = getEmail();
+      const res = await api('/api/marzban', 'POST', { email, action: 'create' });
+      return res.config;
+    }
+
+    function isSubscriptionActive() {
+      return currentUser && currentUser.expiry && currentUser.expiry > Date.now();
+    }
+
+    function updateProfileUI() {
+      if (!currentUser) {
+        document.getElementById('profileBtnWrap').style.display = 'none';
+        document.querySelector('.nav-cta').style.display = 'block';
+        document.getElementById('adminPanelBtn').style.display = 'none';
+        if (document.getElementById('sec-profile').classList.contains('active')) populateProfileData();
+        return;
+      }
+      document.getElementById('profileBtnWrap').style.display = 'flex';
+      document.querySelector('.nav-cta').style.display = 'none';
+      const nameElem = document.getElementById('profileName');
+      if (isSubscriptionActive()) {
+        nameElem.innerHTML = currentUser.name + ` <span class="subscription-badge"> до ${new Date(currentUser.expiry).toLocaleDateString()}</span>`;
+      } else {
+        nameElem.innerHTML = currentUser.name;
+      }
+      document.getElementById('profileAvatar').textContent = currentUser.name[0].toUpperCase();
+      // Показываем кнопку админа, если email совпадает с ADMIN_EMAIL
+      if (getEmail() === (window.ADMIN_EMAIL || '')) {
+        document.getElementById('adminPanelBtn').style.display = 'inline-block';
+        isAdmin = true;
+      } else {
+        document.getElementById('adminPanelBtn').style.display = 'none';
+        isAdmin = false;
+      }
+      if (document.getElementById('sec-profile').classList.contains('active')) populateProfileData();
+    }
+
+    function populateProfileData() {
+      if (!currentUser) return;
+      document.getElementById('profileFullName').textContent = currentUser.name;
+      document.getElementById('profileEmailDisplay').textContent = getEmail();
+      document.getElementById('profileAvatarBig').textContent = currentUser.name[0].toUpperCase();
+      document.getElementById('profileUid').textContent = currentUser.uid;
+      const box = document.getElementById('profileConfigBox');
+      const extBlock = document.getElementById('profileExtensionBlock');
+      if (isSubscriptionActive()) {
+        document.getElementById('profileSubStatus').textContent = 'Активна';
+        document.getElementById('profileExpiryDate').textContent = new Date(currentUser.expiry).toLocaleDateString();
+        box.classList.add('active');
+        document.getElementById('profileConfigString').textContent = currentUser.config || 'Ключ не сгенерирован. Нажмите «Сгенерировать новый».';
+        extBlock.style.display = 'block';
+      } else {
+        document.getElementById('profileSubStatus').textContent = 'Неактивна';
+        document.getElementById('profileExpiryDate').textContent = '—';
+        box.classList.remove('active');
+        extBlock.style.display = 'none';
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('lvpn_email');
+      currentUser = null;
+      isAdmin = false;
+      updateProfileUI();
+      showSection('home');
+    }
+
+    async function regenerateConfig() {
+      if (!confirm('Старый ключ перестанет работать. Сгенерировать новый?')) return;
+      try {
+        currentUser.config = await getMarzbanConfig();
+        updateProfileUI();
+        showToast('Новый ключ сгенерирован');
+      } catch (e) { showToast(e.message); }
+    }
+
+    function copyProfileConfig() {
+      const txt = document.getElementById('profileConfigString').textContent;
+      if (!txt || txt.includes('не сгенерирован')) return showToast('Сначала сгенерируйте ключ');
+      navigator.clipboard.writeText(txt).then(() => showToast('Ключ скопирован'));
+    }
+
+    // ====================== UI ======================
+    function showSection(name) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById('sec-' + name).classList.add('active');
+      window.scrollTo(0,0);
+      if (name === 'profile') populateProfileData();
+    }
+    function toggleMenu() { document.getElementById('navLinks').classList.toggle('open'); }
+    function closeMenu() { document.getElementById('navLinks').classList.remove('open'); }
+    function toggleFaq(el) { el.parentElement.classList.toggle('open'); }
+
+    function openAuth() { document.getElementById('authModal').classList.add('open'); }
+    function closeAuth() { document.getElementById('authModal').classList.remove('open'); }
+    function switchTab(tab) {
+      document.getElementById('tabLogin').classList.toggle('active', tab==='login');
+      document.getElementById('tabReg').classList.toggle('active', tab==='reg');
+      document.getElementById('formLogin').style.display = tab==='login'?'block':'none';
+      document.getElementById('formReg').style.display = tab==='reg'?'block':'none';
+    }
+
+    async function doLogin() {
+      const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+      const pass = document.getElementById('loginPass').value;
+      try {
+        const res = await api('/api/login', 'POST', { email, password: pass });
+        if (res.success) {
+          setEmail(email);
+          currentUser = await fetchUser();
+          if (!currentUser) throw new Error('Не удалось загрузить профиль');
+          closeAuth();
+          updateProfileUI();
+          showToast('Добро пожаловать!');
         }
+      } catch (e) {
+        document.getElementById('loginErr').textContent = e.message;
+        document.getElementById('loginErr').style.display = 'block';
+      }
+    }
 
-        // ====================== API HELPER ======================
-        const api = async (url, method = 'GET', body = null, headers = {}) => {
-            const opts = { method, headers: { 'Content-Type': 'application/json', ...headers } };
-            if (body) opts.body = JSON.stringify(body);
-            const res = await fetch(url, opts);
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error || 'Ошибка сервера');
-            return data;
-        };
+    async function doRegister() {
+      const email = document.getElementById('regEmail').value.trim().toLowerCase();
+      const name = document.getElementById('regName').value.trim();
+      const pass = document.getElementById('regPass').value;
+      const pass2 = document.getElementById('regPass2').value;
+      try {
+        if (pass !== pass2) throw new Error('Пароли не совпадают');
+        if (pass.length < 6) throw new Error('Минимум 6 символов');
+        await register(email, name, pass);
+        setEmail(email);
+        currentUser = await fetchUser();
+        closeAuth();
+        updateProfileUI();
+        showToast('Регистрация успешна!');
+      } catch (e) {
+        document.getElementById('regErr').textContent = e.message;
+        document.getElementById('regErr').style.display = 'block';
+      }
+    }
 
-        // ====================== AUTH & USER ======================
-        let currentUser = null;
-        const getEmail = () => localStorage.getItem('lvpn_email');
-        const setEmail = (e) => localStorage.setItem('lvpn_email', e);
+    // ====================== PAYMENT ======================
+    let pendingPurchase = null;
+    function initiatePurchase(btn) {
+      if (!currentUser) { openAuth(); showToast('Сначала войдите'); return; }
+      const card = btn.closest('.plan-card');
+      const activeTab = card.querySelector('.price-tab.active');
+      if (!activeTab) return;
+      const plan = btn.dataset.plan;
+      const price = parseInt(activeTab.dataset.price);
+      const period = activeTab.dataset.period;
+      const days = parseInt(activeTab.dataset.days);
+      const planName = plan === 'basic' ? 'Базовый' : 'Семейный';
+      pendingPurchase = { plan, price, days, period, planName };
+      document.getElementById('payPlanName').textContent = planName;
+      document.getElementById('payAmount').innerHTML = price + ' ₽';
+      document.getElementById('payPeriodDesc').textContent = `срок: ${period}`;
+      document.getElementById('yookassa-widget-container').innerHTML = '';
+      document.getElementById('payButton').style.display = 'block';
+      document.getElementById('paymentStatus').style.display = 'none';
+      document.getElementById('closeAfterSuccess').style.display = 'none';
+      openPaymentModal();
+    }
 
-        async function fetchUser() {
-            const email = getEmail();
-            if (!email) return null;
-            try { return await api(`/api/user?email=${encodeURIComponent(email)}`); }
-            catch { return null; }
-        }
+    function extendSubscriptionFromProfile() {
+      const activeTab = document.querySelector('#profileExtensionTabs .price-tab.active');
+      if (!activeTab) return;
+      const days = parseInt(activeTab.dataset.days);
+      const price = parseInt(activeTab.dataset.price);
+      const period = activeTab.dataset.period;
+      pendingPurchase = { plan: 'extension', price, days, period, planName: 'Продление' };
+      document.getElementById('payPlanName').textContent = 'Продление';
+      document.getElementById('payAmount').innerHTML = price + ' ₽';
+      document.getElementById('payPeriodDesc').textContent = `срок: ${period}`;
+      document.getElementById('yookassa-widget-container').innerHTML = '';
+      document.getElementById('payButton').style.display = 'block';
+      document.getElementById('paymentStatus').style.display = 'none';
+      document.getElementById('closeAfterSuccess').style.display = 'none';
+      openPaymentModal();
+    }
 
-        async function register(email, name, pass) {
-            await api('/api/register', 'POST', { email, name, password: pass });
-        }
+    function openPaymentModal() { document.getElementById('paymentModal').classList.add('open'); }
+    function closePaymentModal() { document.getElementById('paymentModal').classList.remove('open'); pendingPurchase = null; }
 
-        async function login(email, pass) {
-            await api('/api/login', 'POST', { email, password: pass });
-        }
-
-        async function extendSubscriptionAPI(days) {
-            const email = getEmail();
-            if (!email) throw new Error('Не авторизован');
-            return await api('/api/user', 'PUT', { email, action: 'extend', days });
-        }
-
-        async function getMarzbanConfig() {
-            const email = getEmail();
-            const res = await api('/api/marzban', 'POST', { email, action: 'create' });
-            return res.config;
-        }
-
-        function isSubscriptionActive() {
-            return currentUser && currentUser.expiry && currentUser.expiry > Date.now();
-        }
-
-        function updateProfileUI() {
-            if (!currentUser) {
-                document.getElementById('profileBtnWrap').style.display = 'none';
-                document.querySelector('.nav-cta').style.display = 'block';
-                if (document.getElementById('sec-profile').classList.contains('active')) {
-                    populateProfileData();
-                }
-                return;
-            }
-            document.getElementById('profileBtnWrap').style.display = 'block';
-            document.querySelector('.nav-cta').style.display = 'none';
-            const nameElem = document.getElementById('profileName');
-            if (isSubscriptionActive()) {
-                nameElem.innerHTML = currentUser.name + ` <span class="subscription-badge"> до ${new Date(currentUser.expiry).toLocaleDateString()}</span>`;
-            } else {
-                nameElem.innerHTML = currentUser.name;
-            }
-            document.getElementById('profileAvatar').textContent = currentUser.name[0].toUpperCase();
-            if (document.getElementById('sec-profile').classList.contains('active')) {
-                populateProfileData();
-            }
-        }
-
-        function populateProfileData() {
-            if (!currentUser) return;
-            document.getElementById('profileFullName').textContent = currentUser.name;
-            document.getElementById('profileEmailDisplay').textContent = getEmail();
-            document.getElementById('profileAvatarBig').textContent = currentUser.name[0].toUpperCase();
-            document.getElementById('profileUid').textContent = currentUser.uid;
-            const box = document.getElementById('profileConfigBox');
-            const extBlock = document.getElementById('profileExtensionBlock');
-            if (isSubscriptionActive()) {
-                document.getElementById('profileSubStatus').textContent = 'Активна';
-                document.getElementById('profileExpiryDate').textContent = new Date(currentUser.expiry).toLocaleDateString();
-                box.classList.add('active');
-                document.getElementById('profileConfigString').textContent = currentUser.config || 'Ключ не сгенерирован. Нажмите «Сгенерировать новый».';
-                extBlock.style.display = 'block';
-            } else {
-                document.getElementById('profileSubStatus').textContent = 'Неактивна';
-                document.getElementById('profileExpiryDate').textContent = '—';
-                box.classList.remove('active');
-                extBlock.style.display = 'none';
-            }
-        }
-
-        function logout() {
-            localStorage.removeItem('lvpn_email');
-            currentUser = null;
-            updateProfileUI();
-            showSection('home');
-        }
-
-        async function regenerateConfig() {
-            if (!confirm('Старый ключ перестанет работать. Сгенерировать новый?')) return;
-            try {
-                currentUser.config = await getMarzbanConfig();
-                updateProfileUI();
-                showToast('Новый ключ сгенерирован');
-            } catch (e) { showToast(e.message); }
-        }
-
-        function copyProfileConfig() {
-            const txt = document.getElementById('profileConfigString').textContent;
-            if (!txt || txt.includes('не сгенерирован')) return showToast('Сначала сгенерируйте ключ');
-            navigator.clipboard.writeText(txt).then(() => showToast('Ключ скопирован'));
-        }
-
-        // ====================== UI ======================
-        function showSection(name) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById('sec-' + name).classList.add('active');
-            window.scrollTo(0,0);
-            if (name === 'profile') populateProfileData();
-        }
-        function toggleMenu() { document.getElementById('navLinks').classList.toggle('open'); }
-        function closeMenu() { document.getElementById('navLinks').classList.remove('open'); }
-        function toggleFaq(el) { el.parentElement.classList.toggle('open'); }
-
-        function openAuth() { document.getElementById('authModal').classList.add('open'); }
-        function closeAuth() { document.getElementById('authModal').classList.remove('open'); }
-        function switchTab(tab) {
-            document.getElementById('tabLogin').classList.toggle('active', tab==='login');
-            document.getElementById('tabReg').classList.toggle('active', tab==='reg');
-            document.getElementById('formLogin').style.display = tab==='login'?'block':'none';
-            document.getElementById('formReg').style.display = tab==='reg'?'block':'none';
-        }
-
-        async function doLogin() {
-            const email = document.getElementById('loginEmail').value.trim().toLowerCase();
-            const pass = document.getElementById('loginPass').value;
-            try {
-                const res = await api('/api/login', 'POST', { email, password: pass });
-                if (res.success) {
-                    setEmail(email);
-                    currentUser = await fetchUser();
-                    if (!currentUser) {
-                        throw new Error('Не удалось загрузить данные профиля. Попробуйте ещё раз.');
-                    }
-                    closeAuth();
-                    updateProfileUI();
-                    showToast('Добро пожаловать!');
-                }
-            } catch (e) {
-                document.getElementById('loginErr').textContent = e.message;
-                document.getElementById('loginErr').style.display = 'block';
-            }
-        }
-
-        async function doRegister() {
-            const email = document.getElementById('regEmail').value.trim().toLowerCase();
-            const name = document.getElementById('regName').value.trim();
-            const pass = document.getElementById('regPass').value;
-            const pass2 = document.getElementById('regPass2').value;
-            try {
-                if (pass !== pass2) throw new Error('Пароли не совпадают');
-                if (pass.length < 6) throw new Error('Минимум 6 символов');
-                await register(email, name, pass);
-                setEmail(email);
-                currentUser = await fetchUser();
-                closeAuth();
-                updateProfileUI();
-                showToast('Регистрация успешна!');
-            } catch (e) {
-                document.getElementById('regErr').textContent = e.message;
-                document.getElementById('regErr').style.display = 'block';
-            }
-        }
-
-        // ====================== PAYMENT ======================
-        let pendingPurchase = null;
-        function initiatePurchase(btn) {
-            if (!currentUser) { openAuth(); showToast('Сначала войдите'); return; }
-            const card = btn.closest('.plan-card');
-            const activeTab = card.querySelector('.price-tab.active');
-            if (!activeTab) return;
-            const plan = btn.dataset.plan;
-            const price = parseInt(activeTab.dataset.price);
-            const period = activeTab.dataset.period;
-            const days = parseInt(activeTab.dataset.days);
-            const planName = plan === 'basic' ? 'Базовый' : 'Семейный';
-            pendingPurchase = { plan, price, days, period, planName };
-            document.getElementById('payPlanName').textContent = planName;
-            document.getElementById('payAmount').innerHTML = price + ' ₽';
-            document.getElementById('payPeriodDesc').textContent = `срок: ${period}`;
-            document.getElementById('yookassa-widget-container').innerHTML = '';
-            document.getElementById('payButton').style.display = 'block';
-            document.getElementById('paymentStatus').style.display = 'none';
-            document.getElementById('closeAfterSuccess').style.display = 'none';
-            openPaymentModal();
-        }
-
-        function extendSubscriptionFromProfile() {
-            const activeTab = document.querySelector('#profileExtensionTabs .price-tab.active');
-            if (!activeTab) return;
-            const days = parseInt(activeTab.dataset.days);
-            const price = parseInt(activeTab.dataset.price);
-            const period = activeTab.dataset.period;
-            pendingPurchase = { plan: 'extension', price, days, period, planName: 'Продление' };
-            document.getElementById('payPlanName').textContent = 'Продление';
-            document.getElementById('payAmount').innerHTML = price + ' ₽';
-            document.getElementById('payPeriodDesc').textContent = `срок: ${period}`;
-            document.getElementById('yookassa-widget-container').innerHTML = '';
-            document.getElementById('payButton').style.display = 'block';
-            document.getElementById('paymentStatus').style.display = 'none';
-            document.getElementById('closeAfterSuccess').style.display = 'none';
-            openPaymentModal();
-        }
-
-        function openPaymentModal() { document.getElementById('paymentModal').classList.add('open'); }
-        function closePaymentModal() { document.getElementById('paymentModal').classList.remove('open'); pendingPurchase = null; }
-
-        async function startPayment() {
-            if (!pendingPurchase) return;
-            const payBtn = document.getElementById('payButton');
-            payBtn.disabled = true;
-            payBtn.textContent = 'Создание платежа...';
-            try {
-                const res = await fetch('/api/create-payment', {
-                    method: 'POST',
-                    headers: {'Content-Type':'application/json'},
-                    body: JSON.stringify({
-                        amount: pendingPurchase.price,
-                        currency: 'RUB',
-                        description: `${pendingPurchase.planName} на ${pendingPurchase.period}`,
-                        metadata: { email: getEmail(), days: pendingPurchase.days }
-                    })
-                });
-                const data = await res.json();
-                if (!data.confirmation_token) throw new Error(data.error || 'Ошибка');
-                payBtn.style.display = 'none';
-                const checkout = new YooMoneyCheckoutWidget({
-                    confirmation_token: data.confirmation_token,
-                    customization: { colors: { primary: '#c8ff00', background: '#111' } },
-                    error_callback: (err) => {
-                        console.error(err);
-                        showToast('Ошибка платежа');
-                        payBtn.style.display = 'block';
-                        payBtn.disabled = false;
-                        payBtn.textContent = 'Оплатить';
-                    }
-                });
-                checkout.on('success', async () => {
-                    try {
-                        document.getElementById('yookassa-widget-container').innerHTML = '';
-                        document.getElementById('paymentStatus').style.display = 'block';
-                        await extendSubscriptionAPI(pendingPurchase.days);
-                        currentUser = await fetchUser();
-                        if (!currentUser.config) {
-                            currentUser.config = await getMarzbanConfig();
-                        }
-                        updateProfileUI();
-                        document.getElementById('closeAfterSuccess').style.display = 'block';
-                    } catch (e) { showToast(e.message); }
-                });
-                checkout.render('yookassa-widget-container');
-            } catch (e) { showToast(e.message); payBtn.disabled = false; payBtn.textContent = 'Оплатить'; }
-        }
-
-        // ====================== ADMIN ======================
-        let adminClickCount = 0, adminClickTimer = null;
-        document.getElementById('adminTrigger').addEventListener('click', (e) => {
-            e.preventDefault();
-            adminClickCount++;
-            if (adminClickCount === 1) adminClickTimer = setTimeout(() => adminClickCount=0, 1000);
-            if (adminClickCount === 3) {
-                clearTimeout(adminClickTimer);
-                adminClickCount = 0;
-                openAdminPasswordModal();
-            }
+    async function startPayment() {
+      if (!pendingPurchase) return;
+      const payBtn = document.getElementById('payButton');
+      payBtn.disabled = true;
+      payBtn.textContent = 'Создание платежа...';
+      try {
+        const res = await fetch('/api/create-payment', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({
+            amount: pendingPurchase.price,
+            currency: 'RUB',
+            description: `${pendingPurchase.planName} на ${pendingPurchase.period}`,
+            metadata: { email: getEmail(), days: pendingPurchase.days }
+          })
         });
-
-        function openAdminPasswordModal() {
-            document.getElementById('adminPasswordModal').classList.add('open');
-            document.getElementById('adminPasswordInput').value = '';
-            document.getElementById('adminPasswordError').style.display = 'none';
-        }
-        function closeAdminPassword() { document.getElementById('adminPasswordModal').classList.remove('open'); }
-
-        async function checkAdminPassword() {
-            const input = document.getElementById('adminPasswordInput').value;
-            const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input));
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            const hashHex = hashArray.map(b => b.toString(16).padStart(2,'0')).join('');
-            try {
-                await api('/api/admin', 'GET', null, { authorization: hashHex });
-                closeAdminPassword();
-                openAdmin();
-                loadAdminUsers();
-            } catch {
-                document.getElementById('adminPasswordError').style.display = 'block';
-            }
-        }
-
-        async function apiAdmin(url, method, body) {
-            const input = document.getElementById('adminPasswordInput')?.value || '';
-            const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input));
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            const hashHex = hashArray.map(b => b.toString(16).padStart(2,'0')).join('');
-            return api(url, method, body, { authorization: hashHex });
-        }
-
-        async function loadAdminUsers() {
-            try {
-                const users = await apiAdmin('/api/admin');
-                renderAdminList(users);
-            } catch (e) { showToast(e.message); }
-        }
-
-        async function searchUser() {
-            const query = document.getElementById('adminSearchInput').value.trim();
-            if (!query) return loadAdminUsers();
-            try {
-                const users = await apiAdmin('/api/admin');
-                const found = users.filter(u => u.uid === query || u.email.includes(query) || u.name.includes(query));
-                renderAdminList(found);
-            } catch (e) { showToast(e.message); }
-        }
-
-        function renderAdminList(users) {
-            const container = document.getElementById('adminUserList');
-            if (!users.length) { container.innerHTML = '<p style="color:#666;">Пользователи не найдены.</p>'; return; }
-            container.innerHTML = users.map(u => `
-                <div class="admin-user-row">
-                    <div><strong>Имя:</strong> ${u.name}</div>
-                    <div><strong>Email:</strong> ${u.email}</div>
-                    <div><strong>UID:</strong> ${u.uid}</div>
-                    <div><strong>Подписка до:</strong> ${u.expiry ? new Date(u.expiry).toLocaleDateString() : '—'} (${u.expiry && u.expiry > Date.now() ? 'Активна' : 'Неактивна'})</div>
-                    <div class="admin-actions">
-                        <input type="date" id="date-${u.uid}" value="${u.expiry ? new Date(u.expiry).toISOString().split('T')[0] : ''}">
-                        <button onclick="adminSetExpiry('${u.email}', document.getElementById('date-${u.uid}').value)">Установить дату</button>
-                        <input type="number" id="days-${u.uid}" placeholder="Дни" style="width:60px;">
-                        <button onclick="adminAddDays('${u.email}', parseInt(document.getElementById('days-${u.uid}').value))">Добавить дни</button>
-                        <button class="danger" onclick="adminDeleteUser('${u.email}')">Удалить</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        async function adminSetExpiry(email, dateStr) {
-            if (!dateStr) return;
-            try { await apiAdmin('/api/admin', 'POST', { email, action: 'setExpiry', date: dateStr }); loadAdminUsers(); showToast('Дата обновлена'); }
-            catch(e) { showToast(e.message); }
-        }
-        async function adminAddDays(email, days) {
-            if (!days || isNaN(days)) return;
-            try { await apiAdmin('/api/admin', 'POST', { email, action: 'addDays', days }); loadAdminUsers(); showToast(`Добавлено ${days} дн.`); }
-            catch(e) { showToast(e.message); }
-        }
-        async function adminDeleteUser(email) {
-            if (!confirm('Удалить пользователя?')) return;
-            try { await apiAdmin('/api/admin', 'POST', { email, action: 'delete' }); loadAdminUsers(); showToast('Пользователь удалён'); }
-            catch(e) { showToast(e.message); }
-        }
-
-        function openAdmin() { document.getElementById('adminModal').classList.add('open'); }
-        function closeAdmin() { document.getElementById('adminModal').classList.remove('open'); }
-
-        // ====================== ИНИЦИАЛИЗАЦИЯ ======================
-        document.querySelectorAll('.price-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                const parent = this.closest('.price-tabs');
-                parent.querySelectorAll('.price-tab').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                const price = this.dataset.price;
-                const period = this.dataset.period;
-                if (parent.id === 'profileExtensionTabs') {
-                    document.getElementById('profileExtensionPriceAmount').innerHTML = `<sup>₽</sup>${price}`;
-                    document.getElementById('profileExtensionPricePeriod').textContent = `/ ${period}`;
-                } else {
-                    const planId = parent.id.includes('basic') ? 'basic' : 'family';
-                    document.getElementById(`price-${planId}`).innerHTML = `<sup>₽</sup>${price}`;
-                    document.getElementById(`period-${planId}`).textContent = `/ ${period}`;
-                }
-            });
+        const data = await res.json();
+        if (!data.confirmation_token) throw new Error(data.error || 'Ошибка');
+        payBtn.style.display = 'none';
+        const checkout = new YooMoneyCheckoutWidget({
+          confirmation_token: data.confirmation_token,
+          customization: { colors: { primary: '#c8ff00', background: '#111' } },
+          error_callback: (err) => {
+            console.error(err);
+            showToast('Ошибка платежа');
+            payBtn.style.display = 'block';
+            payBtn.disabled = false;
+            payBtn.textContent = 'Оплатить';
+          }
         });
-
-        window.addEventListener('load', async () => {
+        checkout.on('success', async () => {
+          try {
+            document.getElementById('yookassa-widget-container').innerHTML = '';
+            document.getElementById('paymentStatus').style.display = 'block';
+            await extendSubscriptionAPI(pendingPurchase.days);
             currentUser = await fetchUser();
+            if (!currentUser.config) currentUser.config = await getMarzbanConfig();
             updateProfileUI();
-            document.getElementById('authModal').addEventListener('click', function(e) { if (e.target === this) closeAuth(); });
-            document.getElementById('paymentModal').addEventListener('click', function(e) { if (e.target === this) closePaymentModal(); });
+            document.getElementById('closeAfterSuccess').style.display = 'block';
+          } catch (e) { showToast(e.message); }
         });
-    </script>
+        checkout.render('yookassa-widget-container');
+      } catch (e) { showToast(e.message); payBtn.disabled = false; payBtn.textContent = 'Оплатить'; }
+    }
+
+    // ====================== ADMIN ======================
+    function openAdminPanel() {
+      if (!isAdmin) return;
+      document.getElementById('adminModal').classList.add('open');
+      loadAdminUsers();
+    }
+    function closeAdmin() { document.getElementById('adminModal').classList.remove('open'); }
+
+    async function loadAdminUsers() {
+      try {
+        const users = await api('/api/admin', 'GET', null, { 'x-admin-email': getEmail() });
+        renderAdminList(users);
+      } catch (e) { showToast(e.message); }
+    }
+
+    async function searchUser() {
+      const query = document.getElementById('adminSearchInput').value.trim();
+      if (!query) return loadAdminUsers();
+      try {
+        const users = await api('/api/admin', 'GET', null, { 'x-admin-email': getEmail() });
+        const found = users.filter(u => u.uid === query || u.email.includes(query) || u.name.includes(query));
+        renderAdminList(found);
+      } catch (e) { showToast(e.message); }
+    }
+
+    function renderAdminList(users) {
+      const container = document.getElementById('adminUserList');
+      if (!users.length) { container.innerHTML = '<p style="color:#666;">Пользователи не найдены.</p>'; return; }
+      container.innerHTML = users.map(u => `
+        <div class="admin-user-row">
+          <div><strong>Имя:</strong> ${u.name}</div>
+          <div><strong>Email:</strong> ${u.email}</div>
+          <div><strong>UID:</strong> ${u.uid}</div>
+          <div><strong>Подписка до:</strong> ${u.expiry ? new Date(u.expiry).toLocaleDateString() : '—'} (${u.expiry && u.expiry > Date.now() ? 'Активна' : 'Неактивна'})</div>
+          <div class="admin-actions">
+            <input type="date" id="date-${u.uid}" value="${u.expiry ? new Date(u.expiry).toISOString().split('T')[0] : ''}">
+            <button onclick="adminSetExpiry('${u.email}', document.getElementById('date-${u.uid}').value)">Установить дату</button>
+            <input type="number" id="days-${u.uid}" placeholder="Дни" style="width:60px;">
+            <button onclick="adminAddDays('${u.email}', parseInt(document.getElementById('days-${u.uid}').value))">Добавить дни</button>
+            <button class="danger" onclick="adminDeleteUser('${u.email}')">Удалить</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function adminSetExpiry(email, dateStr) {
+      if (!dateStr) return;
+      try {
+        await api('/api/admin', 'POST', { email, action: 'setExpiry', date: dateStr }, { 'x-admin-email': getEmail() });
+        loadAdminUsers();
+        showToast('Дата обновлена');
+      } catch(e) { showToast(e.message); }
+    }
+    async function adminAddDays(email, days) {
+      if (!days || isNaN(days)) return;
+      try {
+        await api('/api/admin', 'POST', { email, action: 'addDays', days }, { 'x-admin-email': getEmail() });
+        loadAdminUsers();
+        showToast(`Добавлено ${days} дн.`);
+      } catch(e) { showToast(e.message); }
+    }
+    async function adminDeleteUser(email) {
+      if (!confirm('Удалить пользователя?')) return;
+      try {
+        await api('/api/admin', 'POST', { email, action: 'delete' }, { 'x-admin-email': getEmail() });
+        loadAdminUsers();
+        showToast('Пользователь удалён');
+      } catch(e) { showToast(e.message); }
+    }
+
+    // ====================== INIT ======================
+    document.querySelectorAll('.price-tab').forEach(tab => {
+      tab.addEventListener('click', function() {
+        const parent = this.closest('.price-tabs');
+        parent.querySelectorAll('.price-tab').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        const price = this.dataset.price;
+        const period = this.dataset.period;
+        if (parent.id === 'profileExtensionTabs') {
+          document.getElementById('profileExtensionPriceAmount').innerHTML = `<sup>₽</sup>${price}`;
+          document.getElementById('profileExtensionPricePeriod').textContent = `/ ${period}`;
+        } else {
+          const planId = parent.id.includes('basic') ? 'basic' : 'family';
+          document.getElementById(`price-${planId}`).innerHTML = `<sup>₽</sup>${price}`;
+          document.getElementById(`period-${planId}`).textContent = `/ ${period}`;
+        }
+      });
+    });
+
+    window.addEventListener('load', async () => {
+      // Загружаем ADMIN_EMAIL из переменной окружения (будет вставлен Vercel)
+      try {
+        const res = await fetch('/api/admin-email'); // небольшой endpoint, который просто отдаёт ADMIN_EMAIL
+        if (res.ok) {
+          const data = await res.json();
+          window.ADMIN_EMAIL = data.email;
+        }
+      } catch (e) {}
+      currentUser = await fetchUser();
+      updateProfileUI();
+      document.getElementById('authModal').addEventListener('click', function(e) { if (e.target === this) closeAuth(); });
+      document.getElementById('paymentModal').addEventListener('click', function(e) { if (e.target === this) closePaymentModal(); });
+    });
+  </script>
 </body>
 </html>
