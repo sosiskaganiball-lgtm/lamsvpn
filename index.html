@@ -221,7 +221,8 @@
   <div id="toast-container"></div>
   <nav>
     <div class="inner">
-      <a class="logo" id="adminTrigger"><div class="logo-dot"></div>Lams<span>VPN</span></a>
+      <!-- Убрали id="adminTrigger", чтобы тройной клик не работал -->
+      <a class="logo"><div class="logo-dot"></div>Lams<span>VPN</span></a>
       <ul id="navLinks">
         <li><a href="#" onclick="showSection('home'); closeMenu()">Главная</a></li>
         <li><a href="#" onclick="showSection('tariffs'); closeMenu()">Тарифы</a></li>
@@ -230,13 +231,13 @@
         <li><a href="#" onclick="showSection('support'); closeMenu()">Поддержка</a></li>
         <li><a class="nav-cta" href="#" onclick="openAuth(); closeMenu()">Войти</a></li>
       </ul>
-      <div id="profileBtnWrap" style="display:none;">
+      <div id="profileBtnWrap" style="display:none; gap:8px;">
         <button class="profile-btn" onclick="showSection('profile')">
           <div class="profile-avatar" id="profileAvatar">A</div>
           <span id="profileName">Аккаунт</span>
         </button>
-        <!-- Кнопка админки (видна только админу) -->
-        <button class="profile-btn" id="adminPanelBtn" onclick="openAdminPanel()" style="display:none; margin-left:6px; background:#c8ff00; color:#000; border-color:#c8ff00;">🛡️ Админ</button>
+        <!-- Кнопка админа (видна только админу) -->
+        <button class="profile-btn" id="adminPanelBtn" onclick="openAdminPanel()" style="display:none; background:#c8ff00; color:#000; border-color:#c8ff00;">🛡️ Админ</button>
       </div>
       <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
     </div>
@@ -437,7 +438,7 @@
     </div>
   </div>
 
-  <!-- АДМИН-ПАНЕЛЬ (модальное окно) -->
+  <!-- АДМИН-ПАНЕЛЬ -->
   <div class="modal-overlay" id="adminModal">
     <div class="modal admin-modal">
       <button class="modal-close" onclick="closeAdmin()">✕</button>
@@ -475,6 +476,7 @@
     // ====================== AUTH & USER ======================
     let currentUser = null;
     let isAdmin = false;
+    let adminEmail = '';
     const getEmail = () => localStorage.getItem('lvpn_email');
     const setEmail = (e) => localStorage.setItem('lvpn_email', e);
 
@@ -527,7 +529,7 @@
       }
       document.getElementById('profileAvatar').textContent = currentUser.name[0].toUpperCase();
       // Показываем кнопку админа, если email совпадает с ADMIN_EMAIL
-      if (getEmail() === (window.ADMIN_EMAIL || '')) {
+      if (getEmail() === adminEmail) {
         document.getElementById('adminPanelBtn').style.display = 'inline-block';
         isAdmin = true;
       } else {
@@ -730,6 +732,18 @@
     }
 
     // ====================== ADMIN ======================
+    async function initAdminEmail() {
+      try {
+        const res = await fetch('/api/admin-email');
+        if (res.ok) {
+          const data = await res.json();
+          adminEmail = data.email;
+        }
+      } catch (e) {}
+      // После загрузки adminEmail проверяем текущего пользователя
+      updateProfileUI();
+    }
+
     function openAdminPanel() {
       if (!isAdmin) return;
       document.getElementById('adminModal').classList.add('open');
@@ -819,15 +833,8 @@
     });
 
     window.addEventListener('load', async () => {
-      // Загружаем ADMIN_EMAIL из переменной окружения (будет вставлен Vercel)
-      try {
-        const res = await fetch('/api/admin-email'); // небольшой endpoint, который просто отдаёт ADMIN_EMAIL
-        if (res.ok) {
-          const data = await res.json();
-          window.ADMIN_EMAIL = data.email;
-        }
-      } catch (e) {}
-      currentUser = await fetchUser();
+      await initAdminEmail();            // загружаем админский email с сервера
+      currentUser = await fetchUser();   // получаем текущего пользователя
       updateProfileUI();
       document.getElementById('authModal').addEventListener('click', function(e) { if (e.target === this) closeAuth(); });
       document.getElementById('paymentModal').addEventListener('click', function(e) { if (e.target === this) closePaymentModal(); });
