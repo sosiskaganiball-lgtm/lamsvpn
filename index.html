@@ -363,7 +363,7 @@
         <div class="profile-details">
           <div class="detail-row"><span>Статус подписки:</span> <span id="profileSubStatus">Неактивна</span></div>
           <div class="detail-row"><span>Дата окончания:</span> <span id="profileExpiryDate">—</span></div>
-          <div class="detail-row"><span>Тарифный план:</span> <span id="profilePlan">—</span></div>
+          <div class="detail-row" id="profilePlanRow" style="display:none"><span>Тарифный план:</span> <span id="profilePlan">—</span></div>
           <div class="detail-row"><span>Ваш ID профиля:</span> <span id="profileUid">—</span></div>
         </div>
 
@@ -585,6 +585,7 @@
       document.getElementById('profileAvatarBig').textContent = currentUser.name[0].toUpperCase();
       document.getElementById('profileUid').textContent = currentUser.uid;
       const planElem = document.getElementById('profilePlan');
+      const planRow = document.getElementById('profilePlanRow');
       const box = document.getElementById('profileConfigBox');
       const extBlock = document.getElementById('profileExtensionBlock');
       const instrBlock = document.getElementById('profileInstructionsBlock');
@@ -592,6 +593,7 @@
         document.getElementById('profileSubStatus').textContent = 'Активна';
         document.getElementById('profileExpiryDate').textContent = new Date(currentUser.expiry).toLocaleDateString();
         planElem.textContent = currentUser.plan === 'family' ? 'Семейный' : (currentUser.plan === 'basic' ? 'Базовый' : '—');
+        planRow.style.display = 'flex';
         box.classList.add('active');
         document.getElementById('profileConfigString').textContent = currentUser.config || 'Ключ не сгенерирован. Нажмите «Сгенерировать новый».';
         extBlock.style.display = 'block';
@@ -599,7 +601,7 @@
       } else {
         document.getElementById('profileSubStatus').textContent = 'Неактивна';
         document.getElementById('profileExpiryDate').textContent = '—';
-        planElem.textContent = '—';
+        planRow.style.display = 'none';
         box.classList.remove('active');
         extBlock.style.display = 'none';
         instrBlock.style.display = 'none';
