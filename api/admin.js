@@ -8,7 +8,6 @@ const redis = new Redis({
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 
 export default async function handler(req, res) {
-  // Проверяем email из заголовка
   const email = req.headers['x-admin-email'];
   if (!email || email !== ADMIN_EMAIL) {
     return res.status(403).json({ error: 'Доступ запрещён' });
@@ -37,7 +36,7 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'POST') {
-    const { email: targetEmail, action, days, date } = req.body;
+    const { email: targetEmail, action, days, date, plan } = req.body;
     if (!targetEmail) return res.status(400).json({ error: 'Email обязателен' });
 
     try {
@@ -54,6 +53,14 @@ export default async function handler(req, res) {
         const now = Date.now();
         const prev = user.expiry ? Number(user.expiry) : 0;
         user.expiry = Math.max(now, prev) + days * 86400000;
+        await redis.set(`user:${targetEmail}`, JSON.stringify(user));
+        return res.json({ success: true });
+      }
+      if (action === 'setPlan' && plan) {
+        if (!['basic', 'family'].includes(plan)) {
+          return res.status(400).json({ error: 'Недопустимый план' });
+        }
+        user.plan = plan;
         await redis.set(`user:${targetEmail}`, JSON.stringify(user));
         return res.json({ success: true });
       }
