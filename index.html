@@ -280,28 +280,44 @@
     <div class="container">
       <div class="sec-header"><div class="tag">Тарифы</div><h2>Выберите свой план</h2><p>Оплата картой через ЮKassa</p></div>
       <div class="tariffs-grid">
+        <!-- Базовый -->
         <div class="plan-card">
           <div class="plan-name">Базовый</div><div class="plan-title">До 3 устройств</div>
           <div class="price-tabs" id="tabs-basic">
-            <button class="price-tab active" data-plan="basic" data-price="100" data-period="мес." data-days="30">1 мес.</button>
-            <button class="price-tab" data-plan="basic" data-price="285" data-period="3 мес." data-days="90">3 мес. -5%</button>
-            <button class="price-tab" data-plan="basic" data-price="540" data-period="6 мес." data-days="180">6 мес. -10%</button>
-            <button class="price-tab" data-plan="basic" data-price="1020" data-period="год" data-days="365">1 год -15%</button>
+            <button class="price-tab active" data-plan="basic" data-price="150" data-period="мес." data-days="30">1 мес.</button>
+            <button class="price-tab" data-plan="basic" data-price="427" data-period="3 мес." data-days="90">3 мес. -5%</button>
+            <button class="price-tab" data-plan="basic" data-price="810" data-period="6 мес." data-days="180">6 мес. -10%</button>
+            <button class="price-tab" data-plan="basic" data-price="1530" data-period="год" data-days="365">1 год -15%</button>
           </div>
-          <div class="price-display"><span class="price-amount" id="price-basic"><sup>₽</sup>100</span><span class="price-period" id="period-basic">/ мес.</span></div>
-          <ul class="plan-features"><li>До 3 устройств одновременно</li><li>Обход белых списков РКН</li><li>Серверы: Франция, Шарлотт, Стокгольм, Нидерланды</li><li>Протокол VLESS — высокая скорость</li><li>Персональная конфигурация</li><li>Поддержка 24/7 в Telegram</li></ul>
+          <div class="price-display"><span class="price-amount" id="price-basic"><sup>₽</sup>150</span><span class="price-period" id="period-basic">/ мес.</span></div>
+          <ul class="plan-features">
+            <li>До 3 устройств одновременно</li>
+            <li>Обход белых списков РКН</li>
+            <li>Серверы: Франция, Шарлотт, Стокгольм, Нидерланды</li>
+            <li>Протокол VLESS — высокая скорость</li>
+            <li>Персональная конфигурация</li>
+            <li>Поддержка 24/7 в Telegram</li>
+          </ul>
           <button class="btn-plan" data-plan="basic" onclick="initiatePurchase(this)">Подключить →</button>
         </div>
+        <!-- Семейный -->
         <div class="plan-card featured">
           <div class="plan-name">Семейный</div><div class="plan-title">До 6 устройств</div>
           <div class="price-tabs" id="tabs-family">
-            <button class="price-tab active" data-plan="family" data-price="210" data-period="мес." data-days="30">1 мес.</button>
-            <button class="price-tab" data-plan="family" data-price="599" data-period="3 мес." data-days="90">3 мес. -5%</button>
-            <button class="price-tab" data-plan="family" data-price="1134" data-period="6 мес." data-days="180">6 мес. -10%</button>
-            <button class="price-tab" data-plan="family" data-price="2142" data-period="год" data-days="365">1 год -15%</button>
+            <button class="price-tab active" data-plan="family" data-price="200" data-period="мес." data-days="30">1 мес.</button>
+            <button class="price-tab" data-plan="family" data-price="570" data-period="3 мес." data-days="90">3 мес. -5%</button>
+            <button class="price-tab" data-plan="family" data-price="1080" data-period="6 мес." data-days="180">6 мес. -10%</button>
+            <button class="price-tab" data-plan="family" data-price="2040" data-period="год" data-days="365">1 год -15%</button>
           </div>
-          <div class="price-display"><span class="price-amount" id="price-family"><sup>₽</sup>210</span><span class="price-period" id="period-family">/ мес.</span></div>
-          <ul class="plan-features"><li>До 6 устройств одновременно</li><li>Обход белых списков РКН</li><li>Все серверы включены</li><li>Приоритетная скорость на серверах</li><li>Протокол VLESS — максимальная скорость</li><li>Поддержка 24/7 — приоритетная очередь</li></ul>
+          <div class="price-display"><span class="price-amount" id="price-family"><sup>₽</sup>200</span><span class="price-period" id="period-family">/ мес.</span></div>
+          <ul class="plan-features">
+            <li>До 6 устройств одновременно</li>
+            <li>Обход белых списков РКН</li>
+            <li>Все серверы включены</li>
+            <li>Приоритетная скорость на серверах</li>
+            <li>Протокол VLESS — максимальная скорость</li>
+            <li>Поддержка 24/7 — приоритетная очередь</li>
+          </ul>
           <button class="btn-plan accent" data-plan="family" onclick="initiatePurchase(this)">Подключить →</button>
         </div>
       </div>
@@ -368,13 +384,13 @@
         <div class="profile-extension" id="profileExtensionBlock">
           <h3>🔄 Продлить подписку</h3>
           <div class="price-tabs" id="profileExtensionTabs">
-            <button class="price-tab active" data-days="30" data-price="100" data-period="мес.">1 мес.</button>
-            <button class="price-tab" data-days="90" data-price="285" data-period="3 мес.">3 мес. -5%</button>
-            <button class="price-tab" data-days="180" data-price="540" data-period="6 мес.">6 мес. -10%</button>
-            <button class="price-tab" data-days="365" data-price="1020" data-period="год">1 год -15%</button>
+            <button class="price-tab active" data-days="30" data-price="150" data-period="мес.">1 мес.</button>
+            <button class="price-tab" data-days="90" data-price="427" data-period="3 мес.">3 мес. -5%</button>
+            <button class="price-tab" data-days="180" data-price="810" data-period="6 мес.">6 мес. -10%</button>
+            <button class="price-tab" data-days="365" data-price="1530" data-period="год">1 год -15%</button>
           </div>
           <div class="price-display">
-            <span class="price-amount" id="profileExtensionPriceAmount"><sup>₽</sup>100</span>
+            <span class="price-amount" id="profileExtensionPriceAmount"><sup>₽</sup>150</span>
             <span class="price-period" id="profileExtensionPricePeriod">/ мес.</span>
           </div>
           <button class="btn-primary" onclick="extendSubscriptionFromProfile()">Оплатить продление</button>
