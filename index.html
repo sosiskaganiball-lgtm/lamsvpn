@@ -127,7 +127,6 @@
     .config-string { background:#181818; border:1px solid #2a2a2a; border-radius:8px; padding:14px 16px; font-family:monospace; font-size:12px; color:#aaa; word-break:break-all; line-height:1.5; margin:16px 0; }
     .config-actions { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
     .profile-instructions { margin-top:8px; display:none; }
-    /* Выпадающий список устройств */
     .device-dropdown { position:relative; margin-bottom:16px; }
     .device-trigger { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:#181818; border:1px solid #2a2a2a; border-radius:8px; cursor:pointer; font-size:14px; color:#e8e8e8; width:100%; }
     .device-trigger:hover { border-color:#666; }
@@ -137,7 +136,6 @@
     .device-list.open { display:block; }
     .device-list button { display:block; width:100%; padding:10px 16px; background:none; border:none; color:#e8e8e8; text-align:left; cursor:pointer; font-size:13px; }
     .device-list button:hover { background:#222; color:#c8ff00; }
-    /* Панель инструкции */
     .instruction-panel { max-height:0; overflow:hidden; transition:max-height 0.4s ease; }
     .instruction-panel.open { max-height:1500px; }
     .instr-steps { display:flex; flex-direction:column; gap:16px; margin-top:16px; }
@@ -199,9 +197,17 @@
     #paymentStatus .success-sub { font-size:14px; color:#aaa; max-width:280px; margin:0 auto; line-height:1.4; }
 
     /* Админ-панель */
-    .admin-modal { max-width:700px; }
+    .admin-modal { max-width:750px; }
+    .admin-toolbar { display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap; align-items:center; }
+    .admin-search { flex:1; min-width:200px; }
+    .admin-actions-bar { display:flex; gap:8px; margin-left:auto; }
     .admin-user-row { background:#181818; border:1px solid #2a2a2a; border-radius:12px; padding:16px; margin-bottom:12px; font-size:13px; display:flex; flex-direction:column; gap:8px; }
-    .admin-user-row strong { color:#c8ff00; }
+    .admin-user-row .header { display:flex; justify-content:space-between; align-items:center; }
+    .admin-user-row .header strong { color:#c8ff00; font-size:15px; }
+    .admin-user-row .body { display:flex; flex-wrap:wrap; gap:12px; align-items:center; }
+    .admin-user-row .body > div { flex:1; min-width:120px; }
+    .admin-user-row .body .label { font-size:11px; color:#666; }
+    .admin-user-row .body .value { font-size:13px; color:#e8e8e8; }
     .admin-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; align-items:center; }
     .admin-actions input { padding:6px 10px; background:#111; border:1px solid #333; color:#e8e8e8; border-radius:6px; font-size:12px; width:100px; }
     .admin-actions button { padding:6px 12px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; border:1px solid #444; background:#1e1e1e; color:#e8e8e8; transition:0.2s; }
@@ -410,7 +416,6 @@
           </div>
         </div>
 
-        <!-- Интерактивная инструкция (выпадающий список) -->
         <div class="profile-instructions" id="profileInstructionsBlock">
           <h3>📲 Инструкция по подключению</h3>
           <div class="device-dropdown">
@@ -419,16 +424,15 @@
               <svg class="arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
             </div>
             <div class="device-list" id="deviceList">
-              <button onclick="selectDevice('ios', 'iPhone / iPad (Happ)')">📱 iPhone / iPad (Happ)</button>
-              <button onclick="selectDevice('android', 'Android (V2Ray)')">🤖 Android (V2Ray)</button>
-              <button onclick="selectDevice('windows', 'Windows (V2Ray)')">💻 Windows (V2Ray)</button>
-              <button onclick="selectDevice('macos', 'macOS (V2Ray)')">🍎 macOS (V2Ray)</button>
-              <button onclick="selectDevice('appletv', 'Apple TV (Streisand)')">📺 Apple TV (Streisand)</button>
-              <button onclick="selectDevice('androidtv', 'Android TV (V2Ray)')">📺 Android TV (V2Ray)</button>
+              <button onclick="selectDevice('ios', 'iPhone / iPad (Happ)')">iPhone / iPad (Happ)</button>
+              <button onclick="selectDevice('android', 'Android (V2Ray)')">Android (V2Ray)</button>
+              <button onclick="selectDevice('windows', 'Windows (V2Ray)')">Windows (V2Ray)</button>
+              <button onclick="selectDevice('macos', 'macOS (V2Ray)')">macOS (V2Ray)</button>
+              <button onclick="selectDevice('appletv', 'Apple TV (Streisand)')">Apple TV (Streisand)</button>
+              <button onclick="selectDevice('androidtv', 'Android TV (V2Ray)')">Android TV (V2Ray)</button>
             </div>
           </div>
-
-          <!-- Панели инструкций (скрыты изначально) -->
+          <!-- Панели инструкций (скрыты) -->
           <div id="instr-ios" class="instruction-panel">
             <div class="instr-steps">
               <div class="instr-step"><div class="step-num">1</div><div class="step-content"><h4>Установите приложение</h4><p>Скачайте <a class="app-link" href="https://apps.apple.com/us/app/happ-proxy-utility/id6504287215" target="_blank">Happ из App Store</a>.</p></div></div>
@@ -523,17 +527,24 @@
     </div>
   </div>
 
-  <!-- АДМИН-ПАНЕЛЬ -->
+  <!-- АДМИН-ПАНЕЛЬ (улучшенная) -->
   <div class="modal-overlay" id="adminModal">
     <div class="modal admin-modal">
       <button class="modal-close" onclick="closeAdmin()">✕</button>
       <h3>🛡️ Админ-панель</h3>
-      <div class="form-group" style="margin-bottom:16px;">
-        <label>ПОИСК ПО ID / EMAIL</label>
-        <input type="text" id="adminSearchInput" placeholder="Введите ID или email" oninput="searchUser()">
+      <div class="admin-toolbar">
+        <div class="admin-search">
+          <input type="text" id="adminSearchInput" placeholder="Поиск по email или ID" oninput="searchUser()" class="form-group input">
+        </div>
+        <div class="admin-actions-bar">
+          <button class="btn-ghost" onclick="loadAdminUsers()">🔄 Обновить</button>
+        </div>
       </div>
-      <div id="adminUserList" style="max-height:55vh; overflow-y:auto;"></div>
-      <button class="btn-ghost" onclick="loadAdminUsers()" style="margin-top:12px;">Показать всех пользователей</button>
+      <div id="adminUserList" style="max-height:60vh; overflow-y:auto;"></div>
+      <div style="margin-top:12px; display:flex; justify-content:space-between; align-items:center;">
+        <span id="adminCount" style="color:#666; font-size:13px;"></span>
+        <button class="btn-ghost" onclick="loadAdminUsers()">Показать всех</button>
+      </div>
     </div>
   </div>
 
@@ -858,9 +869,7 @@
     function selectDevice(platform, displayName) {
       document.getElementById('deviceTriggerText').textContent = displayName;
       document.getElementById('deviceList').classList.remove('open');
-      // Скрыть все панели
       document.querySelectorAll('.instruction-panel').forEach(p => p.classList.remove('open'));
-      // Показать выбранную
       const panel = document.getElementById('instr-' + platform);
       if (panel) panel.classList.add('open');
     }
@@ -869,7 +878,6 @@
       document.querySelectorAll('.instruction-panel').forEach(p => p.classList.remove('open'));
     }
 
-    // Закрытие списка при клике вне
     window.addEventListener('click', function(e) {
       if (!e.target.closest('.device-dropdown')) {
         document.getElementById('deviceList').classList.remove('open');
@@ -914,26 +922,49 @@
 
     function renderAdminList(users) {
       const container = document.getElementById('adminUserList');
-      if (!users.length) { container.innerHTML = '<p style="color:#666;">Пользователи не найдены.</p>'; return; }
+      if (!users.length) {
+        container.innerHTML = '<p style="color:#666;">Пользователи не найдены.</p>';
+        document.getElementById('adminCount').textContent = '';
+        return;
+      }
+      document.getElementById('adminCount').textContent = `Найдено: ${users.length}`;
       container.innerHTML = users.map(u => `
         <div class="admin-user-row">
-          <div><strong>👤 ${u.name}</strong> (${u.email})</div>
-          <div>🆔 UID: ${u.uid}</div>
-          <div>📅 Подписка до: ${u.expiry ? new Date(u.expiry).toLocaleDateString() : '—'} (${u.expiry && u.expiry > Date.now() ? 'Активна' : 'Неактивна'})</div>
-          <div>📋 Тарифный план: <strong>${u.plan === 'family' ? 'Семейный' : (u.plan === 'basic' ? 'Базовый' : 'Не назначен')}</strong></div>
+          <div class="header">
+            <strong>${u.name}</strong>
+            <span style="color:#666; font-size:12px;">${u.email}</span>
+          </div>
+          <div class="body">
+            <div>
+              <div class="label">UID</div>
+              <div class="value">${u.uid}</div>
+            </div>
+            <div>
+              <div class="label">Подписка до</div>
+              <div class="value">${u.expiry ? new Date(u.expiry).toLocaleDateString() : '—'}</div>
+            </div>
+            <div>
+              <div class="label">Статус</div>
+              <div class="value" style="color:${u.expiry && u.expiry > Date.now() ? '#4ade80' : '#ff6b6b'}">${u.expiry && u.expiry > Date.now() ? 'Активна' : 'Неактивна'}</div>
+            </div>
+            <div>
+              <div class="label">План</div>
+              <div class="value">${u.plan === 'family' ? 'Семейный' : (u.plan === 'basic' ? 'Базовый' : '—')}</div>
+            </div>
+          </div>
           <div class="admin-actions">
             <input type="date" id="date-${u.uid}" value="${u.expiry ? new Date(u.expiry).toISOString().split('T')[0] : ''}">
-            <button onclick="adminSetExpiry('${u.email}', document.getElementById('date-${u.uid}').value)">📅 Установить дату</button>
+            <button onclick="adminSetExpiry('${u.email}', document.getElementById('date-${u.uid}').value)">Установить дату</button>
             <input type="number" id="days-${u.uid}" placeholder="Дни" style="width:60px;">
-            <button onclick="adminAddDays('${u.email}', parseInt(document.getElementById('days-${u.uid}').value))">➕ Добавить дни</button>
+            <button onclick="adminAddDays('${u.email}', parseInt(document.getElementById('days-${u.uid}').value))">Добавить дни</button>
             <div class="plan-select">
               <select id="plan-${u.uid}">
                 <option value="basic" ${u.plan==='basic'?'selected':''}>Базовый</option>
                 <option value="family" ${u.plan==='family'?'selected':''}>Семейный</option>
               </select>
-              <button onclick="adminSetPlan('${u.email}', document.getElementById('plan-${u.uid}').value)">💼 Сменить план</button>
+              <button onclick="adminSetPlan('${u.email}', document.getElementById('plan-${u.uid}').value)">Сменить план</button>
             </div>
-            <button class="danger" onclick="adminDeleteUser('${u.email}')">🗑️ Удалить</button>
+            <button class="danger" onclick="adminDeleteUser('${u.email}')">Удалить</button>
           </div>
         </div>
       `).join('');
