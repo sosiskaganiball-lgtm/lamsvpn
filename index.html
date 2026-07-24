@@ -127,6 +127,11 @@
     .config-string { background:#181818; border:1px solid #2a2a2a; border-radius:8px; padding:14px 16px; font-family:monospace; font-size:12px; color:#aaa; word-break:break-all; line-height:1.5; margin:16px 0; }
     .config-actions { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
     .profile-instructions { margin-top:8px; display:none; }
+    .platform-selector { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+    .platform-btn { padding:10px 16px; border-radius:8px; border:1px solid #333; background:#1a1a1a; color:#ccc; cursor:pointer; transition:0.2s; font-size:13px; font-weight:600; }
+    .platform-btn:hover, .platform-btn.active { border-color:#c8ff00; color:#c8ff00; background:#222; }
+    .instruction-panel { max-height:0; overflow:hidden; transition:max-height 0.5s ease; }
+    .instruction-panel.open { max-height:1500px; }
     .instr-steps { display:flex; flex-direction:column; gap:16px; margin-top:16px; }
     .instr-step { background:#181818; border-radius:12px; padding:20px; display:flex; gap:16px; align-items:flex-start; }
     .step-num { width:32px; height:32px; flex-shrink:0; background:#c8ff00; color:#000; border-radius:8px; font-weight:800; font-size:15px; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; }
@@ -330,7 +335,7 @@
       <div class="faq-list">
         <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Что такое обход белых списков? <span class="faq-arrow">▼</span></div><div class="faq-a">В России Роскомнадзор блокирует сайты через «белые списки» — разрешённые ресурсы. Наши серверы во Франции и Нидерландах специально настроены так, чтобы обходить эти ограничения без замедления скорости, при этом трафик на российские сайты идёт напрямую.</div></div>
         <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Как быстро подключиться после оплаты? <span class="faq-arrow">▼</span></div><div class="faq-a">Сразу после оплаты через сайт вы получите персональный VLESS конфиг прямо в своём профиле. Добавляете его в приложение — и готово. Занимает не больше 2 минут.</div></div>
-        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Какие устройства поддерживаются? <span class="faq-arrow">▼</span></div><div class="faq-a">Android, iOS, Windows, macOS, Linux. Для каждой платформы есть подробная инструкция в вашем профиле.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Какие устройства поддерживаются? <span class="faq-arrow">▼</span></div><div class="faq-a">Android, iOS, Windows, macOS, Linux, Apple TV, Android TV. Для каждой платформы есть подробная инструкция в вашем профиле.</div></div>
         <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Вы храните логи моей активности? <span class="faq-arrow">▼</span></div><div class="faq-a">Нет. Мы не ведём логи посещённых сайтов, запросов или активности пользователей. Хранится только минимально необходимая информация для работы сервиса — срок действия подписки.</div></div>
         <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Какой протокол используется? <span class="faq-arrow">▼</span></div><div class="faq-a">VLESS с транспортом Reality. Это один из самых современных и устойчивых к блокировкам протоколов.</div></div>
         <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Как оплатить? <span class="faq-arrow">▼</span></div><div class="faq-a">Принимаем банковские карты через ЮKassa. Оплата происходит прямо на сайте, безопасно и быстро.</div></div>
@@ -367,13 +372,20 @@
           <div class="detail-row"><span>Ваш ID профиля:</span> <span id="profileUid">—</span></div>
         </div>
 
+        <!-- Блок продления с динамическими ценами -->
         <div class="profile-extension" id="profileExtensionBlock">
           <h3>🔄 Продлить подписку</h3>
-          <div class="price-tabs" id="profileExtensionTabs">
+          <div class="price-tabs" id="profileExtensionTabsBasic" style="display:none">
             <button class="price-tab active" data-days="30" data-price="150" data-period="мес.">1 мес.</button>
             <button class="price-tab" data-days="90" data-price="427" data-period="3 мес.">3 мес. -5%</button>
             <button class="price-tab" data-days="180" data-price="810" data-period="6 мес.">6 мес. -10%</button>
             <button class="price-tab" data-days="365" data-price="1530" data-period="год">1 год -15%</button>
+          </div>
+          <div class="price-tabs" id="profileExtensionTabsFamily" style="display:none">
+            <button class="price-tab active" data-days="30" data-price="200" data-period="мес.">1 мес.</button>
+            <button class="price-tab" data-days="90" data-price="570" data-period="3 мес.">3 мес. -5%</button>
+            <button class="price-tab" data-days="180" data-price="1080" data-period="6 мес.">6 мес. -10%</button>
+            <button class="price-tab" data-days="365" data-price="2040" data-period="год">1 год -15%</button>
           </div>
           <div class="price-display">
             <span class="price-amount" id="profileExtensionPriceAmount"><sup>₽</sup>150</span>
@@ -391,51 +403,66 @@
           </div>
         </div>
 
+        <!-- Интерактивная инструкция -->
         <div class="profile-instructions" id="profileInstructionsBlock">
           <h3>📲 Инструкция по подключению</h3>
-          <div class="instr-steps">
-            <div class="instr-step">
-              <div class="step-num">1</div>
-              <div class="step-content">
-                <h4>📱 Установите приложение</h4>
-                <p>Выберите ваше устройство и скачайте подходящий VPN-клиент:</p>
-                <div class="apps-row">
-                  <a class="app-link" href="https://play.google.com/store/apps/details?id=com.v2raytun.android&pcampaignid=web_share" target="_blank">Android — V2Ray</a>
-                  <a class="app-link" href="https://apps.apple.com/us/app/happ-proxy-utility/id6504287215" target="_blank">iOS — Happ</a>
-                  <a class="app-link" href="https://github.com/2dust/v2rayN/releases" target="_blank">Windows — V2Ray</a>
-                </div>
-              </div>
+          <p style="margin-bottom:12px; color:#aaa;">Выберите ваше устройство:</p>
+          <div class="platform-selector" id="platformSelector">
+            <button class="platform-btn active" data-platform="ios">iOS (Happ)</button>
+            <button class="platform-btn" data-platform="android">Android (V2Ray)</button>
+            <button class="platform-btn" data-platform="windows">Windows (V2Ray)</button>
+            <button class="platform-btn" data-platform="macos">macOS (V2Ray)</button>
+            <button class="platform-btn" data-platform="appletv">Apple TV (Streisand)</button>
+            <button class="platform-btn" data-platform="androidtv">Android TV (V2Ray)</button>
+          </div>
+
+          <!-- Панели инструкций для каждой платформы -->
+          <div id="instr-ios" class="instruction-panel open">
+            <div class="instr-steps">
+              <div class="instr-step"><div class="step-num">1</div><div class="step-content"><h4>Установите приложение</h4><p>Скачайте <a class="app-link" href="https://apps.apple.com/us/app/happ-proxy-utility/id6504287215" target="_blank">Happ из App Store</a>.</p></div></div>
+              <div class="instr-step"><div class="step-num">2</div><div class="step-content"><h4>Скопируйте ключ</h4><p>Нажмите кнопку «Скопировать ключ» выше.</p></div></div>
+              <div class="instr-step"><div class="step-num">3</div><div class="step-content"><h4>Импортируйте ключ</h4><p>В Happ нажмите «+» → «Импортировать из буфера обмена».</p></div></div>
+              <div class="instr-step"><div class="step-num">4</div><div class="step-content"><h4>Подключайтесь</h4><p>Нажмите кнопку подключения и проверьте IP на <a href="https://2ip.ru" target="_blank">2ip.ru</a>.</p></div></div>
             </div>
-            <div class="instr-step">
-              <div class="step-num">2</div>
-              <div class="step-content">
-                <h4>📋 Скопируйте ключ</h4>
-                <p>Нажмите кнопку «📋 Скопировать ключ» выше. Ключ будет сохранён в буфер обмена.</p>
-              </div>
+          </div>
+          <div id="instr-android" class="instruction-panel">
+            <div class="instr-steps">
+              <div class="instr-step"><div class="step-num">1</div><div class="step-content"><h4>Установите приложение</h4><p>Скачайте <a class="app-link" href="https://play.google.com/store/apps/details?id=com.v2raytun.android&pcampaignid=web_share" target="_blank">V2Ray из Google Play</a>.</p></div></div>
+              <div class="instr-step"><div class="step-num">2</div><div class="step-content"><h4>Скопируйте ключ</h4><p>Нажмите кнопку «Скопировать ключ» выше.</p></div></div>
+              <div class="instr-step"><div class="step-num">3</div><div class="step-content"><h4>Импортируйте ключ</h4><p>В V2Ray нажмите «+» → «Импорт из буфера».</p></div></div>
+              <div class="instr-step"><div class="step-num">4</div><div class="step-content"><h4>Подключайтесь</h4><p>Нажмите кнопку подключения и проверьте IP на <a href="https://2ip.ru" target="_blank">2ip.ru</a>.</p></div></div>
             </div>
-            <div class="instr-step">
-              <div class="step-num">3</div>
-              <div class="step-content">
-                <h4>⚙️ Импортируйте ключ</h4>
-                <p><strong style="color:#fff">Android (V2Ray):</strong> Нажмите «+» → «Импорт из буфера»</p>
-                <p><strong style="color:#fff">Windows (V2Ray):</strong> Серверы → «Импорт URL из буфера»</p>
-                <div class="streisand-detail">
-                  <p><strong style="color:#c8ff00;">🍎 Для Happ (iOS):</strong></p>
-                  <ol>
-                    <li>Откройте Happ, нажмите «+» (правый верхний угол).</li>
-                    <li>Выберите «Импортировать из буфера обмена».</li>
-                    <li>Конфигурация добавится автоматически.</li>
-                    <li>При первом подключении разрешите добавление VPN-профиля.</li>
-                  </ol>
-                </div>
-              </div>
+          </div>
+          <div id="instr-windows" class="instruction-panel">
+            <div class="instr-steps">
+              <div class="instr-step"><div class="step-num">1</div><div class="step-content"><h4>Установите приложение</h4><p>Скачайте <a class="app-link" href="https://github.com/2dust/v2rayN/releases" target="_blank">V2Ray для Windows</a>.</p></div></div>
+              <div class="instr-step"><div class="step-num">2</div><div class="step-content"><h4>Скопируйте ключ</h4><p>Нажмите кнопку «Скопировать ключ» выше.</p></div></div>
+              <div class="instr-step"><div class="step-num">3</div><div class="step-content"><h4>Импортируйте ключ</h4><p>В V2Ray выберите «Серверы» → «Импорт URL из буфера».</p></div></div>
+              <div class="instr-step"><div class="step-num">4</div><div class="step-content"><h4>Подключайтесь</h4><p>Нажмите кнопку подключения и проверьте IP на <a href="https://2ip.ru" target="_blank">2ip.ru</a>.</p></div></div>
             </div>
-            <div class="instr-step">
-              <div class="step-num">4</div>
-              <div class="step-content">
-                <h4>🚀 Подключайтесь</h4>
-                <p>Нажмите кнопку «Подключить» в приложении. Проверьте свой IP на <a href="https://2ip.ru" target="_blank">2ip.ru</a> – он должен измениться.</p>
-              </div>
+          </div>
+          <div id="instr-macos" class="instruction-panel">
+            <div class="instr-steps">
+              <div class="instr-step"><div class="step-num">1</div><div class="step-content"><h4>Установите приложение</h4><p>Скачайте <a class="app-link" href="https://github.com/2dust/v2rayN/releases" target="_blank">V2Ray для macOS</a> (поддерживает Apple Silicon).</p></div></div>
+              <div class="instr-step"><div class="step-num">2</div><div class="step-content"><h4>Скопируйте ключ</h4><p>Нажмите кнопку «Скопировать ключ» выше.</p></div></div>
+              <div class="instr-step"><div class="step-num">3</div><div class="step-content"><h4>Импортируйте ключ</h4><p>В V2Ray выберите «Серверы» → «Импорт URL из буфера».</p></div></div>
+              <div class="instr-step"><div class="step-num">4</div><div class="step-content"><h4>Подключайтесь</h4><p>Нажмите кнопку подключения и проверьте IP на <a href="https://2ip.ru" target="_blank">2ip.ru</a>.</p></div></div>
+            </div>
+          </div>
+          <div id="instr-appletv" class="instruction-panel">
+            <div class="instr-steps">
+              <div class="instr-step"><div class="step-num">1</div><div class="step-content"><h4>Установите приложение</h4><p>На Apple TV скачайте <a class="app-link" href="https://apps.apple.com/app/streisand/id6450534064" target="_blank">Streisand из App Store</a>.</p></div></div>
+              <div class="instr-step"><div class="step-num">2</div><div class="step-content"><h4>Скопируйте ключ</h4><p>На iPhone/iPad откройте сайт LamsVPN, скопируйте ключ, затем используйте Universal Clipboard или вставьте вручную на Apple TV.</p></div></div>
+              <div class="instr-step"><div class="step-num">3</div><div class="step-content"><h4>Импортируйте ключ</h4><p>В Streisand выберите «+» → «Import from Clipboard».</p></div></div>
+              <div class="instr-step"><div class="step-num">4</div><div class="step-content"><h4>Подключайтесь</h4><p>Нажмите кнопку подключения. Apple TV будет использовать VPN для всех приложений.</p></div></div>
+            </div>
+          </div>
+          <div id="instr-androidtv" class="instruction-panel">
+            <div class="instr-steps">
+              <div class="instr-step"><div class="step-num">1</div><div class="step-content"><h4>Установите приложение</h4><p>На Android TV скачайте <a class="app-link" href="https://play.google.com/store/apps/details?id=com.v2raytun.android&pcampaignid=web_share" target="_blank">V2Ray из Google Play</a> (или установите APK).</p></div></div>
+              <div class="instr-step"><div class="step-num">2</div><div class="step-content"><h4>Скопируйте ключ</h4><p>Скопируйте ключ на компьютере/телефоне и отправьте на Android TV (например, через Telegram, Google Keep).</p></div></div>
+              <div class="instr-step"><div class="step-num">3</div><div class="step-content"><h4>Импортируйте ключ</h4><p>В V2Ray нажмите «+» → «Импорт из буфера» (возможно, потребуется пульт или мышь).</p></div></div>
+              <div class="instr-step"><div class="step-num">4</div><div class="step-content"><h4>Подключайтесь</h4><p>Нажмите кнопку подключения. Трафик пойдёт через VPN.</p></div></div>
             </div>
           </div>
         </div>
@@ -589,15 +616,30 @@
       const box = document.getElementById('profileConfigBox');
       const extBlock = document.getElementById('profileExtensionBlock');
       const instrBlock = document.getElementById('profileInstructionsBlock');
+      const basicTabs = document.getElementById('profileExtensionTabsBasic');
+      const familyTabs = document.getElementById('profileExtensionTabsFamily');
+
       if (isSubscriptionActive()) {
         document.getElementById('profileSubStatus').textContent = 'Активна';
         document.getElementById('profileExpiryDate').textContent = new Date(currentUser.expiry).toLocaleDateString();
-        planElem.textContent = currentUser.plan === 'family' ? 'Семейный' : (currentUser.plan === 'basic' ? 'Базовый' : '—');
+        const plan = currentUser.plan === 'family' ? 'Семейный' : (currentUser.plan === 'basic' ? 'Базовый' : '—');
+        planElem.textContent = plan;
         planRow.style.display = 'flex';
         box.classList.add('active');
         document.getElementById('profileConfigString').textContent = currentUser.config || 'Ключ не сгенерирован. Нажмите «Сгенерировать новый».';
         extBlock.style.display = 'block';
         instrBlock.style.display = 'block';
+
+        // Показываем нужные табы продления
+        if (currentUser.plan === 'family') {
+          basicTabs.style.display = 'none';
+          familyTabs.style.display = 'flex';
+          updateExtensionPrice('family');
+        } else {
+          basicTabs.style.display = 'flex';
+          familyTabs.style.display = 'none';
+          updateExtensionPrice('basic');
+        }
       } else {
         document.getElementById('profileSubStatus').textContent = 'Неактивна';
         document.getElementById('profileExpiryDate').textContent = '—';
@@ -605,6 +647,17 @@
         box.classList.remove('active');
         extBlock.style.display = 'none';
         instrBlock.style.display = 'none';
+      }
+    }
+
+    function updateExtensionPrice(plan) {
+      const tabs = document.querySelectorAll(plan === 'family' ? '#profileExtensionTabsFamily .price-tab' : '#profileExtensionTabsBasic .price-tab');
+      const activeTab = Array.from(tabs).find(t => t.classList.contains('active'));
+      if (activeTab) {
+        const price = activeTab.dataset.price;
+        const period = activeTab.dataset.period;
+        document.getElementById('profileExtensionPriceAmount').innerHTML = `<sup>₽</sup>${price}`;
+        document.getElementById('profileExtensionPricePeriod').textContent = `/ ${period}`;
       }
     }
 
@@ -714,13 +767,14 @@
     }
 
     function extendSubscriptionFromProfile() {
-      const activeTab = document.querySelector('#profileExtensionTabs .price-tab.active');
+      const plan = currentUser.plan || 'basic';
+      const tabsContainer = document.getElementById(plan === 'family' ? 'profileExtensionTabsFamily' : 'profileExtensionTabsBasic');
+      const activeTab = tabsContainer.querySelector('.price-tab.active');
       if (!activeTab) return;
       const days = parseInt(activeTab.dataset.days);
       const price = parseInt(activeTab.dataset.price);
       const period = activeTab.dataset.period;
-      // План остаётся прежним, если продление из профиля
-      pendingPurchase = { plan: currentUser.plan || 'basic', price, days, period, planName: 'Продление' };
+      pendingPurchase = { plan: plan, price, days, period, planName: 'Продление' };
       document.getElementById('payPlanName').textContent = 'Продление';
       document.getElementById('payAmount').innerHTML = price + ' ₽';
       document.getElementById('payPeriodDesc').textContent = `срок: ${period}`;
@@ -777,6 +831,19 @@
         });
         checkout.render('yookassa-widget-container');
       } catch (e) { showToast(e.message); payBtn.disabled = false; payBtn.textContent = 'Оплатить'; }
+    }
+
+    // ====================== INTERACTIVE INSTRUCTION ======================
+    function selectPlatform(platform) {
+      // Скрыть все панели
+      document.querySelectorAll('.instruction-panel').forEach(p => p.classList.remove('open'));
+      // Показать выбранную
+      const panel = document.getElementById('instr-' + platform);
+      if (panel) panel.classList.add('open');
+      // Обновить активную кнопку
+      document.querySelectorAll('.platform-btn').forEach(b => b.classList.remove('active'));
+      const activeBtn = document.querySelector(`.platform-btn[data-platform="${platform}"]`);
+      if (activeBtn) activeBtn.classList.add('active');
     }
 
     // ====================== ADMIN ======================
@@ -878,11 +945,12 @@
     document.querySelectorAll('.price-tab').forEach(tab => {
       tab.addEventListener('click', function() {
         const parent = this.closest('.price-tabs');
+        if (!parent) return;
         parent.querySelectorAll('.price-tab').forEach(t => t.classList.remove('active'));
         this.classList.add('active');
         const price = this.dataset.price;
         const period = this.dataset.period;
-        if (parent.id === 'profileExtensionTabs') {
+        if (parent.id.startsWith('profileExtensionTabs')) {
           document.getElementById('profileExtensionPriceAmount').innerHTML = `<sup>₽</sup>${price}`;
           document.getElementById('profileExtensionPricePeriod').textContent = `/ ${period}`;
         } else {
@@ -890,6 +958,15 @@
           document.getElementById(`price-${planId}`).innerHTML = `<sup>₽</sup>${price}`;
           document.getElementById(`period-${planId}`).textContent = `/ ${period}`;
         }
+      });
+    });
+
+    // Кнопки выбора платформы
+    document.querySelectorAll('.platform-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const platform = this.dataset.platform;
+        selectPlatform(platform);
       });
     });
 
