@@ -127,10 +127,18 @@
     .config-string { background:#181818; border:1px solid #2a2a2a; border-radius:8px; padding:14px 16px; font-family:monospace; font-size:12px; color:#aaa; word-break:break-all; line-height:1.5; margin:16px 0; }
     .config-actions { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
     .profile-instructions { margin-top:8px; display:none; }
-    .platform-selector { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
-    .platform-btn { padding:10px 16px; border-radius:8px; border:1px solid #333; background:#1a1a1a; color:#ccc; cursor:pointer; transition:0.2s; font-size:13px; font-weight:600; }
-    .platform-btn:hover, .platform-btn.active { border-color:#c8ff00; color:#c8ff00; background:#222; }
-    .instruction-panel { max-height:0; overflow:hidden; transition:max-height 0.5s ease; }
+    /* Выпадающий список устройств */
+    .device-dropdown { position:relative; margin-bottom:16px; }
+    .device-trigger { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:#181818; border:1px solid #2a2a2a; border-radius:8px; cursor:pointer; font-size:14px; color:#e8e8e8; width:100%; }
+    .device-trigger:hover { border-color:#666; }
+    .device-trigger .arrow { transition:0.2s; }
+    .device-trigger.open .arrow { transform:rotate(180deg); }
+    .device-list { position:absolute; top:100%; left:0; right:0; background:#181818; border:1px solid #2a2a2a; border-radius:8px; margin-top:4px; display:none; z-index:10; }
+    .device-list.open { display:block; }
+    .device-list button { display:block; width:100%; padding:10px 16px; background:none; border:none; color:#e8e8e8; text-align:left; cursor:pointer; font-size:13px; }
+    .device-list button:hover { background:#222; color:#c8ff00; }
+    /* Панель инструкции */
+    .instruction-panel { max-height:0; overflow:hidden; transition:max-height 0.4s ease; }
     .instruction-panel.open { max-height:1500px; }
     .instr-steps { display:flex; flex-direction:column; gap:16px; margin-top:16px; }
     .instr-step { background:#181818; border-radius:12px; padding:20px; display:flex; gap:16px; align-items:flex-start; }
@@ -372,7 +380,6 @@
           <div class="detail-row"><span>Ваш ID профиля:</span> <span id="profileUid">—</span></div>
         </div>
 
-        <!-- Блок продления с динамическими ценами -->
         <div class="profile-extension" id="profileExtensionBlock">
           <h3>🔄 Продлить подписку</h3>
           <div class="price-tabs" id="profileExtensionTabsBasic" style="display:none">
@@ -403,27 +410,33 @@
           </div>
         </div>
 
-        <!-- Интерактивная инструкция -->
+        <!-- Интерактивная инструкция (выпадающий список) -->
         <div class="profile-instructions" id="profileInstructionsBlock">
           <h3>📲 Инструкция по подключению</h3>
-          <p style="margin-bottom:12px; color:#aaa;">Выберите ваше устройство:</p>
-          <div class="platform-selector" id="platformSelector">
-            <button class="platform-btn active" data-platform="ios">iOS (Happ)</button>
-            <button class="platform-btn" data-platform="android">Android (V2Ray)</button>
-            <button class="platform-btn" data-platform="windows">Windows (V2Ray)</button>
-            <button class="platform-btn" data-platform="macos">macOS (V2Ray)</button>
-            <button class="platform-btn" data-platform="appletv">Apple TV (Streisand)</button>
-            <button class="platform-btn" data-platform="androidtv">Android TV (V2Ray)</button>
+          <div class="device-dropdown">
+            <div class="device-trigger" id="deviceTrigger" onclick="toggleDeviceList()">
+              <span id="deviceTriggerText">Выберите устройство</span>
+              <svg class="arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+            <div class="device-list" id="deviceList">
+              <button onclick="selectDevice('ios', 'iPhone / iPad (Happ)')">📱 iPhone / iPad (Happ)</button>
+              <button onclick="selectDevice('android', 'Android (V2Ray)')">🤖 Android (V2Ray)</button>
+              <button onclick="selectDevice('windows', 'Windows (V2Ray)')">💻 Windows (V2Ray)</button>
+              <button onclick="selectDevice('macos', 'macOS (V2Ray)')">🍎 macOS (V2Ray)</button>
+              <button onclick="selectDevice('appletv', 'Apple TV (Streisand)')">📺 Apple TV (Streisand)</button>
+              <button onclick="selectDevice('androidtv', 'Android TV (V2Ray)')">📺 Android TV (V2Ray)</button>
+            </div>
           </div>
 
-          <!-- Панели инструкций для каждой платформы -->
-          <div id="instr-ios" class="instruction-panel open">
+          <!-- Панели инструкций (скрыты изначально) -->
+          <div id="instr-ios" class="instruction-panel">
             <div class="instr-steps">
               <div class="instr-step"><div class="step-num">1</div><div class="step-content"><h4>Установите приложение</h4><p>Скачайте <a class="app-link" href="https://apps.apple.com/us/app/happ-proxy-utility/id6504287215" target="_blank">Happ из App Store</a>.</p></div></div>
               <div class="instr-step"><div class="step-num">2</div><div class="step-content"><h4>Скопируйте ключ</h4><p>Нажмите кнопку «Скопировать ключ» выше.</p></div></div>
               <div class="instr-step"><div class="step-num">3</div><div class="step-content"><h4>Импортируйте ключ</h4><p>В Happ нажмите «+» → «Импортировать из буфера обмена».</p></div></div>
               <div class="instr-step"><div class="step-num">4</div><div class="step-content"><h4>Подключайтесь</h4><p>Нажмите кнопку подключения и проверьте IP на <a href="https://2ip.ru" target="_blank">2ip.ru</a>.</p></div></div>
             </div>
+            <button class="btn-ghost" style="margin-top:12px;" onclick="hideInstruction()">Скрыть инструкцию</button>
           </div>
           <div id="instr-android" class="instruction-panel">
             <div class="instr-steps">
@@ -432,6 +445,7 @@
               <div class="instr-step"><div class="step-num">3</div><div class="step-content"><h4>Импортируйте ключ</h4><p>В V2Ray нажмите «+» → «Импорт из буфера».</p></div></div>
               <div class="instr-step"><div class="step-num">4</div><div class="step-content"><h4>Подключайтесь</h4><p>Нажмите кнопку подключения и проверьте IP на <a href="https://2ip.ru" target="_blank">2ip.ru</a>.</p></div></div>
             </div>
+            <button class="btn-ghost" style="margin-top:12px;" onclick="hideInstruction()">Скрыть инструкцию</button>
           </div>
           <div id="instr-windows" class="instruction-panel">
             <div class="instr-steps">
@@ -440,6 +454,7 @@
               <div class="instr-step"><div class="step-num">3</div><div class="step-content"><h4>Импортируйте ключ</h4><p>В V2Ray выберите «Серверы» → «Импорт URL из буфера».</p></div></div>
               <div class="instr-step"><div class="step-num">4</div><div class="step-content"><h4>Подключайтесь</h4><p>Нажмите кнопку подключения и проверьте IP на <a href="https://2ip.ru" target="_blank">2ip.ru</a>.</p></div></div>
             </div>
+            <button class="btn-ghost" style="margin-top:12px;" onclick="hideInstruction()">Скрыть инструкцию</button>
           </div>
           <div id="instr-macos" class="instruction-panel">
             <div class="instr-steps">
@@ -448,6 +463,7 @@
               <div class="instr-step"><div class="step-num">3</div><div class="step-content"><h4>Импортируйте ключ</h4><p>В V2Ray выберите «Серверы» → «Импорт URL из буфера».</p></div></div>
               <div class="instr-step"><div class="step-num">4</div><div class="step-content"><h4>Подключайтесь</h4><p>Нажмите кнопку подключения и проверьте IP на <a href="https://2ip.ru" target="_blank">2ip.ru</a>.</p></div></div>
             </div>
+            <button class="btn-ghost" style="margin-top:12px;" onclick="hideInstruction()">Скрыть инструкцию</button>
           </div>
           <div id="instr-appletv" class="instruction-panel">
             <div class="instr-steps">
@@ -456,6 +472,7 @@
               <div class="instr-step"><div class="step-num">3</div><div class="step-content"><h4>Импортируйте ключ</h4><p>В Streisand выберите «+» → «Import from Clipboard».</p></div></div>
               <div class="instr-step"><div class="step-num">4</div><div class="step-content"><h4>Подключайтесь</h4><p>Нажмите кнопку подключения. Apple TV будет использовать VPN для всех приложений.</p></div></div>
             </div>
+            <button class="btn-ghost" style="margin-top:12px;" onclick="hideInstruction()">Скрыть инструкцию</button>
           </div>
           <div id="instr-androidtv" class="instruction-panel">
             <div class="instr-steps">
@@ -464,6 +481,7 @@
               <div class="instr-step"><div class="step-num">3</div><div class="step-content"><h4>Импортируйте ключ</h4><p>В V2Ray нажмите «+» → «Импорт из буфера» (возможно, потребуется пульт или мышь).</p></div></div>
               <div class="instr-step"><div class="step-num">4</div><div class="step-content"><h4>Подключайтесь</h4><p>Нажмите кнопку подключения. Трафик пойдёт через VPN.</p></div></div>
             </div>
+            <button class="btn-ghost" style="margin-top:12px;" onclick="hideInstruction()">Скрыть инструкцию</button>
           </div>
         </div>
 
@@ -630,7 +648,6 @@
         extBlock.style.display = 'block';
         instrBlock.style.display = 'block';
 
-        // Показываем нужные табы продления
         if (currentUser.plan === 'family') {
           basicTabs.style.display = 'none';
           familyTabs.style.display = 'flex';
@@ -833,18 +850,31 @@
       } catch (e) { showToast(e.message); payBtn.disabled = false; payBtn.textContent = 'Оплатить'; }
     }
 
-    // ====================== INTERACTIVE INSTRUCTION ======================
-    function selectPlatform(platform) {
+    // ====================== DEVICE DROPDOWN ======================
+    function toggleDeviceList() {
+      document.getElementById('deviceList').classList.toggle('open');
+    }
+
+    function selectDevice(platform, displayName) {
+      document.getElementById('deviceTriggerText').textContent = displayName;
+      document.getElementById('deviceList').classList.remove('open');
       // Скрыть все панели
       document.querySelectorAll('.instruction-panel').forEach(p => p.classList.remove('open'));
       // Показать выбранную
       const panel = document.getElementById('instr-' + platform);
       if (panel) panel.classList.add('open');
-      // Обновить активную кнопку
-      document.querySelectorAll('.platform-btn').forEach(b => b.classList.remove('active'));
-      const activeBtn = document.querySelector(`.platform-btn[data-platform="${platform}"]`);
-      if (activeBtn) activeBtn.classList.add('active');
     }
+
+    function hideInstruction() {
+      document.querySelectorAll('.instruction-panel').forEach(p => p.classList.remove('open'));
+    }
+
+    // Закрытие списка при клике вне
+    window.addEventListener('click', function(e) {
+      if (!e.target.closest('.device-dropdown')) {
+        document.getElementById('deviceList').classList.remove('open');
+      }
+    });
 
     // ====================== ADMIN ======================
     async function initAdminEmail() {
@@ -958,15 +988,6 @@
           document.getElementById(`price-${planId}`).innerHTML = `<sup>₽</sup>${price}`;
           document.getElementById(`period-${planId}`).textContent = `/ ${period}`;
         }
-      });
-    });
-
-    // Кнопки выбора платформы
-    document.querySelectorAll('.platform-btn').forEach(btn => {
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        const platform = this.dataset.platform;
-        selectPlatform(platform);
       });
     });
 
