@@ -221,8 +221,7 @@
   <div id="toast-container"></div>
   <nav>
     <div class="inner">
-      <!-- Убрали id="adminTrigger", чтобы тройной клик не работал -->
-      <a class="logo"><div class="logo-dot"></div>Lams<span>VPN</span></a>
+      <a class="logo" onclick="showSection('home')"><div class="logo-dot"></div>Lams<span>VPN</span></a>
       <ul id="navLinks">
         <li><a href="#" onclick="showSection('home'); closeMenu()">Главная</a></li>
         <li><a href="#" onclick="showSection('tariffs'); closeMenu()">Тарифы</a></li>
@@ -236,7 +235,7 @@
           <div class="profile-avatar" id="profileAvatar">A</div>
           <span id="profileName">Аккаунт</span>
         </button>
-        <!-- Кнопка админа (видна только админу) -->
+        <!-- Кнопка админа -->
         <button class="profile-btn" id="adminPanelBtn" onclick="openAdminPanel()" style="display:none; background:#c8ff00; color:#000; border-color:#c8ff00;">🛡️ Админ</button>
       </div>
       <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
@@ -740,7 +739,6 @@
           adminEmail = data.email;
         }
       } catch (e) {}
-      // После загрузки adminEmail проверяем текущего пользователя
       updateProfileUI();
     }
 
@@ -833,11 +831,9 @@
     });
 
     window.addEventListener('load', async () => {
-      await initAdminEmail();            // загружаем админский email с сервера
-      currentUser = await fetchUser();   // получаем текущего пользователя
+      await initAdminEmail();
+      currentUser = await fetchUser();
       updateProfileUI();
-      document.getElementById('authModal').addEventListener('click', function(e) { if (e.target === this) closeAuth(); });
-      document.getElementById('paymentModal').addEventListener('click', function(e) { if (e.target === this) closePaymentModal(); });
     });
   </script>
 </body>
